@@ -1,11 +1,27 @@
 
-
-import React from 'react';
+import React, {useState} from 'react';
+import axios from 'axios';
 import './LoginPage1.css'; 
 import companylogo from '../assets/logo.png';
               <input type="password"/>
 
 const LoginPage = () => {
+  const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const HandleUserLogin = async (event) => {
+        event.preventDefault();
+        console.log('Login attempt with', username, password);
+        try {
+            const response = await axios.post('http://localhost:8000/login', { username, password });
+            console.log('Login successful:', response.data);
+
+        } catch (error) {
+            console.error('Login error:', error.response ? error.response.data : error.message);
+
+            
+        }
+    };
   return (
     <div className="login-container">
       <div className="login-card">
@@ -16,16 +32,26 @@ const LoginPage = () => {
         <section className="login-form">
           <h2>WELCOME BACK!</h2>
           <div className="sign-up">
-            Don’t have an account, <a href="#">Sign up</a>
+            Don’t have an account, <a href="http://localhost:8000/signup">Sign up</a>
           </div>
           <form>
             <div className="form-group">
               <label htmlFor="username">Username</label>
-              <input type="email" id="username" placeholder="mustafa@gmail.com" />
+
+              <input 
+                type="text" 
+                id="username" 
+                placeholder="mustafa@gmail.com" 
+                value={username}
+                onChange={event => setUsername(event.target.value)}/>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" />
+              <input 
+                type="password" 
+                id="password" 
+                value={password}
+                onChange={event => setPassword(event.target.value)}/>
             </div>
             <div className="form-options">
             <div className="remember-me">
