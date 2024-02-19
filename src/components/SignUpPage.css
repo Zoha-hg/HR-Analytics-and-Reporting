@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #39d6d3, #042434); 
+}
+ 
+.signup-card {
+    background-color: white;
+    padding: 2em;
+    border-radius: 8px;
+    width: 70em; /* Unchanged width */
+    height: 35em; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.signup-header {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    margin-right: 2em; 
+}
+.signup-header h1 {
+    color: #4a90e2;
+    font-size: 1.5em;
+    margin-bottom: 0;
+}
+.signup-header p {
+    color: #1b1919;
+    font-size: 1.1em;
+    font-family: 'Inknut Antiqua', serif;
+    height: 35em;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.signup-form {
+    margin-left: 20em;
+    flex-grow: 0.2; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.signup-form h2 {
+    margin-bottom: 0.5em;
+    font-family: 'Overpass', sans-serif;
+    font-size: 2.5em;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: .5em;
+    font-family: 'Nunito', sans-serif;
+    text-align: left;
+}
+
+.form-group input,
+.form-group select { /* Adjusted for select element */
+    width: 100%;
+    padding: 0.75em;
+    border: 1px solid #0c0c0c;
+    border-radius: 100px;
+    font-size: 1em; 
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.forgot-password {
+    color: #333;
+    font-family: 'Nunito', sans-serif;
+}
+
+.sign-up-button {
+    width: 100%;
+    padding: 0.75em;
+    border-radius: 100px;
+    background-color: #39d6d3;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sign-up-button:hover {
+    background-color: #042434;
+}
+
+.sign-in {
+    text-align: center;
+    color: #726f6f;
+    font-size: 1em;
+    margin-top: -1.5em;
+    margin-bottom: 3em;
+}
+
+.sign-in a {
+    color: #111213;
+    text-decoration: none;
+    font-weight: bold;
+}
