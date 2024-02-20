@@ -33,6 +33,7 @@ const SignUpPage = () => {
                     <h2>WELCOME!</h2>
                     <div className="sign-in">
                         Already have an account? <a href="http://localhost:3000/login">Sign in</a>
+
                     </div>
                     <form onSubmit={HandleUserSignUp}>
                         <div className="form-group">
@@ -72,6 +73,7 @@ const SignUpPage = () => {
                                 value={role}
                                 onChange={(event) => setRole(event.target.value)}
                             >
+
                                 <option value="">Select Role</option>
                                 <option value="HR professional">HR professional</option>
                                 <option value="Employee">Employee</option>

@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
-.signup-container {
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,11 +10,11 @@
     background: linear-gradient(to right, #39d6d3, #042434); 
 }
  
-.signup-card {
+.login-card {
     background-color: white;
     padding: 2em;
     border-radius: 8px;
-    width: 70em; /* Unchanged width */
+    width: 70em; 
     height: 35em; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -23,18 +23,18 @@
     align-items: center; 
 }
 
-.signup-header {
+.login-header {
     display: flex;
     flex-direction: column; 
     align-items: flex-start; 
     margin-right: 2em; 
-}
-.signup-header h1 {
+  }
+.login-header h1 {
     color: #4a90e2;
     font-size: 1.5em;
     margin-bottom: 0;
 }
-.signup-header p {
+.login-header p {
     color: #1b1919;
     font-size: 1.1em;
     font-family: 'Inknut Antiqua', serif;
@@ -42,7 +42,7 @@
     margin-top: 0;
     margin-bottom: 0;
 }
-.signup-form {
+.login-form {
     margin-left: 20em;
     flex-grow: 0.2; 
     display: flex;
@@ -50,7 +50,8 @@
     justify-content: center;
 }
 
-.signup-form h2 {
+
+.login-form h2 {
     margin-bottom: 0.5em;
     font-family: 'Overpass', sans-serif;
     font-size: 2.5em;
@@ -68,16 +69,12 @@
     text-align: left;
 }
 
-.form-group input,
-.form-group select { /* Adjusted for select element */
+.form-group input {
     width: 100%;
     padding: 0.75em;
     border: 1px solid #0c0c0c;
     border-radius: 100px;
-
-    font-size: 1em;
-    font-family: 'Nunito', sans-serif; /* Same font family as other inputs */
-    background-color: white;
+    font-size: 1em; 
 }
 
 .form-options {
@@ -87,28 +84,95 @@
     margin-bottom: 1em;
 }
 
+.remember-me {
+    display: flex;
+    align-items: center;
+
+}
+.remember-me input[type="checkbox"]:checked + .custom-checkbox::after {
+    content: ''; 
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: #39d6d3; 
+    border-radius: 2px; 
+  }
+  
+.remember-me label {
+    margin-left: 8px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+
+  }
+
+.custom-checkbox-label {
+    display: flex;
+    align-items: center; 
+  }
+  
+.custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    margin-right: 10px; 
+    position: relative;
+  }
+  
+.remember-me input[type="checkbox"]:checked + .custom-checkbox-label .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #042434;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+  
+  
+
 .forgot-password {
     color: #333;
     font-family: 'Nunito', sans-serif;
+
 }
 
-.sign-up-button {
-    width: 100%;
+.sign-in-button {
+    align-items: right;
+    width: 107%;
     padding: 0.75em;
+    
     border-radius: 100px;
     background-color: #39d6d3;
     border: none;
+    border-radius: 100px;
     color: white;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-align: center;
+
 }
 
-.sign-up-button:hover {
+
+.company-logo {
+    max-width: 15em; 
+    height: auto;
+    margin-top: 20em;
+    margin-bottom: 0; 
+}
+
+.sign-in-button:hover {
     background-color: #042434;
 }
 
-.sign-in {
+.sign-up {
     text-align: center;
     color: #726f6f;
     font-size: 1em;
@@ -116,9 +180,9 @@
     margin-bottom: 3em;
 }
 
-.sign-in a {
+.sign-up a {
     color: #111213;
     text-decoration: none;
     font-weight: bold;
 }
-
+  

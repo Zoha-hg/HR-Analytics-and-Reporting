@@ -59,7 +59,7 @@ app.post("/login", async (req, res) =>
         res.status(401).json("Invalid Credentials")
       }
     } catch (error) {
-      res.status(569).json("Suckmydick")
+      res.status(569).json("Error")
     }
   }
   catch

@@ -21,6 +21,7 @@ const LoginPage = () => {
     };
 
     return (
+
         <div className="login-container">
             <div className="login-card">
                 <header className="login-header">
@@ -31,6 +32,7 @@ const LoginPage = () => {
                     <h2>WELCOME BACK!</h2>
                     <div className="sign-up">
                         Don’t have an account, <a href="http://localhost:3000/signup">Sign up</a>
+
                     </div>
                     <form onSubmit={HandleUserLogin}>
                         <div className="form-group">
