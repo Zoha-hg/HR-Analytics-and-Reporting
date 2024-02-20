@@ -21,29 +21,7 @@ const LoginPage = () => {
     };
 
     return (
-<<<<<<< Updated upstream
-        <div>
-            <h1>Login Page</h1>
-            <form onSubmit={HandleUserLogin}>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={event => setUsername(event.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={event => setPassword(event.target.value)}
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-=======
+
         <div className="login-container">
             <div className="login-card">
                 <header className="login-header">
@@ -89,8 +67,8 @@ const LoginPage = () => {
                         <button type="submit" className="sign-in-button">Sign In</button>
                     </form>
                 </section>
-            </div>
->>>>>>> Stashed changes
+            </div>  
+
         </div>
     );
 };
