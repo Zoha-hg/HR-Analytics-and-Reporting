@@ -31,7 +31,8 @@ const LoginPage = () => {
                 <section className="login-form">
                     <h2>WELCOME BACK!</h2>
                     <div className="sign-up">
-                        Don’t have an account, <a href="#">Sign up</a>
+                        Don’t have an account, <a href="http://localhost:3000/signup">Sign up</a>
+
                     </div>
                     <form onSubmit={HandleUserLogin}>
                         <div className="form-group">
@@ -67,8 +68,7 @@ const LoginPage = () => {
                         <button type="submit" className="sign-in-button">Sign In</button>
                     </form>
                 </section>
-            </div>  
-
+            </div>
         </div>
     );
 };

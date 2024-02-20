@@ -32,7 +32,8 @@ const SignUpPage = () => {
                 <section className="signup-form">
                     <h2>WELCOME!</h2>
                     <div className="sign-in">
-                        Already have an account? <a href="#">Sign in</a>
+                        Already have an account? <a href="http://localhost:3000/login">Sign in</a>
+
                     </div>
                     <form onSubmit={HandleUserSignUp}>
                         <div className="form-group">
@@ -71,16 +72,8 @@ const SignUpPage = () => {
                                 id="role"
                                 value={role}
                                 onChange={(event) => setRole(event.target.value)}
-                                // style={{
-                                //     width: '100%',
-                                //     padding: '.75em',
-                                //     border: '1px solid #0c0c0c',
-                                //     borderRadius: '100px',
-                                //     fontSize: '1em',
-                                //     fontFamily: 'Nunito, sans-serif',
-                                //     backgroundColor: 'white',
-                                // }}
-                                >
+                            >
+
                                 <option value="">Select Role</option>
                                 <option value="HR professional">HR professional</option>
                                 <option value="Employee">Employee</option>
