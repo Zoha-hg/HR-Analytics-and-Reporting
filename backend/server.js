@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 // import user from "./models/users.model";
 const userModel = require("./models/users.model");
 const feedbackModel = require("./models/feedback_model");
-const hrModel = require("./models/hr.model");
-const departmentModel = require("./models/department.model");
+const hrModel = require("./models/hr_model");
+const departmentModel = require("./models/department_model");
 const employeeModel = require("./models/employee_model");
-const managerModel = require("./models/manager.model");
-const taskModel = require("./models/task.model");
-const dailyTrackingModel = require("./models/dailyTracking.model");
+const managerModel = require("./models/manager_model");
+const taskModel = require("./models/tasks_model");
+const dailyTrackingModel = require("./models/daily_tracking_model");
 
 
 
