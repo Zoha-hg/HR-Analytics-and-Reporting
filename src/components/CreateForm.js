@@ -40,7 +40,7 @@ function CreateForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:8000/createform', formData);
+            await axios.post('http://localhost:8000/form', formData);
             alert('Form created successfully');
             // should redirect back to displaying forms page
         } catch (error) {
