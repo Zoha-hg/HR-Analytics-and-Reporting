@@ -9,12 +9,21 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
+<<<<<<< Updated upstream
     "googleapis": "^133.0.0",
+=======
+    "mongoose-auto-increment": "^5.0.1",
+>>>>>>> Stashed changes
     "react": "^18.2.0",
     "react-datepicker": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.22.0",
+<<<<<<< Updated upstream
     "react-scripts": "^5.0.1",
+=======
+    "react-scripts": "5.0.1",
+    "uuid": "^9.0.1",
+>>>>>>> Stashed changes
     "web-vitals": "^2.1.4"
   },
   "scripts": {
