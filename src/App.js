@@ -5,6 +5,7 @@ import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateForm from './components/CreateForm';
+import Dashboard from './components/Dashboard'; 
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/form" element={<CreateForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </div>

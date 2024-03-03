@@ -65,11 +65,12 @@ app.post("/login", async (req, res) =>
 {
   try
   {
+
     const { username, password } = req.body;
     try {
       const user = await User.findOne({ username, password });
       if (user) {
-        res.status(200).json("Ready")
+        res.status(200).json(user)
       }
       else{
         res.status(401).json("Invalid Credentials")
@@ -112,3 +113,24 @@ app.post('/form', async (req, res) => {
       res.status(500).json({ message: 'Failed to create form. Please try again.' });
   }
 });
+
+app.post('/dashboard', async (req, res) => {
+  res.status(200).json({ message: 'Welcome to the dashboard' });
+});
+
+
+// app.get('/dashboard/', async (req, res) => {
+//   try {
+//       const { username } = req.params;
+//       const user = await User.findOne
+//       ({ username });
+//       if (user) {
+//           res.status(200).json(user);
+//       } else {
+//           res.status(404).json({ message: 'User not found' });
+//       }
+//   } catch (error) {
+//       console.error('Error fetching user:', error);
+//       res.status(500).json({ message: 'Failed to fetch user. Please try again.' });
+//   }
+// });
