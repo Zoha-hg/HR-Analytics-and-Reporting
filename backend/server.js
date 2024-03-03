@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require('mongoose');
-// import user from "./models/users.model";
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const userModel = require("./models/users.model");
 const feedbackModel = require("./models/feedback_model");
 const hrModel = require("./models/hr_model");
@@ -22,7 +23,6 @@ app.use(cors());
 app.use(express.json());
 
 const uri = process.env.ATLAS_URI;
-// const uri = "mongodb://localhost:27017/HR-Analytics-and-Reporting";
 mongoose.connect(uri, {useNewUrlParser: true});
 const User = mongoose.model("User", userModel);
 const Feedback = mongoose.model("Feedback", feedbackModel);
@@ -44,53 +44,89 @@ connection.once("open", () =>
 const usersRouter = require("./routes/users");
 app.use("/users", usersRouter);
 
-app.post("/signup", async (req, res) => 
+
+// Middleware to authenticate token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+// Endpoint to get user role
+app.get('/user-role', authenticateToken, async (req, res) => {
+  // console.log('User:', req)
+  try {
+    // console.log('Fetching user role for:', req.user.username)
+    const user = await User.findOne({ username: req.user.username });
+    if (!user) return res.status(404).send('User not found');
+    // console.log(user)
+    res.json({ role: user.role });
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+    res.status(500).json({ message: 'Failed to fetch user role' });
+  }
+});
+
+app.post("/signup", async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword, role });
+    await newUser.save();
+    res.status(201).json({ message: "Signup successful" });
+
+  } catch (error) {
+    console.error('SignUp error:', error);
+    res.status(500).json({ message: 'Failed to sign up. Please try again.' });
+  }
+});
+
+
+app.post("/login", async (req, res) => 
 {
   try 
   {
-    const { username, email, password, role } = req.body;
-    const user = new User({ username, email, password, role });
-    await user.save();
-    // res.json(user{ username, email, password, role});
-    console.log("Signup attempt with", req.body);
-    res.send("Signup successful");
-  }
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (user && await bcrypt.compare(password, user.password)) 
+    {
+      
+      const token = jwt.sign({ username: user.username, role: user.role }, process.env.TOKEN_SECRET);
+
+      res.status(200).json({ token });
+    } 
+    else 
+    {
+      res.status(401).json("Invalid credentials");
+    }
+  } 
   catch (error) 
   {
-    console.error('SignUp error:', error.response ? error.response.data : error.message);
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Failed to log in. Please try again.' });
   }
 });
 
-app.post("/login", async (req, res) =>
-{
-  try
-  {
-
-    const { username, password } = req.body;
-    try {
-      const user = await User.findOne({ username, password });
-      if (user) {
-        res.status(200).json(user)
-      }
-      else{
-        res.status(401).json("Invalid Credentials")
-      }
-    } catch (error) {
-      res.status(569).json("Error")
-    }
-  }
-  catch(error)
-  {
-    console.error('Login error:', error.response ? error.response.data : error.message);
-  }
+app.get('/verify-token', authenticateToken, (req, res) => {
+  // Assuming req.user is set by authenticateToken middleware
+  res.status(200).json({ username: req.user.username });
 });
+
+
 
 app.listen(8000, () => 
 {
   console.log("Server started on port 8000");
 });
 
-app.post('/form', async (req, res) => {
+app.post('/createform', async (req, res) => {
   try {
       const { form_id, filled, title, description, start_time, end_time, questions } = req.body;
       // need to fetch newest feedback form id and increment by 1
@@ -115,7 +151,7 @@ app.post('/form', async (req, res) => {
 });
 
 
-app.post('/fillform', async (req, res) => {
+app.get('/fillform', async (req, res) => {
   try {
       const { form_id, employee_id, answers } = req.body;
       const newFilledForm = await DailyTracking.create({
@@ -130,7 +166,7 @@ app.post('/fillform', async (req, res) => {
   }
 });
 
-app.post('/displayform', async (req, res) => {
+app.get('/displayform', async (req, res) => {
   try {
       const forms = await Feedback.find({});
       res.status(200).json(forms);
@@ -139,24 +175,3 @@ app.post('/displayform', async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
   }
 });
-
-app.post('/dashboard', async (req, res) => {
-  res.status(200).json({ message: 'Welcome to the dashboard' });
-});
-
-
-// app.get('/dashboard/', async (req, res) => {
-//   try {
-//       const { username } = req.params;
-//       const user = await User.findOne
-//       ({ username });
-//       if (user) {
-//           res.status(200).json(user);
-//       } else {
-//           res.status(404).json({ message: 'User not found' });
-//       }
-//   } catch (error) {
-//       console.error('Error fetching user:', error);
-//       res.status(500).json({ message: 'Failed to fetch user. Please try again.' });
-//   }
-// });

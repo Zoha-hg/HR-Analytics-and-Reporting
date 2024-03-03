@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import axios from 'axios';
 import './CreateForm.css';
 
@@ -14,6 +15,7 @@ function CreateForm() {
     });
 
     const [formErrors, setFormErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -49,6 +51,7 @@ function CreateForm() {
                 await axios.post('http://localhost:8000/createform', formData);
                 alert('Form created successfully');
                 // should redirect back to displaying forms page
+                navigate('/display');
             } else {
                 setFormErrors(errors);
             }
