@@ -128,21 +128,12 @@ app.post('/fillform', async (req, res) => {
   }
 });
 
-app.post('/createform', async (req, res) => {
+app.post('/displayform', async (req, res) => {
   try {
-      const { form_id, title, description, start_time, end_time, questions } = req.body;
-      const newForm = await Feedback.create({
-          form_id,
-          filled: false,
-          title,
-          description,
-          start_time,
-          end_time,
-          questions
-      });
-      res.status(201).json(newForm);
+      const forms = await Feedback.find({});
+      res.status(200).json(forms);
   } catch (error) {
-      console.error('Error creating form:', error);
-      res.status(500).json({ message: 'Failed to create form. Please try again.' });
+      console.error('Error fetching forms:', error);
+      res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
   }
 });
