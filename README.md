@@ -21,6 +21,22 @@ Ensure you have the following software installed on your machine:
     cd backend
     npm install
 
+5. The directory structure is as follows:
+    - HR-Analytics-and-Reporting
+        - backend
+            - This contains all the backend components.
+                - Routes
+                - Models
+                - Email API
+                - server.js
+        - public
+        - src
+            - This contains all the front-end components
+                - components
+                    - Includes all the pages used in the app
+                - Contains the App.js file along with files used for authentication of tokens.
+        
+
 ## Running the Application
 
 1. Start the MongoDB server.
@@ -37,3 +53,5 @@ Ensure you have the following software installed on your machine:
 
 - Before contributing, make sure to create a separate branch and work there:
     git checkout -b your-branch-name
+
+- Do not merge directly into main, when a task is completed, push to your branch and create a pull request to wait for it to be merged.
