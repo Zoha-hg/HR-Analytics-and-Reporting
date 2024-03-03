@@ -2,26 +2,29 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import './LoginPage.css'; 
+import { useNavigate } from 'react-router-dom';
 import companylogo from './assets/logo.png';
               <input type="password"/>
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const navigate = useNavigate();
     const HandleUserLogin = async (event) => {
-        event.preventDefault();
-        console.log('Login attempt with', username, password);
-        try {
-            const response = await axios.post('http://localhost:8000/login', { username, password });
-            console.log('Login successful:', response.data);
-
-        } catch (error) {
-            console.error('Login error:', error.response ? error.response.data : error.message);
-
-            
+      event.preventDefault();
+      try {
+        const response = await axios.post('http://localhost:8000/login', { username, password });
+        if (response.data === 'Ready') {
+          sessionStorage.setItem('isAuthenticated', 'true'); 
+          navigate('/dashboard'); 
+        } else {
+          alert('Login failed');
         }
+      } catch (error) {
+        console.error('Login error:', error);
+      }
     };
+    
   return (
     <div className="login-container">
       <div className="login-card">
