@@ -4,7 +4,7 @@ import axios from 'axios';
 function DisplayForm() {
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
-    useEffect(() => {
+    /*useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.post('http://localhost:8000/displayform', {user: username});
@@ -31,8 +31,16 @@ function DisplayForm() {
         };
         fetchUserName();
         fetchData();
-    }, []);
-
+    }, []);*/
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/displayform');
+            setForms(response.data);
+        } catch (error) {
+            console.error('Error fetching forms:', error);
+        }
+    };
+    useEffect(() => {fetchData();}, []);
 
     const handleGoToForm = async (form_id) => {
 

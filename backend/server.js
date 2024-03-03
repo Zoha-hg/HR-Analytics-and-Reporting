@@ -190,32 +190,40 @@ app.get('/fillform', async (req, res) => {
   }
 });
 
-app.post('/displayform', async (req, res) => {
-    try {
-        const {user} = req.body;
-		console.log(user)
-        const employee = await Employee.findOne({ employee_id: user }).populate('feedback_forms.form');
-        if (!employee) {
-			console.log(user)
-            return res.status(404).json({ message: 'Employee not found.' });
-        }
+// app.post('/displayform', async (req, res) => {
+//     try {
+//         const {user} = req.body;
+// 		console.log(user)
+//         const employee = await Employee.findOne({ employee_id: user }).populate('feedback_forms.form');
+//         if (!employee) {
+// 			console.log(user)
+//             return res.status(404).json({ message: 'Employee not found.' });
+//         }
 
-        const forms = employee.feedback_forms.map(form => ({
-            formId: form.form._id,
-            title: form.form.title,
-            description: form.form.description,
-            start_time: form.form.start_time,
-            end_time: form.form.end_time,
-            filled: form.filled
-        }));
-        res.status(200).json(forms);
-    } catch (error) {
-        console.error('Error fetching forms:', error);
-        res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
-    }
-});
+//         const forms = employee.feedback_forms.map(form => ({
+//             formId: form.form._id,
+//             title: form.form.title,
+//             description: form.form.description,
+//             start_time: form.form.start_time,
+//             end_time: form.form.end_time,
+//             filled: form.filled
+//         }));
+//         res.status(200).json(forms);
+//     } catch (error) {
+//         console.error('Error fetching forms:', error);
+//         res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
+//     }
+// });
 
-
+app.get('/displayform', async (req, res) => {
+	try {
+		const forms = await Feedback.find({});
+		res.status(200).json(forms);
+	} catch (error) {
+		console.error('Error fetching forms:', error);
+		res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
+	}
+  });
 
 // just so i can make employees pls ignore
 
