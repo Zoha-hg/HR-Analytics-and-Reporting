@@ -74,6 +74,22 @@ app.get('/user-role', authenticateToken, async (req, res) => {
   }
 });
 
+// API Endpoint to get username.
+app.get('/user-name', authenticateToken, async (req, res) => {
+  // console.log('User:', req)
+  try {
+    // console.log('Fetching user role for:', req.user.username)
+    const user = await User.findOne({ username: req.user.username });
+    if (!user) return res.status(404).send('User not found');
+    // console.log(user)
+    res.json({ username: user.username });
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+    res.status(500).json({ message: 'Failed to fetch user role' });
+  }
+});
+
+
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
