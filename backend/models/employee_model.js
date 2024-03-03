@@ -35,13 +35,13 @@ const employeeSchema = new Schema({
             ref: 'DailyTracking',
         }
     ],
-    feedback_forms: 
-    [
-        {
+    feedback_forms: [{
+        form: {
             type: Schema.Types.ObjectId,
             ref: 'Feedback',
-        }
-    ],
+        },
+        filled: { type: Boolean, required: true }
+    }],
     tasks: 
     [
         {
