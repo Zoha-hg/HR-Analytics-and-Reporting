@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './SignUpPage.css'; // Make sure to import the CSS file for styling
+import './SignUpPage.css';
 import companylogo from './assets/logo.png';
 
 const SignUpPage = () => {
@@ -81,7 +81,6 @@ const SignUpPage = () => {
                                 value={role}
                                 onChange={(event) => setRole(event.target.value)}
                             >
-
                                 <option value="">Select Role</option>
                                 <option value="HR professional">HR professional</option>
                                 <option value="Employee">Employee</option>
