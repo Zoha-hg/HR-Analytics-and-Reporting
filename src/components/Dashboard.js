@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const Dashboard = () => {
     // Get the user context from location state
@@ -19,7 +19,15 @@ const Dashboard = () => {
                 <div>
                     <h2>Admin Dashboard</h2>
                     <p>Admin can see all the data</p>
-                    
+                    <Link to="/form">
+                        <button>Create a Form</button>
+                    </Link>
+                    <Link to="/fill">
+                        <button>Fill a Form</button>
+                    </Link>
+                    <Link to="/display">
+                        <button>Display Forms</button>
+                    </Link>
                 </div>
             )}
 
@@ -28,6 +36,12 @@ const Dashboard = () => {
                 <div>
                     <h2>HR Dashboard</h2>
                     <p>HR can see all the data</p>
+                    <Link to="/form">
+                        <button>Create a Form</button>
+                    </Link>
+                    <Link to="/display">
+                        <button>Display Forms</button>
+                    </Link>
                 </div>
             )}
 
@@ -36,6 +50,15 @@ const Dashboard = () => {
                 <div>
                     <h2>Employee Dashboard</h2>
                     <p>User can see only their data</p>
+                    <Link to="/form">
+                        <button>Create a Form</button>
+                    </Link>
+                    <Link to="/fill">
+                        <button>Fill a Form</button>
+                    </Link>
+                    <Link to="/display">
+                        <button>Display Forms</button>
+                    </Link>
                 </div>
             )}
             
@@ -44,6 +67,12 @@ const Dashboard = () => {
                 <div>
                     <h2>Manager Dashboard</h2>
                     <p>Manager can see only their department data</p>
+                    <Link to="/fill">
+                        <button>Fill a Form</button>
+                    </Link>
+                    <Link to="/display">
+                        <button>Display Forms</button>
+                    </Link>
                 </div>
             )}
 
