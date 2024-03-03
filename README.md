@@ -9,10 +9,10 @@ Ensure you have the following software installed on your machine:
 ## Installation
 
 1. Clone this repository to your local machine using Git:
-    git clone https://github.com/yourusername/your-repo.git
+    git clone https://github.com/Zoha-hg/HR-Analytics-and-Reporting.git
 
 2. Navigate into the project directory:
-    cd your-repo
+    cd HR-Analytics-and-Reporting
 
 3. Install dependencies in the root directory:
     npm install
