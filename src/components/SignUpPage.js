@@ -16,15 +16,13 @@ const SignUpPage = () => {
         console.log('SignUp attempt with', username, email, password, role);
         try {
             const response = await axios.post('http://localhost:8000/signup', { username, email, password, role });
-            console.log('SignUp successful:', response.data);
+            // console.log('SignUp successful:', response.data);
             // Handle success, redirect or set user state
-            if (response.status === 200) {
-                // alert('SignUp successful');
-                // Redirect to login page
+            if (response.status === 201) {
                 navigate('/login');
             }
         } catch (error) {
-            console.error('SignUp error:', error.response ? error.response.data : error.message);
+            // console.error('SignUp error:', error.response ? error.response.data : error.message);
             // Handle error, display error message to the user
             alert('SignUp failed. Please try again.');
         }
