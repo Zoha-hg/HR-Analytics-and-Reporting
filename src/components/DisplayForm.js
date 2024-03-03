@@ -3,22 +3,57 @@ import axios from 'axios';
 
 function DisplayForm() {
     const [forms, setForms] = useState([]);
-    useEffect(() => {
+    const [username, setUsername] = useState('');
+    /*useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/displayform');
+                const response = await axios.post('http://localhost:8000/displayform', {user: username});
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);
             }
         };
+        
+        const fetchUserName = async () => {
+            // Getting user token
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/user-name', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                // Setting username to the current user's username
+                setUsername(response.data.username);
+    
+            } catch (error) {
+                console.error('Error fetching user name:', error);
+            }
+        };
+        fetchUserName();
         fetchData();
-    }, []);
+    }, []);*/
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/displayform');
+            setForms(response.data);
+        } catch (error) {
+            console.error('Error fetching forms:', error);
+        }
+    };
+    useEffect(() => {fetchData();}, []);
 
-    const handleGoToForm = () => {
-        console.log("going to form " + forms.form_id);
-        // window.location.href = '/feedbackform/fillform/?feedback_id=' + forms.form_id;
+    const handleGoToForm = async (form_id) => {
+
+       
+
+
+        // event.preventDefault();
+        console.log("going to form " + form_id);
+        // fetch the feedback forms of the current user's ID
+        // Temporarily using username instead of ID
+        window.location.href = '/feedbackform/fillform/?feedback_id=' + form_id;
     }
+    //hello
 
     return (
         <div>
@@ -26,7 +61,7 @@ function DisplayForm() {
             <ul>
                 {forms.map(form => (
                     <li key={form.form_id}>
-                        <button type="button" onClick={handleGoToForm}>
+                        <button type="button" onClick={() => handleGoToForm(form.form_id)}>
                         <h2>{form.title}</h2>
                         <p>{form.description}</p>
                         <p>Start Time: {form.start_time}</p>

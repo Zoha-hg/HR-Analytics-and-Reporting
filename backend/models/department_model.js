@@ -21,7 +21,7 @@ const departmentSchema = new Schema({
     {
         type: Schema.Types.ObjectId,
         ref: 'Manager',
-        required: true
+        // required: true
     }
 });
 
