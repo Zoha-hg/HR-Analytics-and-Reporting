@@ -2,90 +2,69 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function FillForm() {
-    const [forms, setForms] = useState([]);
-    const [selectedForm, setSelectedForm] = useState(null);
-    const [answers, setAnswers] = useState([]);
+    const [formData, setFormData] = useState({
+        form_id: '',
+        employee_id: '',
+        answers: [] 
+    });
 
-    useEffect(() => {
-        // Fetch existing forms from the backend when the component mounts
-        const fetchForms = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/displayform'); // Adjust the API endpoint accordingly
+    const [formQuestions, setFormQuestions] = useState([]);
 
-                setForms(response.data);
-            } catch (error) {
-                console.error('Error fetching forms:', error);
-            }
-        };
-
-        fetchForms();
-    }, []);
-
-    const handleFormSelect = (form) => {
-        // Set the selected form and initialize answers array
-        setSelectedForm(form);
-        setAnswers(new Array(form.questions.length).fill(''));
-    };
-
-    const handleInputChange = (index, value) => {
-        // Update answers array as user fills the form
-        const updatedAnswers = [...answers];
-        updatedAnswers[index] = value;
-        setAnswers(updatedAnswers);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // Function to fetch form questions based on form ID
+    const fetchFormQuestions = async () => {
         try {
-            // Submit filled form to the backend
-            await axios.post('http://localhost:8000/fillform', {
-                form_id: selectedForm.form_id,
-                employee_id: selectedForm.employee_id,
-                answers: answers,
-            });
-            alert('Form filled successfully');
-            // Optionally, you can display a success message or redirect the user
+            const response = await axios.get(`http://localhost:8000/getformquestions/${formData.form_id}`);
+            setFormQuestions(response.data.questions);
         } catch (error) {
-            console.error('Error filling form:', error);
-            // Handle error
-            alert('Error filling form. Please try again.');
+            console.error('Error fetching form questions:', error);
         }
     };
 
+    // Function to handle input change for each question
+    const handleAnswerChange = (e, index) => {
+        const newAnswers = [...formData.answers];
+        newAnswers[index] = e.target.value;
+        setFormData({
+            ...formData,
+            answers: newAnswers
+        });
+    };
+
+    // Function to submit filled form
+    const handleSubmitForm = async (e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        try {
+            await axios.post('http://localhost:8000/fillform', formData);
+            alert('Form submitted successfully');
+            // Redirect or perform any action after successful form submission
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Error submitting form. Please try again.');
+        }
+    };
+
+    useEffect(() => {
+        fetchFormQuestions();
+    }, []);
+
     return (
         <div>
-            <h2>Fill Form</h2>
-            <div>
-                <h3>Select Form to Fill:</h3>
-                <ul>
-                    {forms.map((form) => (
-                        <li key={form.form_id} onClick={() => handleFormSelect(form)}>
-                            {form.title}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            {selectedForm && (
-                <div>
-                    <h3>Fill Form: {selectedForm.title}</h3>
-                    <form onSubmit={handleSubmit}>
-                        {selectedForm.questions.map((question, index) => (
-                            <div key={index}>
-                                <label htmlFor={`question_${index}`}>{question}</label>
-                                <input
-                                    type="text"
-                                    id={`question_${index}`}
-                                    name={`question_${index}`}
-                                    value={answers[index]}
-                                    onChange={(e) => handleInputChange(index, e.target.value)}
-                                    required
-                                />
-                            </div>
-                        ))}
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-            )}
+            <h1>Fill Form</h1>
+            <form onSubmit={handleSubmitForm}>
+                {formQuestions.map((question, index) => (
+                    <div key={index}>
+                        <label htmlFor={`question_${index}`}>{question}</label>
+                        <input
+                            type="text"
+                            id={`question_${index}`}
+                            value={formData.answers[index] || ''}
+                            onChange={(e) => handleAnswerChange(e, index)}
+                            required
+                        />
+                    </div>
+                ))}
+                <button type="submit">Submit Form</button>
+            </form>
         </div>
     );
 }
