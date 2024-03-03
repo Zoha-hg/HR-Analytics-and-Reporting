@@ -1,27 +1,48 @@
 
+// import React from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import GmailIntegrate from './GmailIntegrate'; // Import GmailIntegrate component
+
+// function Dashboard() {
+//     const navigate = useNavigate(); 
+
+//     const handleLogout = () => {
+//         sessionStorage.removeItem('isAuthenticated');
+//         navigate('/login');
+//     };
+
+//     return (
+//         <div>
+//             <h1>Dashboard</h1>
+//             <GmailIntegrate /> {/* Use GmailIntegrate as a component */}
+//             <button onClick={handleLogout}>Logout</button>
+//         </div>
+//     );
+// }
+
+// export default Dashboard;
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
-  const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
-  const integrateGmail = () => {
-    navigate('/integrate-gmail'); 
-  };
+    const handleIntegrateGmail = () => {
+        navigate('/integrate-gmail');
+    };
 
-  const handleLogout = () => {
-    // Assuming you're using sessionStorage to manage the login state
-    sessionStorage.removeItem('isAuthenticated'); // Clear the authentication flag
-    navigate('/login');
-  };
+    const handleLogout = () => {
+        sessionStorage.removeItem('isAuthenticated');
+        navigate('/login');
+    };
 
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <button onClick={integrateGmail}>Integrate Gmail</button>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            <button onClick={handleIntegrateGmail}>Integrate Gmail</button>
+            <button onClick={handleLogout}>Logout</button>
+        </div>
+    );
 }
 
 export default Dashboard;

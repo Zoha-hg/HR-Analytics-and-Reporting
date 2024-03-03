@@ -1,35 +1,14 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-// import authorize from '../../backend/email-api/services/googleApiAuthService';
+import React from 'react';
 
 function GmailIntegrate() {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        fetch('/check-token-existence', {
-            method: 'GET',
-            credentials: 'include',
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.hasToken) {
-                // If a token exists, redirect to the Gmail page
-                navigate('/gmail');
-            } else {
-                // If no token, initiate the authorization process
-                initiateAuthorization();
-            }
-        })
-        .catch(error => {
-            console.error('Error checking token existence:', error);
-        });
-    }, [navigate]);
-
     const initiateAuthorization = () => {
-        // This should point to your backend endpoint that starts the OAuth process
-        // The backend should handle the OAuth flow and eventually redirect back to your app
-        window.location.href = '/start-gmail-authorization';
+       
+        window.location.href = 'http://localhost:8000/start-gmail-authorization';
+        console.log("Initiating Gmail Integration...");
     };
+    initiateAuthorization();
+    
+
 
     return (
         <div>
