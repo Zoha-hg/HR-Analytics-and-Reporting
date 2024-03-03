@@ -199,3 +199,85 @@ app.get('/displayform', async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
   }
 });
+
+
+// just so i can make employees pls ignore
+
+const getDepartment = async (ddepartment_id) => {
+	try {
+		const departments = await Department.findOne({department_id: ddepartment_id});
+		return departments
+	} catch (error) {
+		console.error('Error fetching departments:', error);
+	}
+  }
+app.post('/createemployee', async (req, res) => {
+	try {
+		const {
+			employee_name,
+			dept,
+			gender,
+			position,
+			salary,
+			age,
+			address,
+			phone_number,
+		} = req.body;
+		let employee_id = 0;
+		const lastEmployee = await Employee.find().sort({ employee_id: -1 }).limit(1);
+
+		let last_employee_id = 0;
+		if (lastEmployee.length !== 0)
+		{
+			last_employee_id = lastEmployee[0].employee_id;
+		}
+		employee_id = last_employee_id + 1;
+		console.log("employee_id is " + employee_id);
+		
+		const department = await getDepartment(dept);
+		// Create the employee
+		const newEmployee = new Employee({
+			employee_id,
+			employee_name,
+			department,
+			gender,
+			position,
+			salary,
+			age,
+			address,
+			phone_number
+		});
+
+		// Save the employee to the database
+		await newEmployee.save();
+
+		res.status(201).json({ message: 'Employee created successfully.', employee: newEmployee });
+	} catch (error) {
+		console.error('Error creating employee:', error);
+		res.status(500).json({ message: 'Failed to create employee. Please try again.' });
+	}
+  });
+
+app.post('/createdepartment', async (req, res) => {
+	  try {
+	  const { department_name} = req.body;
+	  let department_id = 0;
+	  const lastDepartment = await Department.find().sort({ department_id: -1 }).limit(1);
+	  
+	  let last_department_id = 0;
+	  if (lastDepartment.length !== 0) {
+		last_department_id = lastDepartment[0].department_id;
+	  }
+	  department_id = last_department_id + 1;
+	  console.log("department_id is " + department_id);
+	  const newDepartment = await Department.create({
+		  department_id,
+		  department_name
+	  });
+	  res.status(201).json(newDepartment);
+  } catch (error) {
+	  console.error('Error creating department:', error);
+	  res.status(500).json({ message: 'Failed to create department. Please try again.' });
+  }
+});
+
