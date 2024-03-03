@@ -15,9 +15,10 @@ function DisplayForm() {
         fetchData();
     }, []);
 
-    const handleGoToForm = () => {
-        console.log("going to form " + forms.form_id);
-        // window.location.href = '/feedbackform/fillform/?feedback_id=' + forms.form_id;
+    const handleGoToForm = (form_id) => {
+        // event.preventDefault();
+        console.log("going to form " + form_id);
+        window.location.href = '/feedbackform/fillform/?feedback_id=' + form_id;
     }
 
     return (
@@ -26,7 +27,7 @@ function DisplayForm() {
             <ul>
                 {forms.map(form => (
                     <li key={form.form_id}>
-                        <button type="button" onClick={handleGoToForm}>
+                        <button type="button" onClick={() => handleGoToForm(form.form_id)}>
                         <h2>{form.title}</h2>
                         <p>{form.description}</p>
                         <p>Start Time: {form.start_time}</p>
