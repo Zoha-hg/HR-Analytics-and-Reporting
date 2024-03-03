@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './SignUpPage.css';
 import companylogo from './assets/logo.png';
@@ -8,6 +9,7 @@ const SignUpPage = () => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
+    const navigate = useNavigate();
 
     const HandleUserSignUp = async (event) => {
         event.preventDefault();
@@ -16,9 +18,15 @@ const SignUpPage = () => {
             const response = await axios.post('http://localhost:8000/signup', { username, email, password, role });
             console.log('SignUp successful:', response.data);
             // Handle success, redirect or set user state
+            if (response.status === 200) {
+                // alert('SignUp successful');
+                // Redirect to login page
+                navigate('/login');
+            }
         } catch (error) {
             console.error('SignUp error:', error.response ? error.response.data : error.message);
             // Handle error, display error message to the user
+            alert('SignUp failed. Please try again.');
         }
     };
 
@@ -32,7 +40,7 @@ const SignUpPage = () => {
                 <section className="signup-form">
                     <h2>WELCOME!</h2>
                     <div className="sign-in">
-                        Already have an account? <a href="http://localhost:3000/login">Sign in</a>
+                        Already have an account? <a href="/login">Sign in</a>
 
                     </div>
                     <form onSubmit={HandleUserSignUp}>
