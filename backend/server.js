@@ -117,6 +117,8 @@ app.post('/form', async (req, res) => {
 app.post('/dashboard', async (req, res) => {
   res.status(200).json({ message: 'Welcome to the dashboard' });
 });
+
+
 // app.get('/dashboard/', async (req, res) => {
 //   try {
 //       const { username } = req.params;
