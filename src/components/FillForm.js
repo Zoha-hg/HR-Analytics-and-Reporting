@@ -10,7 +10,8 @@ function FillForm() {
         // Fetch existing forms from the backend when the component mounts
         const fetchForms = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/forms'); 
+                const response = await axios.get('http://localhost:8000/displayform'); // Adjust the API endpoint accordingly
+
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);

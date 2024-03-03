@@ -13,7 +13,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const managerSchema = new Schema({
-    employee_id: { type: Number, required: true, trim: true},
+    employee_id: { type: Number, required: true, trim: true, unique: true},
     employee_name: { type: String, required: true, trim: true},
     department: 
     {

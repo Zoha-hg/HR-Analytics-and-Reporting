@@ -128,9 +128,17 @@ app.listen(8000, () =>
 
 app.post('/createform', async (req, res) => {
   try {
-      const { form_id, filled, title, description, start_time, end_time, questions } = req.body;
-      // need to fetch newest feedback form id and increment by 1
-      // Create the form
+      const {filled, title, description, start_time, end_time, questions } = req.body;
+
+      let form_id = 0;
+    const lastFeedback = await Feedback.find().sort({ form_id: -1 }).limit(1);
+    
+    let last_form_id = 0;
+    if (lastFeedback.length !== 0) {
+      last_form_id = lastFeedback[0].form_id;
+    }
+    form_id = last_form_id + 1;
+    console.log("form_id is " + form_id);
       const newForm = await Feedback.create({
           form_id,
           filled,
@@ -140,10 +148,10 @@ app.post('/createform', async (req, res) => {
           end_time,
           questions
       });
-      // after form is created, its uploaded to all employee and manager databases also
-	  // so that they can fill it out
+
 	  await Employee.updateMany({}, { $push: { feedback_forms: newForm._id } }); // check this line.
-      res.status(201).json(newForm);
+	  await Manager.updateMany({}, { $push: { feedback_forms: newForm._id } }); // check this line.
+    res.status(201).json(newForm);
   } catch (error) {
       console.error('Error creating form:', error);
       res.status(500).json({ message: 'Failed to create form. Please try again.' });

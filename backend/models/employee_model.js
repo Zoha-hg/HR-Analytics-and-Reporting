@@ -14,7 +14,7 @@ const Schema = mongoose.Schema;
 // feedback forms array
 
 const employeeSchema = new Schema({
-    employee_id: { type: Number, required: true, trim: true},
+    employee_id: { type: Number, required: true, trim: true, unique: true},
     employee_name: { type: String, required: true, trim: true},
     department: 
     {
