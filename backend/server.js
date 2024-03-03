@@ -105,7 +105,7 @@ app.post('/form', async (req, res) => {
       });
       // after form is created, its uploaded to all employee and manager databases also
 	  // so that they can fill it out
-	  await Employee.updateMany({}, { $push: { feedback_forms: newForm._id } });
+	  await Employee.updateMany({}, { $push: { feedback_forms: newForm._id } }); // check this line.
       res.status(201).json(newForm);
   } catch (error) {
       console.error('Error creating form:', error);
@@ -125,5 +125,24 @@ app.post('/fillform', async (req, res) => {
   } catch (error) {
       console.error('Error filling form:', error);
       res.status(500).json({ message: 'Failed to fill form. Please try again.' });
+  }
+});
+
+app.post('/createform', async (req, res) => {
+  try {
+      const { form_id, title, description, start_time, end_time, questions } = req.body;
+      const newForm = await Feedback.create({
+          form_id,
+          filled: false,
+          title,
+          description,
+          start_time,
+          end_time,
+          questions
+      });
+      res.status(201).json(newForm);
+  } catch (error) {
+      console.error('Error creating form:', error);
+      res.status(500).json({ message: 'Failed to create form. Please try again.' });
   }
 });

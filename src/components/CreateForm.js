@@ -91,48 +91,50 @@ function CreateForm() {
     };
 
     return (
-        <div className="create-form">
-            <h2>Create Form</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="form_id">Form ID:</label>
-                    <input type="number" id="form_id" name="form_id" value={formData.form_id} onChange={(e) => setFormData({ ...formData, form_id: e.target.value })} required />
-                    {formErrors.form_id && <span className="error">{formErrors.form_id}</span>}
-                </div>
-                <div>
-                    <label htmlFor="title">Title:</label>
-                    <input type="text" id="title" name="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required />
-                    {formErrors.title && <span className="error">{formErrors.title}</span>}
-                </div>
-                <div>
-                    <label htmlFor="description">Description:</label>
-                    <textarea id="description" name="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
-                    {formErrors.description && <span className="error">{formErrors.description}</span>}
-                </div>
-                <div>
-                    <label htmlFor="start_time">Start Time:</label>
-                    <input type="datetime-local" id="start_time" name="start_time" value={formData.start_time} onChange={(e) => setFormData({ ...formData, start_time: e.target.value })} required />
-                    {formErrors.start_time && <span className="error">{formErrors.start_time}</span>}
-                </div>
-                <div>
-                    <label htmlFor="end_time">End Time:</label>
-                    <input type="datetime-local" id="end_time" name="end_time" value={formData.end_time} onChange={(e) => setFormData({ ...formData, end_time: e.target.value })} required />
-                    {formErrors.end_time && <span className="error">{formErrors.end_time}</span>}
-                </div>
-                <div>
-                    <h3>Questions</h3>
-                    {formData.questions.map((question, index) => (
-                        <div key={index}>
-                            <label htmlFor={`question_${index}`}>Question {index + 1}:</label>
-                            <input type="text" id={`question_${index}`} name="question" value={question.question} onChange={(e) => handleChange(e, index)} required />
-                            {formErrors[`question_${index}`] && <span className="error">{formErrors[`question_${index}`]}</span>}
-                            <button type="button" onClick={() => removeQuestion(index)}>Remove</button>
-                        </div>
-                    ))}
-                    <button type="button" onClick={addQuestion}>Add Question</button>
-                </div>
-                <button type="submit">Create Form</button>
-            </form>
+        <div className="form-container">
+            <div className="form-card">
+                <h2>Create Form</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="form_id">Form ID:</label>
+                        <input type="number" id="form_id" name="form_id" value={formData.form_id} onChange={(e) => setFormData({ ...formData, form_id: e.target.value })} required inputMode="numeric" />
+                        {formErrors.form_id && <span className="error">{formErrors.form_id}</span>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="title">Title:</label>
+                        <input type="text" id="title" name="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required />
+                        {formErrors.title && <span className="error">{formErrors.title}</span>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description:</label>
+                        <textarea id="description" name="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+                        {formErrors.description && <span className="error">{formErrors.description}</span>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="start_time">Start Time:</label>
+                        <input type="datetime-local" id="start_time" name="start_time" value={formData.start_time} onChange={(e) => setFormData({ ...formData, start_time: e.target.value })} required />
+                        {formErrors.start_time && <span className="error">{formErrors.start_time}</span>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="end_time">End Time:</label>
+                        <input type="datetime-local" id="end_time" name="end_time" value={formData.end_time} onChange={(e) => setFormData({ ...formData, end_time: e.target.value })} required />
+                        {formErrors.end_time && <span className="error">{formErrors.end_time}</span>}
+                    </div>
+                    <div className="questions">
+                        <h3>Questions</h3>
+                        {formData.questions.map((question, index) => (
+                            <div key={index}>
+                                <label htmlFor={`question_${index}`}>Question {index + 1}:</label>
+                                <input type="text" id={`question_${index}`} name="question" value={question.question} onChange={(e) => handleChange(e, index)} required />
+                                {formErrors[`question_${index}`] && <span className="error">{formErrors[`question_${index}`]}</span>}
+                                <button type="button" className="remove-question-button" onClick={() => removeQuestion(index)}>Remove</button>
+                            </div>
+                        ))}
+                        <button type="button" className="add-question-button" onClick={addQuestion}>Add Question</button>
+                    </div>
+                    <button type="submit" className="create-form-button">Create Form</button>
+                </form>
+            </div>
         </div>
     );
 }

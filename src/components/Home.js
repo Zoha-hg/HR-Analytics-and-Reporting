@@ -17,6 +17,9 @@ const Home = () => {
             <Link to="/fill">
                 <button>Fill a Form</button>
             </Link>
+            <Link to="/display">
+                <button>Display Forms</button>
+            </Link>
         </div>
     );
 };

@@ -62,6 +62,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1em;
+  -moz-appearance: textfield; /* Remove spinner arrows on Firefox */
 }
 
 /* Questions section */
@@ -82,11 +83,6 @@ body {
   margin-top: 10px;
 }
 
-.create-form button {
-  background-color: #007bff; /* Blue */
-  color: white;
-}
-
 .add-question-button {
   background-color: #28a745; /* Green */
   margin-left: 5px;
@@ -95,6 +91,11 @@ body {
 .remove-question-button {
   background-color: #dc3545; /* Red */
   margin-left: 5px;
+}
+
+.create-form-button {
+  background-color: #007bff; /* Blue */
+  color: white;
 }
 
 /* Button hover effect */
