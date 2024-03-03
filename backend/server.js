@@ -112,3 +112,18 @@ app.post('/form', async (req, res) => {
       res.status(500).json({ message: 'Failed to create form. Please try again.' });
   }
 });
+
+app.post('/fillform', async (req, res) => {
+  try {
+      const { form_id, employee_id, answers } = req.body;
+      const newFilledForm = await DailyTracking.create({
+          form_id,
+          employee_id,
+          answers
+      });
+      res.status(201).json(newFilledForm);
+  } catch (error) {
+      console.error('Error filling form:', error);
+      res.status(500).json({ message: 'Failed to fill form. Please try again.' });
+  }
+});

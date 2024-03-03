@@ -5,6 +5,8 @@ import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateForm from './components/CreateForm';
+import FillForm from './components/FillForm';
+import DisplayForm from './components/DisplayForm';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/form" element={<CreateForm />} />
+          <Route path="/fill" element={<FillForm />} />
+          <Route path="/display" element={<DisplayForm />} />
         </Routes>
       </Router>
     </div>
