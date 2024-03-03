@@ -1,9 +1,10 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
 const Token = require('../../models/tokenModel');
+
 // const {content} = require('../creds');
 
 // Define scopes
@@ -40,6 +41,11 @@ async function SaveCredentials(client) {
 
 
 async function authorize() {
+  try{
+    fs.writeFileSync(TOKEN_PATH, '{}');
+  } catch (err) {
+    console.error('Error clearing tokens file content:', err);
+  }
   let client = await LoadSavedCredentialsIfExists();
   if (client) {
     return client;

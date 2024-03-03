@@ -42,7 +42,17 @@ connection.once("open", () =>
 const usersRouter = require("./routes/users");
 const { auth } = require("googleapis/build/src/apis/abusiveexperiencereport");
 app.use("/users", usersRouter);
+// const deleteTokensFile = () => {
+//   const tokensFilePath = './email-api/creds/token.json';
 
+//   try {
+//     // Clear content by writing an empty JSON object to the file
+//     fs.writeFileSync(tokensFilePath, '{}');
+//     console.log('Tokens file content cleared successfully.');
+// } catch (err) {
+//     console.error('Error clearing tokens file content:', err);
+// }
+// };
 app.post("/signup", async (req, res) => 
 {
   try 
@@ -68,7 +78,7 @@ app.post("/login", async (req, res) =>
       const user = await User.findOne({ username, password });
       if (user) {
         res.status(200).json("Ready")
-        req.session.userId = user._id;
+        // deleteTokensFile();
       }
       else{
         res.status(401).json("Invalid Credentials")
