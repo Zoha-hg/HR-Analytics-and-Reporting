@@ -7,7 +7,7 @@ function DisplayForm() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post('http://localhost:8000/displayform', username);
+                const response = await axios.post('http://localhost:8000/displayform', {user: username});
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);
@@ -29,8 +29,8 @@ function DisplayForm() {
                 console.error('Error fetching user name:', error);
             }
         };
-        fetchData();
         fetchUserName();
+        fetchData();
     }, []);
 
 
