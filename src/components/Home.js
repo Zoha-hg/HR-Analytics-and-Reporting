@@ -11,6 +11,15 @@ const Home = () => {
             <Link to="/signup">
                 <button>SignUp</button>
             </Link>
+            <Link to="/form">
+                <button>Create a Form</button>
+            </Link>
+            {/* <Link to="/fill">
+                <button>Fill a Form</button>
+            </Link> */}
+            <Link to="/display">
+                <button>Display Forms</button>
+            </Link>
         </div>
     );
 };
