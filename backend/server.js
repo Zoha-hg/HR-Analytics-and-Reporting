@@ -90,7 +90,7 @@ app.listen(8000, () =>
   console.log("Server started on port 8000");
 });
 
-app.post('/form', async (req, res) => {
+app.post('/createform', async (req, res) => {
   try {
       const { form_id, filled, title, description, start_time, end_time, questions } = req.body;
       // need to fetch newest feedback form id and increment by 1
@@ -130,7 +130,7 @@ app.post('/fillform', async (req, res) => {
   }
 });
 
-app.post('/displayform', async (req, res) => {
+app.get('/displayform', async (req, res) => {
   try {
       const forms = await Feedback.find({});
       res.status(200).json(forms);
