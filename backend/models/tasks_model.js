@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
-    task_id: { type: Number, required: true, trim: true, minlength: 3 },
+    task_id: { type: Number, required: true, trim: true, unique: true},
     start_time: { type: Date, required: true, trim: true, minlength: 3 },
     end_time: { type: Date, trim: true, minlength: 3 },
     assigned_to: 

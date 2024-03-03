@@ -4,7 +4,6 @@ import './CreateForm.css';
 
 function CreateForm() {
     const [formData, setFormData] = useState({
-        form_id: '',
         filled: false,
         title: '',
         description: '',
@@ -61,10 +60,6 @@ function CreateForm() {
     const validateForm = (formData) => {
         let errors = {};
 
-        if (!formData.form_id) {
-            errors.form_id = 'Form ID is required';
-        }
-
         if (!formData.title) {
             errors.title = 'Title is required';
         }
@@ -95,11 +90,6 @@ function CreateForm() {
             <div className="form-card">
                 <h2>Create Form</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="form_id">Form ID:</label>
-                        <input type="number" id="form_id" name="form_id" value={formData.form_id} onChange={(e) => setFormData({ ...formData, form_id: e.target.value })} required inputMode="numeric" />
-                        {formErrors.form_id && <span className="error">{formErrors.form_id}</span>}
-                    </div>
                     <div className="form-group">
                         <label htmlFor="title">Title:</label>
                         <input type="text" id="title" name="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required />

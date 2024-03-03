@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const hrSchema = new Schema({
-    employee_id: { type: Number, required: true, trim: true},
+    employee_id: { type: Number, required: true, trim: true, unique: true},
     employee_name: { type: String, required: true, trim: true},
     age: { type: Number, required: true, trim: true},
     gender: { type: String, required: true, trim: true},
