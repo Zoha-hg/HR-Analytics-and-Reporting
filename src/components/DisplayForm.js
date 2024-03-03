@@ -20,6 +20,7 @@ function DisplayForm() {
         console.log("going to form " + form_id);
         window.location.href = '/feedbackform/fillform/?feedback_id=' + form_id;
     }
+    //hello
 
     return (
         <div>
