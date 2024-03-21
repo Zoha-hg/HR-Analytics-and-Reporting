@@ -58,7 +58,7 @@ const Dashboard = () => {
                     <h2>Employee Dashboard</h2>
                     <p>User can see only their data</p>
                     <Link to="/fill"><button>Fill a Form</button></Link>
-                    <Link to="/display"><button>Display Forms</button></Link>
+                    <Link to="/feedbackform"><button>Feedback Forms</button></Link>
                 </div>
             )}
             {role === 'Manager' && (
