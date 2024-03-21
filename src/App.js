@@ -10,7 +10,7 @@ import FillForm from './components/FillForm';
 import DisplayForm from './components/DisplayForm';
 import Dashboard from './components/Dashboard'; 
 import DisplayResults from './components/DisplayFormResults';
-// import DisplayForms from './components/DisplayF';
+import HRDisplayForms from './components/HRDisplayForms';
 
 
 function App() {

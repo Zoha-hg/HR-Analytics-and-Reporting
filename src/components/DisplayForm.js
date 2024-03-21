@@ -9,14 +9,31 @@ import gmail_icon from './assets/Turnover.svg';
 
 function DisplayForms() {
     const [forms, setForms] = useState([]);
-    // const [username, setUsername] = useState('');
+    const [username, setUsername] = useState('');
+    const [user_role, setUserRole] = useState('');
 
-    function getFirstTwoDigits(number) {
+    function getUserRole(employee_id) {
 
-        const numberString = number.toString();
-        const firstTwoDigits = numberString.slice(0, 2);
+        const numberString = employee_id.toString();
+        const firstDigit = numberString.slice(0, 1);
     
-        return firstTwoDigits;
+        if(firstDigit === "1")
+        {
+            console.log("Employee");
+            return "Employee";
+        }
+        else if(firstDigit === "2")
+        {
+            console.log("Manager");
+            return "Manager";
+        }
+        else if(firstDigit === "3")
+        {
+            console.log("HR");
+            return "HR";
+        }
+    
+        return firstDigit;
     }
 
     useEffect(() => {
@@ -27,7 +44,7 @@ function DisplayForms() {
                 const response = await axios.get('http://localhost:8000/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                
+                setUsername(response.data.username);
                 return response.data.username;
                 
             } catch (error) {
@@ -38,6 +55,7 @@ function DisplayForms() {
         const fetchData = async (username) => {
             try {
                 const response = await axios.post('http://localhost:8000/displayforms', {user: username});
+                console.log("response.data: ", response.data);
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);
@@ -46,6 +64,7 @@ function DisplayForms() {
 
         const getData = async () => {
             let username = await fetchUserName();
+            setUserRole(getUserRole(username));
             fetchData(username);
             // setUsername(username);
         }
@@ -55,7 +74,8 @@ function DisplayForms() {
 
     const handleGoToForm = async (form_id) =>
     {
-        if((getFirstTwoDigits(form_id) === '10')||(getFirstTwoDigits(form_id) === '20'))
+        const user_role = getUserRole(username);
+        if((user_role === "Employee")||(user_role === "Manager"))
         {
             console.log("going to form " + form_id);
             window.location.href = '/feedbackform/fillform/?feedback_id=' + form_id;
@@ -82,45 +102,71 @@ function DisplayForms() {
                 </ul>
             </div>
             <div>
-                <h1>Feedback Forms</h1>
-                <h2>Incomplete</h2>
-                <ul>
-                    {unfilledForms.length > 0 ? (
-                        <ul style={{ listStyleType: 'none', padding: 0 }}>
-                            {unfilledForms.map(form => (
-                                <li key={form.form_id}>
-                                    <button type="button" onClick={() => handleGoToForm(form.form_id)}>
-                                        <h3>{form.title}</h3>
-                                        <p>{form.description}</p>
-                                        <p>Start Time: {form.start_time}</p>
-                                        <p>End Time: {form.end_time}</p>
-                                    </button>
-                                </li>
-                            ))}
+                {user_role === "HR" ? (
+                    <div>
+                        <h1>Feedback Forms</h1>
+                        <ul>
+                            {forms.length > 0 ? (
+                                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                    {forms.map(form => (
+                                        <li key={form.form_id}>
+                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
+                                                <h3>{form.title}</h3>
+                                                <p>{form.description}</p>
+                                                <p>Start Time: {form.start_time}</p>
+                                                <p>End Time: {form.end_time}</p>
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>None</p>
+                            )}
                         </ul>
-                        ) : (
-                            <p>None</p>
-                        )}
-                </ul>
-                <h2>Complete</h2>
-                <ul>
-                    {filledForms.length > 0 ? (
-                        <ul style={{ listStyleType: 'none', padding: 0 }}>
-                            {filledForms.map(form => (
-                                <li key={form.form_id}>
-                                    <button type="button" onClick={() => handleGoToForm(form.form_id)}>
-                                        <h3>{form.title}</h3>
-                                        <p>{form.description}</p>
-                                        <p>Start Time: {form.start_time}</p>
-                                        <p>End Time: {form.end_time}</p>
-                                    </button>
-                                </li>
-                            ))}
+                    </div>
+                ) : (
+                    <div>
+                        <h1>Feedback Forms</h1>
+                        <h2>Incomplete</h2>
+                        <ul>
+                            {unfilledForms.length > 0 ? (
+                                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                    {unfilledForms.map(form => (
+                                        <li key={form.form_id}>
+                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
+                                                <h3>{form.title}</h3>
+                                                <p>{form.description}</p>
+                                                <p>Start Time: {form.start_time}</p>
+                                                <p>End Time: {form.end_time}</p>
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>None</p>
+                            )}
                         </ul>
-                    ) : (
-                        <p>None</p>
-                    )}
-                </ul>
+                        <h2>Complete</h2>
+                        <ul>
+                            {filledForms.length > 0 ? (
+                                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                    {filledForms.map(form => (
+                                        <li key={form.form_id}>
+                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
+                                                <h3>{form.title}</h3>
+                                                <p>{form.description}</p>
+                                                <p>Start Time: {form.start_time}</p>
+                                                <p>End Time: {form.end_time}</p>
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>None</p>
+                            )}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );

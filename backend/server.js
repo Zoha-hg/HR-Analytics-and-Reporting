@@ -148,10 +148,23 @@ app.listen(8000, () =>
 	console.log("Server started on port 8000");
 });
 
-function getFirstTwoDigits(number) {
+function getUserRole(employee_id) {
 
-	const numberString = number.toString();
-    const firstTwoDigits = numberString.slice(0, 2);
+	const numberString = employee_id.toString();
+    const firstTwoDigits = numberString.slice(0, 1);
+
+	if(firstTwoDigits === "1")
+	{
+		return "Employee";
+	}
+	else if(firstTwoDigits === "2")
+	{
+		return "Manager";
+	}
+	else if(firstTwoDigits === "3")
+	{
+		return "HR";
+	}
 
     return firstTwoDigits;
 }
@@ -197,30 +210,12 @@ app.post('/createform', async (req, res) => {
 });
 
 
-// app.get('/fillform', async (req, res) => {
-//   	try
-// 	{
-// 		const { form_id, employee_id, answers } = req.body;
-
-// 		const newFilledForm = await DailyTracking.create({
-// 			form_id,
-// 			employee_id,
-// 			answers
-// 		});
-// 		res.status(201).json(newFilledForm);
-// 	}
-// 	catch (error) {
-// 		console.error('Error filling form:', error);
-// 		res.status(500).json({ message: 'Failed to fill form. Please try again.' });
-// 	}
-
-// });
-
 app.post('/displayforms', async (req, res) => {
     try
 	{
 		const {user} = req.body;
-		if(getFirstTwoDigits(user) === "10")
+		const user_role = getUserRole(user);
+		if(user_role === "Employee")
 		{
 			const employee = await Employee.findOne({ employee_id: user }).populate({
 				path: 'feedback_forms.form',
@@ -246,7 +241,7 @@ app.post('/displayforms', async (req, res) => {
 	
 			res.status(200).json(forms); // send the forms
 		}
-		else if(getFirstTwoDigits(user) === "20")
+		else if(user_role === "Manager")
 		{
 			const manager = await Manager.findOne({ employee_id: user }).populate({
 				path: 'feedback_forms.form',
