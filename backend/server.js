@@ -305,3 +305,18 @@ app.post('/createdepartment', async (req, res) => {
   }
 });
 
+app.get('/start-gmail-authorization', async (req, res) => {
+  try {
+      // Call your authorization logic here
+      authorize();
+      res.status(200).send('Authorization initiated');
+  } catch (error) {
+      console.error('Authorization error:', error);
+      res.status(500).send('Internal server error');
+  }
+});
+
+app.listen(8000, () => 
+{
+  console.log("Server started on port 8000");
+});
