@@ -41,6 +41,7 @@ const Dashboard = () => {
                     <Link to="/form"><button>Create a Form</button></Link>
                     <Link to="/fill"><button>Fill a Form</button></Link>
                     <Link to="/display"><button>Display Forms</button></Link>
+                    <Link to="/integrate-gmail"><button>Integrate Gmail</button></Link>
                 </div>
             )}
             {role === 'HR professional' && (

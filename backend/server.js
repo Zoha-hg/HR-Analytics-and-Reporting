@@ -11,6 +11,7 @@ const employeeModel = require("./models/employee_model");
 const managerModel = require("./models/manager_model");
 const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
+const authorize = require("./email-api/services/googleApiAuthService");
 
 
 
@@ -314,9 +315,4 @@ app.get('/start-gmail-authorization', async (req, res) => {
       console.error('Authorization error:', error);
       res.status(500).send('Internal server error');
   }
-});
-
-app.listen(8000, () => 
-{
-  console.log("Server started on port 8000");
 });

@@ -1,16 +1,18 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
-// const {content} = require('googleapis/build/src/apis/content');
+// const Token = require('../../models/tokenModel');
+
+// const {content} = require('../creds');
 
 // Define scopes
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send'];
 
 // Fetch and store token from files
-const TOKEN_PATH = path.join(process.cwd(), '../creds/token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), '../creds/creds.json');
+const TOKEN_PATH = path.join(process.cwd(), './email-api/creds/token.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), './email-api/creds/creds.json');
 
 // Read previously authorized credentials from saved file
 async function LoadSavedCredentialsIfExists() {
@@ -22,7 +24,6 @@ async function LoadSavedCredentialsIfExists() {
     return null;
   }
 }
-//
 
 async function SaveCredentials(client) {
   const content = await fs.readFile(CREDENTIALS_PATH);
@@ -37,7 +38,14 @@ async function SaveCredentials(client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
+
+
 async function authorize() {
+  try{
+    fs.writeFileSync(TOKEN_PATH, '{}');
+  } catch (err) {
+    console.error('Error clearing tokens file content:', err);
+  }
   let client = await LoadSavedCredentialsIfExists();
   if (client) {
     return client;
@@ -53,4 +61,4 @@ async function authorize() {
 }
 
 
-authorize().catch(console.error);
+module.exports = authorize;
