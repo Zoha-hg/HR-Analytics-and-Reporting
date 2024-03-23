@@ -12,6 +12,7 @@ const managerModel = require("./models/manager_model");
 const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
+const authorize2 = require("./email-api/services/googleApiAuthService2");
 
 
 
@@ -306,13 +307,34 @@ app.post('/createdepartment', async (req, res) => {
   }
 });
 
-app.get('/start-gmail-authorization', async (req, res) => {
+// app.get('/start-gmail-authorization', async (req, res) => {
+//   try {
+//       // Call your authorization logic here
+//       authorize();
+//       res.status(200).send('Authorization initiated');
+//   } catch (error) {
+//       console.error('Authorization error:', error);
+//       res.status(500).send('Internal server error');
+//   }
+// });
+
+app.get('/start-gmail-authorization', authenticateToken ,async (req, res) => {
+  console.log("here")
   try {
-      // Call your authorization logic here
-      authorize();
-      res.status(200).send('Authorization initiated');
+    // Using the username from the authenticated user's details
+    console.log('User:', req.user);
+    const username = req.user.username;
+
+    if (!username) {
+      return res.status(400).send('User identifier is missing');
+    }
+
+    // Call your authorization logic here with the username
+    await authorize2(username);
+    res.status(200).send('Authorization initiated');
   } catch (error) {
-      console.error('Authorization error:', error);
-      res.status(500).send('Internal server error');
+    console.error('Authorization error:', error);
+    res.status(500).send('Internal server error');
   }
+
 });
