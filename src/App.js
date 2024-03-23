@@ -10,7 +10,6 @@ import FillForm from './components/FillForm';
 import DisplayForm from './components/DisplayForm';
 import Dashboard from './components/Dashboard'; 
 import DisplayResults from './components/DisplayFormResults';
-import HRDisplayForms from './components/HRDisplayForms';
 
 
 function App() {
@@ -22,11 +21,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/form" element={<CreateForm />} />
-            <Route path="/feedbackform/fillform" element={<FillForm />} />
-            <Route path="/feedbackform" element={<DisplayForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/feedbackform" element={<DisplayForm />} />
             <Route path="/feedbackform/displayresults" element={<DisplayResults />} />
+            <Route path="/feedbackform/createform" element={<CreateForm />} />
+            <Route path="/feedbackform/fillform" element={<FillForm />} />
           </Routes>
         </Router>
       </div>

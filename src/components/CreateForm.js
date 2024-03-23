@@ -50,7 +50,7 @@ function CreateForm() {
                 await axios.post('http://localhost:8000/createform', formData);
                 alert('Form created successfully');
                 // should redirect back to displaying forms page
-                navigate('/display');
+                navigate('/feedbackform');
             } else {
                 setFormErrors(errors);
             }

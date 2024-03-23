@@ -239,7 +239,7 @@ app.post('/displayforms', async (req, res) => {
 				filled: form.filled
 			}));
 	
-			res.status(200).json(forms); // send the forms
+			res.status(200).json(forms.filter(form => new Date(form.end_time) > new Date())); // filter out forms that have ended and send
 		}
 		else if(user_role === "Manager")
 		{
@@ -269,7 +269,13 @@ app.post('/displayforms', async (req, res) => {
 			}));
 	
 			// console.log("forms", forms)
+			res.status(200).json(forms.filter(form => new Date(form.end_time) > new Date())); // filter out forms that have ended and send
+		}
+		else
+		{
+			const forms = await Feedback.find({}).sort({ form_id: -1 });
 			res.status(200).json(forms);
+		
 		}
     }
 	catch (error)
@@ -331,7 +337,7 @@ app.post("/displayresults", async (req, res) => {
 		let total_ratings = [];
 		for(let j = 0; j < form.questions.length; j++)
 		{
-			total_ratings.push({question: "", total_rating: 0, rating1: 0, rating2: 0, rating3: 0, rating4: 0, rating5: 0});
+			total_ratings.push({question: "", rating1: 0, rating2: 0, rating3: 0, rating4: 0, rating5: 0, total_rating: 0});
 		}
 		// console.log(allEmployees.length, allManagers.length);
 		for(let i = 0; i < allEmployees.length; i++)
@@ -377,6 +383,7 @@ app.post("/displayresults", async (req, res) => {
 					}
 					// console.log("total_ratings[j].total_rating ", total_ratings[j].total_rating, form_ratings[j], i)
 					total_ratings[j].total_rating += form_ratings[j];
+					// console.log("total_ratings[j].total_rating ", total_ratings[j].total_rating, form_ratings[j], i)
 					// console.log("total_ratings[j].total_rating ", total_ratings[j].total_rating)
 
 				}
@@ -425,6 +432,7 @@ app.post("/displayresults", async (req, res) => {
 				}
 			}
 		}
+		// console.log("total_ratings ", total_ratings)
 		res.send(total_ratings);
 	}
 	catch (error)

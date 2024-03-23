@@ -10,7 +10,7 @@ import feedback_icon from './assets/Feedback.svg';
 import turnover_icon from './assets/Turnover.svg';
 import calendar_icon from './assets/Calendar.svg';
 import gmail_icon from './assets/Turnover.svg';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar , Container, Row, Col } from 'react-bootstrap';
 
 function DisplayResults()
