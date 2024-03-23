@@ -94,16 +94,35 @@ app.post("/signup", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword, role });
-    await newUser.save();
-    res.status(201).json({ message: "Signup successful" });
-
+    // Checking if the email or username already exist in the database.
+    const existing = await User.findOne({ $or: [{ username }, { email }] });
+    if (existing) {
+      return res.status(401).json({ message: 'User already exists' });
+    }
+    else{
+      // Checking if the password is valid and contains at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.
+      const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+      if (!password.match(passwordRegex)) {
+        // console.log('Password invalid:', password)
+        return res.status(400).json({ message: 'Password must contain at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.' });
+      }
+      else {
+        const newUser = new User({ username, email, password: hashedPassword, role });
+        await newUser.save();
+		// Adding the user's credentials to the relevant database
+		await addUser(username, email, role);
+        res.status(201).json({ message: "Signup successful" });
+      }
+    }
   } catch (error) {
     console.error('SignUp error:', error);
     res.status(500).json({ message: 'Failed to sign up. Please try again.' });
   }
 });
 
+const addUser = async (username, email, role) => {
+	//Adding the user to the database
+}
 
 app.post("/login", async (req, res) => 
 {
