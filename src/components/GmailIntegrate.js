@@ -8,26 +8,29 @@ function GmailIntegrate() {
 
     const initiateAuthorization = async () => {
         try {
-            // Assuming the token is stored in localStorage
             const token = localStorage.getItem('token');
-
             if (!token) {
                 console.error('No token found');
                 return;
             }
-
-            // Send a request to the backend to initiate the OAuth process
+    
             const response = await axios.get('http://localhost:8000/start-gmail-authorization', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
-            // Open a new popup window with the URL provided by the server
-            const newPopup = window.open(response.data.url, 'Gmail Integration', 'width=600,height=400');
-            setPopup(newPopup);
+    
+            if (response.data.url) {
+                // If the server provides a URL, open the OAuth flow in a new window
+                const newPopup = window.open(response.data.url, 'Gmail Integration', 'width=600,height=400');
+                setPopup(newPopup);
+            } else {
+                // If there's no URL, assume authorization is complete
+                navigate('/authorized'); // Redirect to the authorized-only page
+            }
         } catch (error) {
             console.error('Error initiating Gmail integration:', error);
         }
     };
+    
 
     const handleLogout = () => {
         sessionStorage.removeItem('isAuthenticated');

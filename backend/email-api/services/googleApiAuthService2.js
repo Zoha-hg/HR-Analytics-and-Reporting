@@ -14,15 +14,21 @@ const CREDENTIALS_PATH = path.join(process.cwd(), './email-api/creds/creds.json'
 async function loadSavedCredentialsIfExists(username) {
   try {
     const user = await User.findOne({ username: username });
-    console.log('debugging')
     console.log('User:', user);
     if (user && user.refreshToken) {
-      const credentials = {
+      // Create an OAuth2 client with the client ID and secret
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'http://localhost:3000/oauth2callback' // The redirect URI used in the initial OAuth flow, not used here but required for initialization
+      );
+
+      // Set the OAuth2 client's credentials with the user's refresh token
+      oauth2Client.setCredentials({
         refresh_token: user.refreshToken,
-        client_id: process.env.GOOGLE_CLIENT_ID, // Ensure these are set in your environment variables or config
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      };
-      return google.auth.fromJSON(credentials);
+      });
+
+      return oauth2Client;
     }
     return null;
   } catch (error) {
@@ -54,6 +60,7 @@ async function authorize2(username) {
         return client;
     }
 
+    console.log('hhhh',client)
     console.log('Authorizing user:', username);
 
     try {
