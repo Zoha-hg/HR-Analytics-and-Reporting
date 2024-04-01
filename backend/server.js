@@ -12,7 +12,8 @@ const managerModel = require("./models/manager_model");
 const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
-const authorize2 = require("./email-api/services/googleApiAuthService2");
+const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
+const { listLabels, listMessages, sendEmail } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -337,4 +338,54 @@ app.get('/start-gmail-authorization', authenticateToken ,async (req, res) => {
     res.status(500).send('Internal server error');
   }
 
+});
+
+
+
+
+
+const getClient = async (req, res, next) => {
+  
+  const username = req.user.username;
+  console.log("heyy", username)
+
+  if (!username) {
+      return res.status(401).send('Username is missing from the request');
+  }
+
+  try {
+      // Load the saved credentials (e.g., refresh token) for the user
+      const authClient = await loadSavedCredentialsIfExists(username);
+
+      if (!authClient) {
+          // If no credentials are found or they can't be used to create an auth client, return an error
+          return res.status(401).send('Failed to load authentication credentials for the user');
+      }
+
+      // Attach the authenticated Google client to the request object so it can be used in subsequent route handlers
+      req.authClient = authClient;
+
+      next(); // Proceed to the next middleware/route handler
+  } catch (error) {
+      console.error('Error in getClient middleware:', error);
+      res.status(500).send('Internal server error while loading Google client');
+  }
+};
+
+// Gmail routes
+app.get('/api/gmail/labels', authenticateToken, getClient, async (req, res) => {
+    console.log("hellooo vhahhda")
+    const labels = await listLabels(req.authClient);
+    res.json(labels);
+});
+
+app.get('/api/gmail/messages', authenticateToken, getClient, async (req, res) => {
+    const messages = await listMessages(req.authClient);
+    res.json(messages);
+});
+
+app.post('/api/gmail/send', authenticateToken, getClient, async (req, res) => {
+    const { content } = req.body;
+    const result = await sendEmail(req.authClient, content);
+    res.json(result);
 });

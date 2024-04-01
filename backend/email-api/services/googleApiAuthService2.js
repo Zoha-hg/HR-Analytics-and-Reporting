@@ -84,4 +84,8 @@ async function authorize2(username) {
     return client;
 }
 
-module.exports = authorize2;
+// module.exports = authorize2;
+module.exports = {
+  authorize2 : authorize2,
+  loadSavedCredentialsIfExists : loadSavedCredentialsIfExists
+};

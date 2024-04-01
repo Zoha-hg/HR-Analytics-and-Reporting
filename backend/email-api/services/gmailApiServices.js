@@ -1,6 +1,6 @@
 const {google} = require('googleapis');
 const authorize = require('../services/googleApiAuthService');
-const Token = require('../../models/tokenModel');
+
 /**
  * Lists the labels in the user's account.
  *
