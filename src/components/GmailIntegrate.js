@@ -33,7 +33,9 @@ function GmailIntegrate() {
     
 
     const handleLogout = () => {
-        sessionStorage.removeItem('isAuthenticated');
+        
+        // remove the JWT token
+       
         navigate('/login');
     };
 

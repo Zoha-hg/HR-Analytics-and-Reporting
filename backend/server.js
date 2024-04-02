@@ -358,7 +358,7 @@ const getClient = async (req, res, next) => {
       const authClient = await loadSavedCredentialsIfExists(username);
 
       if (!authClient) {
-          // If no credentials are found or they can't be used to create an auth client, return an error
+   
           return res.status(401).send('Failed to load authentication credentials for the user');
       }
 
