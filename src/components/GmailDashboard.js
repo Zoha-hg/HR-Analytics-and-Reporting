@@ -6,14 +6,29 @@ function GmailDashboard() {
     const [subject, setSubject] = useState('');
     const [emailContent, setEmailContent] = useState('');
 
+    // const fetchLabels = async () => {
+    //     try {
+    //         const response = await axios.get('/api/gmail/labels');
+    //         console.log('Labels:', response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching labels:', error);
+    //     }
+    // };
+
     const fetchLabels = async () => {
+        const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
         try {
-            const response = await axios.get('/api/gmail/labels');
+            const response = await axios.get('/api/gmail/labels', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             console.log('Labels:', response.data);
         } catch (error) {
             console.error('Error fetching labels:', error);
         }
     };
+
 
     const fetchMessages = async () => {
         try {
