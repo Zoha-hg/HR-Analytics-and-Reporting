@@ -18,7 +18,7 @@ function GmailDashboard() {
     const fetchLabels = async () => {
         const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
         try {
-            const response = await axios.get('/api/gmail/labels', {
+            const response = await axios.get('http://localhost:8000/api/gmail/labels', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -31,8 +31,14 @@ function GmailDashboard() {
 
 
     const fetchMessages = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('/api/gmail/messages');
+            const response = await axios.get('http://localhost:8000/api/gmail/messages', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // const response = await axios.get('');
             console.log('Messages:', response.data);
         } catch (error) {
             console.error('Error fetching messages:', error);
@@ -40,9 +46,14 @@ function GmailDashboard() {
     };
 
     const sendEmail = async () => {
-        const message = `TO: ${email}\nSubject: ${subject}\nContent-Type: text/html; charset-utf-8\n\n${emailContent}`;
+        const message = `TO: ${email}\nSubject: ${subject}\nContent-Type: text/html; charset=utf-8\n\n${emailContent}`;
+        const token = localStorage.getItem('token'); // Or however you're storing the token
+        const headers = {
+            Authorization: `Bearer ${token}`
+        };
+    
         try {
-            await axios.post('/api/gmail/send', { message });
+            await axios.post('http://localhost:8000/api/gmail/send', { message }, { headers });
             setEmail('');
             setSubject('');
             setEmailContent('');
@@ -52,7 +63,7 @@ function GmailDashboard() {
             alert('Failed to send email. Please try again.');
         }
     };
-
+    
     return (
         <div>
             <h1>Gmail Dashboard</h1>

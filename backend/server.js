@@ -373,19 +373,45 @@ const getClient = async (req, res, next) => {
 };
 
 // Gmail routes
-app.get('/api/gmail/labels', authenticateToken, getClient, async (req, res) => {
-    console.log("hellooo vhahhda")
-    const labels = await listLabels(req.authClient);
-    res.json(labels);
+app.get('/api/gmail/labels', authenticateToken, async (req, res) => {
+  try {
+      console.log("Attempting to fetch Gmail labels");
+      const username = req.user.username;  // Assuming this is set by authenticateToken
+
+      // Get the authorized client
+      const authClient = await authorize2(username);
+
+      // Once the client is obtained, use it to list labels
+      const labels = await listLabels(authClient);
+
+      // Send the labels as response
+      res.json(labels);
+  } catch (error) {
+      console.error("Error fetching labels: ", error);
+      res.status(500).send("Failed to fetch Gmail labels");
+  }
 });
 
-app.get('/api/gmail/messages', authenticateToken, getClient, async (req, res) => {
-    const messages = await listMessages(req.authClient);
+
+app.get('/api/gmail/messages', authenticateToken, async (req, res) => {
+    const username = req.user.username;  // Assuming this is set by authenticateToken
+  
+    const authClient = await authorize2(username);
+  
+    const messages = await listMessages(authClient);
     res.json(messages);
 });
 
-app.post('/api/gmail/send', authenticateToken, getClient, async (req, res) => {
-    const { content } = req.body;
-    const result = await sendEmail(req.authClient, content);
-    res.json(result);
+app.post('/api/gmail/send', authenticateToken, async (req, res) => {
+  const { message } = req.body;
+  const username = req.user.username;
+
+  try {
+      const authClient = await authorize2(username);
+      const result = await sendEmail(authClient, message); // Assuming sendEmail expects a single message string
+      res.json(result);
+  } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ message: 'Failed to send email' });
+  }
 });
