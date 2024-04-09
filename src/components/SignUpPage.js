@@ -32,7 +32,9 @@ const SignUpPage = () => {
         <div className="signup-container">
             <div className="signup-card">
                 <header className="signup-header">
-                    <img src={companylogo} alt="DevSinc logo" className="company-logo" />
+                    <a href="/">
+                        <img src={companylogo} alt="DevSinc logo" className="company-logo"/>
+                    </a>
                     <p>HR DATA DRIVE</p>
                 </header>
                 <section className="signup-form">

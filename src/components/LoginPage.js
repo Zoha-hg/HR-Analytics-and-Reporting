@@ -32,7 +32,9 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="login-card">
         <header className="login-header">
-          <img src={companylogo} alt="DevSinc logo"className="company-logo" />
+          <a href="/">
+            <img src={companylogo} alt="DevSinc logo" className="company-logo"/>
+          </a>
           <p>HR DATA DRIVE</p>
         </header>
         <section className="login-form">

@@ -1,63 +1,72 @@
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    background: 'linear-gradient(to right, #39d6d3, #042434)',
+  },
   homeContainer: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-evenly',
     minHeight: '100vh',
-    justifyContent: 'space-between',
-    background: 'linear-gradient(to right, #39d6d3, #042434)',
     color: '#fff',
     fontFamily: 'Nunito, sans-serif',
     padding: '2em',
   },
-  homeHeader: {
+  header: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: '2em',
   },
-  homeContent: {
-    textAlign: 'left',
-    marginBottom: '2em',
-  },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1em',
-  },
-  signUpButton: {
-    borderRadius: '5px',
-    background: '#fff',
-    color: '#000',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    padding: '10px 20px',
-    border: '1px solid #fff',
-    transition: 'background-color 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#e0e0e0',
-      color: '#000',
-    },
-  },
-  loginButton: {
-    borderRadius: '5px',
-    color: '#fff',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    padding: '10px 20px',
-    border: '1px solid #fff',
-    transition: 'background-color 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#39d6d3',
-      color: '#000',
-    },
-  },
-  homeFooter: {
+  footer: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '0.8em',
+    width: '100%',
+    paddingLeft: '2em',
+    paddingRight: '2em',
+    marginTop: 'auto',
+  },
+  logo: {
+    width: '150px',
+    height: 'auto',
+  },
+  brandName: {
+    fontSize: '1.5em', 
+    marginLeft: '0.5em', 
+    verticalAlign: 'middle',
+  },
+  rightContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 'auto',
+    marginTop: '2em',
+    marginBottom: '2em',
+  },
+  leftContainer: {
+    // textAlign: 'left',
+    alignItems: 'center',
+    margin: 'auto',
+    marginTop: '2em',
+    marginBottom: '2em',
+  },
+  signUpButton: {
+    textAlign: 'center',
+    marginRight: '1em',
+    fontSize: '1.5em', // Increase button font size
+    padding: '1em 2em',
+    backgroundColor: '#fff', // Set button background color to white
+    color: '#000', // Set button text color to black
+    marginTop: '1em', // Add spacing between text and button
+  },
+  loginButton: {
+    fontSize: '1.5em', // Increase button font size
+    padding: '1em 2em',
+    backgroundColor: '#fff', // Set button background color to white
+    color: '#000', // Set button text color to black
   },
 }));
 

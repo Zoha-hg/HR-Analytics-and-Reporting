@@ -14,7 +14,7 @@
     background-color: white;
     padding: 2em;
     border-radius: 8px;
-    width: 70em; /* Unchanged width */
+    width: 70em; 
     height: 35em; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
