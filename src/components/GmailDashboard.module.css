@@ -1,0 +1,76 @@
+/* GmailDashboard.module.css */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.splitView {
+  display: flex;
+  width: 100%;
+}
+
+.messageList {
+  width: 35%;
+  padding-right: 20px;
+}
+
+.messageSelected {
+  background-color: #e6f7ff; /* Change this color to whatever you want for selected messages */
+}
+.messagePreview {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+  cursor: pointer;
+  /* background-color: white; Default background */
+  transition: background-color 0.3s; /* Optional: adds a transition effect */
+}
+
+.senderName {
+  font-weight: bold;
+}
+
+.messageTime {
+  color: #777;
+  font-size: 0.8em;
+}
+
+.messageSnippet {
+  color: #555;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.messageDetails {
+  width: 65%;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  min-height: 200px; /* or adjust as needed */
+}
+
+.messageSubject {
+  font-size: 1.2em;
+  margin-bottom: 4px;
+}
+
+.messageFrom {
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.messageDate {
+  text-align: right;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.messageBody {
+  color: #333;
+}

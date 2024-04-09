@@ -1,97 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styles from './GmailDashboard.module.css'; // Ensure you have the correct path to your CSS module
 
 function GmailDashboard() {
-    const [email, setEmail] = useState('');
-    const [subject, setSubject] = useState('');
-    const [emailContent, setEmailContent] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [selectedMessage, setSelectedMessage] = useState(null);
 
-    // const fetchLabels = async () => {
-    //     try {
-    //         const response = await axios.get('/api/gmail/labels');
-    //         console.log('Labels:', response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching labels:', error);
-    //     }
-    // };
-
-    const fetchLabels = async () => {
-        const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-        try {
-            const response = await axios.get('http://localhost:8000/api/gmail/labels', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log('Labels:', response.data);
-        } catch (error) {
-            console.error('Error fetching labels:', error);
-        }
-    };
-
+    useEffect(() => {
+        fetchMessages();
+    }, []);
 
     const fetchMessages = async () => {
-        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8000/api/gmail/messages', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            // const response = await axios.get('');
-            console.log('Messages:', response.data);
+            const response = await axios.get('http://localhost:8000/api/gmail/messages', getAuthHeaders());
+            // Process the messages as needed for your application
+            const formattedMessages = response.data.map(msg => ({
+                ...msg,
+                fromName: extractNameFromEmail(msg.from), // Extract the sender's name from the email
+                snippet: msg.body.substring(0, 50) + '...' // Truncate the body to show a snippet
+            }));
+            setMessages(formattedMessages);
         } catch (error) {
             console.error('Error fetching messages:', error);
+            // Handle errors, such as updating the UI to show an error message
         }
     };
-
-    const sendEmail = async () => {
-        const message = `TO: ${email}\nSubject: ${subject}\nContent-Type: text/html; charset=utf-8\n\n${emailContent}`;
-        const token = localStorage.getItem('token'); // Or however you're storing the token
-        const headers = {
-            Authorization: `Bearer ${token}`
+    
+    const getAuthHeaders = () => {
+        const token = localStorage.getItem('token');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}` // Assuming your backend expects a Bearer token
+            }
         };
-    
-        try {
-            await axios.post('http://localhost:8000/api/gmail/send', { message }, { headers });
-            setEmail('');
-            setSubject('');
-            setEmailContent('');
-            alert('Email sent!');
-        } catch (error) {
-            console.error('Error sending email:', error);
-            alert('Failed to send email. Please try again.');
-        }
     };
     
+    // Utility function to extract the name from an email string
+    const extractNameFromEmail = (email) => {
+        const match = email.match(/^(.*?)</); // This regex finds the name before the email
+        return match ? match[1].trim() : email; // If no name is found, return the whole email
+    };
+    
+    const handleSelectMessage = (message) => {
+        setSelectedMessage(message);
+    };
+
     return (
-        <div>
-            <h1>Gmail Dashboard</h1>
-
-            <div>
-                <h2>Fetch Labels</h2>
-                <button onClick={fetchLabels}>Fetch Labels</button>
-            </div>
-
-            <div>
-                <h2>Fetch Messages</h2>
-                <button onClick={fetchMessages}>Fetch Messages</button>
-            </div>
-
-            <div>
-                <h2>Send Email</h2>
-                <label>
-                    Email Address:
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </label>
-                <br />
-                <label>
-                    Subject:
-                    <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                </label>
-                <br />
-                <textarea value={emailContent} onChange={(e) => setEmailContent(e.target.value)}></textarea>
-                <button onClick={sendEmail}>Send</button>
+        <div className={styles.dashboard}>
+            <h1 className={styles.title}>Gmail Dashboard</h1>
+            <div className={styles.splitView}>
+                <div className={styles.messageList}>
+                    {messages.map((message, index) => (
+                        <div
+                            key={index}
+                            className={styles.messagePreview}
+                            onClick={() => handleSelectMessage(message)}
+                        >
+                            <div className={styles.senderName}>
+                                {message.fromName} {/* Extract the name from the email */}
+                            </div>
+                            <div className={styles.messageTime}>{message.date}</div>
+                            <div className={styles.messageSnippet}>{message.snippet}</div>
+                        </div>
+                    ))}
+                </div>
+                <div className={styles.messageDetails}>
+                    {selectedMessage && (
+                        <>
+                            <div className={styles.messageSubject}>{selectedMessage.subject}</div>
+                            <div className={styles.messageFrom}>{selectedMessage.from}</div>
+                            <div className={styles.messageDate}>{selectedMessage.date}</div>
+                            <div className={styles.messageBody}>{selectedMessage.body}</div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
