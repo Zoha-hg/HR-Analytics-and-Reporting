@@ -3,14 +3,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-import dashboard_icon from './assets/Dashboard.png';
-import employee_icon from './assets/Employee.svg';
-import feedback_icon from './assets/Feedback.svg';
-import turnover_icon from './assets/Turnover.svg';
-import calendar_icon from './assets/Calendar.svg';
-import gmail_icon from './assets/Turnover.svg';
+
 
 function DisplayForms() {
+    
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
     const [user_role, setUserRole] = useState('');
@@ -26,7 +22,9 @@ function DisplayForms() {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
+                console.log("response ",response.data.role)
                 console.log("user_role: ", user_role);
+                return response.data.role;
 
             } catch (error) {
                 console.error('Error fetching user role:', error);
@@ -50,9 +48,10 @@ function DisplayForms() {
             }
         };
         
-        const fetchData = async (username) => {
+        const fetchData = async (username, role) => {
             try {
-                const response = await axios.post('http://localhost:8000/displayforms', {user: username});
+                console.log("role ", role, "!", username);
+                const response = await axios.post('http://localhost:8000/displayforms', {user: username, user_role: role});
                 // console.log("response.data: ", response.data);
                 setForms(response.data);
                 if(user_role === "HR professional")
@@ -69,9 +68,9 @@ function DisplayForms() {
         };
 
         const getData = async () => {
+            let role = await fetchUserRole();
             let username = await fetchUserName();
-            await fetchUserRole();
-            fetchData(username);
+            fetchData(username, role);
             // setUsername(username);
         }
 
@@ -93,8 +92,8 @@ function DisplayForms() {
         }
     }
 
-    const filledForms = forms.filter(form => form.filled);
-    const unfilledForms = forms.filter(form => !form.filled);
+    const filledForms = forms.filter(form => form.filled || new Date(form.end_time) < new Date());
+    const unfilledForms = forms.filter(form => !form.filled && (new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()));
 
     const endedForms = forms.filter(form => new Date(form.end_time) < new Date());
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date());
@@ -105,16 +104,6 @@ function DisplayForms() {
             <div>
                 {user_role === "HR professional" && (
                     <div>
-                        <div >
-                            <ul>
-                                <li><button onClick={() => {navigate("/dashboard")}}><img src={dashboard_icon} alt="Dashboard"></img></button></li>
-                                <li><button onClick={() => {navigate("/employee")}}><img src={employee_icon} alt="Employee"></img></button></li>
-                                <li><button onClick={() => {navigate("/turnover")}}><img src={turnover_icon} alt="Turnover"></img></button></li>
-                                <li><button onClick={() => {navigate("/feedbackform")}}><img src={feedback_icon} alt="Feedback"></img></button></li>
-                                <li><button onClick={() => {navigate("/calendar")}}><img src={calendar_icon} alt="Calendar"></img></button></li>
-                                <li><button onClick={() => {navigate("/email")}}><img src={calendar_icon} alt="Email"></img></button></li>
-                            </ul>
-                        </div>
                         <h1>Feedback Forms</h1>
                         <Link to="/feedbackform/createform"><button>Create a Form</button></Link>
                         <h2>Finished</h2>
@@ -142,12 +131,10 @@ function DisplayForms() {
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                                     {ongoingForms.map(form => (
                                         <li key={form.form_id}>
-                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
                                                 <h3>{form.title}</h3>
                                                 <p>{form.description}</p>
                                                 <p>Start Time: {form.start_time}</p>
                                                 <p>End Time: {form.end_time}</p>
-                                            </button>
                                         </li>
                                     ))}
                                 </ul>
@@ -157,69 +144,57 @@ function DisplayForms() {
                         </ul>
                     </div>
                 )}
+
                 {user_role === "Employee" && (
                     <div>
-                        <div >
-                            <ul>
-                                <li><button onClick={() => {navigate("/dashboard")}}><img src={dashboard_icon} alt="Dashboard"></img></button></li>
-                                <li><button onClick={() => {navigate("/feedbackform")}}><img src={feedback_icon} alt="Feedback"></img></button></li>
-                                <li><button onClick={() => {navigate("/calendar")}}><img src={calendar_icon} alt="Calendar"></img></button></li>
-                                <li><button onClick={() => {navigate("/email")}}><img src={calendar_icon} alt="Email"></img></button></li>
-                            </ul>
-                        </div>
                         <h1>Feedback Forms</h1>
-                        <h2>Incomplete</h2>
-                        <ul>
-                            {unfilledForms.length > 0 ? (
-                                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    {unfilledForms.map(form => (
-                                        <li key={form.form_id}>
-                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
-                                                <h3>{form.title}</h3>
-                                                <p>{form.description}</p>
-                                                <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
-                                            </button>
-                                        </li>
-                                    ))}
+                        <div  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
+                            <div className='incomplete-forms' >
+                                <h2>Incomplete</h2>
+                                <ul className='form-display'>
+                                    {unfilledForms.length > 0 ? (
+                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                            {unfilledForms.map(form => (
+                                                <li key={form.form_id}>
+                                                    <button className="form-button" type="button" onClick={() => handleGoToForm(form.form_id)}>
+                                                        <h3>{form.title}</h3>
+                                                        <p>{form.description}</p>
+                                                        <p>Start Time: {form.start_time}</p>
+                                                        <p>End Time: {form.end_time}</p>
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p>None</p>
+                                    )}
                                 </ul>
-                            ) : (
-                                <p>None</p>
-                            )}
-                        </ul>
-                        <h2>Complete</h2>
-                        <ul>
-                            {filledForms.length > 0 ? (
-                                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    {filledForms.map(form => (
-                                        <li key={form.form_id}>
-                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
-                                                <h3>{form.title}</h3>
-                                                <p>{form.description}</p>
-                                                <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
-                                            </button>
-                                        </li>
-                                    ))}
+                            </div>
+                            <div className='complete-forms'>
+                                <h2>Complete</h2>
+                                <ul>
+                                    {filledForms.length > 0 ? (
+                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                            {filledForms.map(form => (
+                                                <li key={form.form_id}>
+                                                        <h3>{form.title}</h3>
+                                                        <p>{form.description}</p>
+                                                        <p>Start Time: {form.start_time}</p>
+                                                        <p>End Time: {form.end_time}</p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p>None</p>
+                                    )}
                                 </ul>
-                            ) : (
-                                <p>None</p>
-                            )}
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 )}
+
                 {user_role === "Manager" && (
                     <div>
-                        <div >
-                            <ul>
-                                <li><button onClick={() => {navigate("/dashboard")}}><img src={dashboard_icon} alt="Dashboard"></img></button></li>
-                                <li><button onClick={() => {navigate("/employee")}}><img src={employee_icon} alt="Employee"></img></button></li>
-                                <li><button onClick={() => {navigate("/turnover")}}><img src={turnover_icon} alt="Turnover"></img></button></li>
-                                <li><button onClick={() => {navigate("/feedbackform")}}><img src={feedback_icon} alt="Feedback"></img></button></li>
-                                <li><button onClick={() => {navigate("/calendar")}}><img src={calendar_icon} alt="Calendar"></img></button></li>
-                                <li><button onClick={() => {navigate("/email")}}><img src={calendar_icon} alt="Email"></img></button></li>
-                            </ul>
-                        </div>
                         <h1>Feedback Forms</h1>
                         <h2>Incomplete</h2>
                         <ul>
@@ -246,12 +221,10 @@ function DisplayForms() {
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                                     {filledForms.map(form => (
                                         <li key={form.form_id}>
-                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
                                                 <h3>{form.title}</h3>
                                                 <p>{form.description}</p>
                                                 <p>Start Time: {form.start_time}</p>
                                                 <p>End Time: {form.end_time}</p>
-                                            </button>
                                         </li>
                                     ))}
                                 </ul>

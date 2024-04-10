@@ -1,0 +1,87 @@
+/* Import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+.form-results {
+  flex: 1;
+  padding-left: 117px;
+  margin-top: 21px;
+  margin-right: 48px;
+  text-align: left;
+}
+
+.form-results h1
+{
+  color: #0D3951;
+  font-family: Rubik;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 3.2px;
+}
+.form-results h2 {
+  color: #03716C;
+
+  font-family: Lexend;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 2.4px;
+}
+h3
+{
+  color: #555;
+  font-family: Lexend;
+  /* font-size: 16px; */
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 1.6px;
+}
+
+.chart-options {
+  display: flex;
+  flex: 1;
+  justify-content: left;
+}
+
+.chart-options label {
+  padding: 0px 20px 0px 0px;
+  color: #2E2A2A;
+  font-family: Nunito;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 1.2px;
+}
+.form-display, li{
+  list-style: none; /* Remove default list styles */
+  padding: 0; /* Remove default padding */
+  padding-bottom: 10px;
+}
+.form-display,button {
+  width: 516px;
+  margin-left: 117px;
+  border-radius: 9px;
+  border: 1px solid #B8BFC3;
+  background: #FFF;
+}
+.incomplete-forms {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for smaller screens */
+  grid-gap: 10px; /* Adjust the gap between columns */
+}
+
+.complete-forms {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 10px; /* Corrected */
+}
+
+.form-results {
+  padding-left: 80px;
+  padding-top: 80px; 
+}

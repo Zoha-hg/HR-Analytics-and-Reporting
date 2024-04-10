@@ -37,37 +37,25 @@ const Dashboard = () => {
                 // Admin Dashboard content
                 <div>
                     <h2>Admin Dashboard</h2>
-                    <p>Admin can see all the data</p>
-                    {/* <Link to="/feedbackform/createform"><button>Create a Form</button></Link>
-                    <Link to="/feedbackform/fillform"><button>Fill a Form</button></Link> */}
-                    <Link to="/feedbackform"><button>Feedback Forms</button></Link>
                 </div>
             )}
             {role === 'HR professional' && (
                 // HR Dashboard content
                 <div>
                     <h2>HR Dashboard</h2>
-                    <p>HR can see all the data</p>
-                    {/* <Link to="/feedbackform/createform"><button>Create a Form</button></Link> */}
-                    <Link to="/feedbackform"><button>Feedback Forms</button></Link>
                 </div>
             )}
             {role === 'Employee' && (
                 // Employee Dashboard content
                 <div>
                     <h2>Employee Dashboard</h2>
-                    <p>User can see only their data</p>
-                    {/* <Link to="/feedbackform/fillform"><button>Fill a Form</button></Link> */}
-                    <Link to="/feedbackform"><button>Feedback Forms</button></Link>
                 </div>
             )}
             {role === 'Manager' && (
                 // Manager Dashboard content
                 <div>
                     <h2>Manager Dashboard</h2>
-                    <p>Manager can see only their department data</p>
-                    {/* <Link to="/feedbackform/fillform"><button>Fill a Form</button></Link> */}
-                    <Link to="/feedbackform"><button>Feedback Forms</button></Link>
+                    
                  </div>
             )}
         </div>

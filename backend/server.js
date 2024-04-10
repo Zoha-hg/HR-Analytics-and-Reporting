@@ -43,6 +43,7 @@ connection.once("open", () =>
 
 const usersRouter = require("./routes/users");
 const { all } = require("axios");
+const e = require("express");
 app.use("/users", usersRouter);
 
 
@@ -148,41 +149,13 @@ app.listen(8000, () =>
 	console.log("Server started on port 8000");
 });
 
-function getUserRole(employee_id) {
-
-	const numberString = employee_id.toString();
-    const firstTwoDigits = numberString.slice(0, 1);
-
-	if(firstTwoDigits === "1")
-	{
-		return "Employee";
-	}
-	else if(firstTwoDigits === "2")
-	{
-		return "Manager";
-	}
-	else if(firstTwoDigits === "3")
-	{
-		return "HR";
-	}
-
-    return firstTwoDigits;
-}
 app.post('/createform', async (req, res) => {
   	try {
 
 		//get last filled form id and increment it by 1
 		const {filled, title, description, start_time, end_time, questions } = req.body;
 
-		let form_id = 0;
-		const lastFeedback = await Feedback.find().sort({ form_id: -1 }).limit(1);
-		
-		let last_form_id = 0;
-		if (lastFeedback.length !== 0)
-		{
-			last_form_id = lastFeedback[0].form_id;
-		}
-		form_id = last_form_id + 1;
+		const form_id = new mongoose.Types.ObjectId();
 	
 		// make a new form
 		const newForm = await Feedback.create({
@@ -213,15 +186,16 @@ app.post('/createform', async (req, res) => {
 app.post('/displayforms', async (req, res) => {
     try
 	{
-		const {user} = req.body;
-		const user_role = getUserRole(user);
+		const {user, user_role} = req.body;
+		// const user_role = getUserRole(user);
+		console.log("user role", user_role, "hehehe", req.body)
 		if(user_role === "Employee")
 		{
 			const employee = await Employee.findOne({ employee_id: user }).populate({
 				path: 'feedback_forms.form',
 				model: 'Feedback',
 			});
-	
+			console.log("got the employee !", employee)
 			if (!employee) // if employee doesnt exist
 			{
 				console.log(user)
@@ -238,8 +212,8 @@ app.post('/displayforms', async (req, res) => {
 				end_time: form.form.end_time,
 				filled: form.filled
 			}));
-	
-			res.status(200).json(forms.filter(form => new Date(form.end_time) > new Date())); // filter out forms that have ended and send
+			// console.log("forms", forms.filter(form => new Date(form.end_time) > new Date()))
+			res.status(200).json(forms); // filter out forms that have ended and send
 		}
 		else if(user_role === "Manager")
 		{
@@ -269,7 +243,7 @@ app.post('/displayforms', async (req, res) => {
 			}));
 	
 			// console.log("forms", forms)
-			res.status(200).json(forms.filter(form => new Date(form.end_time) > new Date())); // filter out forms that have ended and send
+			res.status(200).json(forms); // filter out forms that have ended and send
 		}
 		else
 		{
@@ -288,28 +262,60 @@ app.post('/displayforms', async (req, res) => {
 app.post("/fillform", async (req, res) => {
 	try
 	{
-		const { form_id, employee_id, answers } = req.body;
-		const employee = await Employee.findOne({ employee_id : employee_id }).populate({
-			path: 'feedback_forms.form',
-            model: 'Feedback', 
-        });
-		const formIndex = employee.feedback_forms.findIndex(formObj => formObj.form.form_id === form_id);
-		
-		const form = employee.feedback_forms[formIndex].form;
-		
-		console.log("before update ", employee.feedback_forms[formIndex].form);
+		const { form_id, employee_id, user_role, answers } = req.body;
 
-		employee.feedback_forms[formIndex].ratingList = answers;
-		employee.feedback_forms[formIndex].filled = true;
-
-		console.log("new employee should hav form ", employee.feedback_forms[formIndex]);
-		await employee.save();
-
-		const updatedEmployee = await Employee.findOne({ employee_id }).populate({
-			path: 'feedback_forms.form',
-			model: 'Feedback',
-		});
-		
+		if(user_role === "Employee")
+		{
+			console.log("employee_id ", employee_id, form_id);
+			const employee = await Employee.findOne({ employee_id : employee_id }).populate({
+				path: 'feedback_forms.form',
+				model: 'Feedback', 
+			});
+			console.log("employee ", employee.feedback_forms[0].form.form_id);
+			if(employee.feedback_forms[0].form.form_id == form_id)
+			{
+				console.log("EQUAL")
+			}
+			const formIndex = employee.feedback_forms.findIndex(formObj => formObj.form.form_id == form_id);
+			console.log("formIndex ", formIndex)
+			const form = employee.feedback_forms[formIndex].form;
+			
+			console.log("before update ", employee.feedback_forms[formIndex].form);
+	
+			employee.feedback_forms[formIndex].ratingList = answers;
+			employee.feedback_forms[formIndex].filled = true;
+	
+			console.log("new employee should hav form ", employee.feedback_forms[formIndex]);
+			await employee.save();
+	
+			const updatedEmployee = await Employee.findOne({ employee_id }).populate({
+				path: 'feedback_forms.form',
+				model: 'Feedback',
+			});
+		}
+		else if(user_role === "Manager")
+		{
+			const manager = await Manager.findOne({ employee_id : employee_id }).populate({
+				path: 'feedback_forms.form',
+				model: 'Feedback', 
+			});
+			const formIndex = manager.feedback_forms.findIndex(formObj => formObj.form.form_id === form_id);
+			
+			const form = manager.feedback_forms[formIndex].form;
+			
+			console.log("before update ", manager.feedback_forms[formIndex].form);
+	
+			manager.feedback_forms[formIndex].ratingList = answers;
+			manager.feedback_forms[formIndex].filled = true;
+	
+			console.log("new employee should hav form ", manager.feedback_forms[formIndex]);
+			await manager.save();
+	
+			const updatedManager = await Manager.findOne({ employee_id }).populate({
+				path: 'feedback_forms.form',
+				model: 'Feedback',
+			});
+		}
 		// console.log("Updated employee:", updatedEmployee.feedback_forms[1].form.questions[0]);
 		res.status(201).json("Form filled successfully");
 	}
@@ -428,11 +434,11 @@ app.post("/displayresults", async (req, res) => {
 					{
 						total_ratings[j].rating5 += 1;
 					}
-					total_ratings[j].total_rating += form_ratings[j];
+					total_ratings[j].total_rating = form_ratings[j];
 				}
 			}
 		}
-		// console.log("total_ratings ", total_ratings)
+		console.log("total_ratings ", total_ratings)
 		res.send(total_ratings);
 	}
 	catch (error)
@@ -442,17 +448,225 @@ app.post("/displayresults", async (req, res) => {
 	}
 });
 
-// not needed anymore
-// app.get('/displayform', async (req, res) => {
-// 	try {
-// 		const forms = await Feedback.find({});
-// 		res.status(200).json(forms);
-// 	} catch (error) {
-// 		console.error('Error fetching forms:', error);
-// 		res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
-// 	}
-//   });
+app.post("/getform", async (req, res) =>
+{
+	const {form_id} = req.body;
 
+	const form = await Feedback.findOne({form_id: form_id});
+	if(!form)
+	{
+		res.send("error");
+	}
+	const formData =
+	{
+		title: form.title,
+		description: form.description,
+		questions: form.questions
+	}
+	console.log("FORM DATA ", formData);
+	res.send(formData);
+})
+
+app.post("/getfillform", async (req, res) =>
+{
+	const {form_id} = req.body;
+
+	const form = await Feedback.findOne({form_id: form_id});
+	if(!form)
+	{
+		res.send("error");
+	}
+	const formData =
+	{
+		title: form.title,
+		description: form.description,
+		questions: form.questions
+	}
+	console.log("FORM DATA ", formData);
+	res.send(formData);
+})
+
+app.post("/createtask", async (req, res) => {
+	const {manager_id, employee_id, title, start_time, skills} = req.body;
+
+	const task_id = parseInt(new mongoose.Types.ObjectId().toString().substring(0, 8), 16);
+
+	//create a new task
+	const assigned_by = await Manager.findOne({employee_id: manager_id});
+	const assigned_to = await Employee.findOne({employee_id: employee_id});
+	if(assigned_by === null ||assigned_to === null)
+	{
+		res.status(404).json({ error: 'Manager or Employee not found' });
+	}
+
+	let ski = [];
+
+	skills.map((skill) => {
+		let s = {
+			skill: skill,
+			rating: undefined
+		}
+		ski.push(s);	
+	})
+	console.log("ski", ski)
+	let task = {
+		task_id,
+		title,
+		start_time,
+		assigned_by,
+		assigned_to,
+		skills: ski
+	};
+	try
+	{
+		const newTask = await Task.create(task);
+		await Manager.updateOne({ employee_id: manager_id }, { $push: { tasks: newTask } });
+		await Employee.updateOne({employee_id: employee_id},{ $push: { tasks: newTask }});
+		res.status(201).json({ message: 'Task created successfully.', task: newTask });
+		// Handle successful creation
+	}
+	catch (error) {
+		res.status(500).json(error);
+	}
+
+});
+
+app.post("/getdepttasks", async (req, res) => {
+	const {manager_id} = req.body;
+
+	try
+	{
+
+		const manager = await Manager.findOne({ employee_id: manager_id }).populate({
+			path: 'tasks', // Correct the model field name to 'tasks'
+			populate: {
+				path: 'assigned_to', // Populate the 'assigned_to' field
+				model: 'Employee', // Use the correct model name 'Employee'
+				select: 'employee_name' // Select the 'name' field of the employee
+			}
+		}).populate('department', 'department_name');
+		
+		console.log("manager", manager);
+		if (!manager) // if employee doesnt exist
+		{
+			console.log("um who is this manager:" , manager)
+			return res.status(404).json({ message: 'Manager not found.' });
+		}
+	
+		const tasks = manager.tasks.map(task => task); // get all forms with data
+	
+		const alltasks = tasks.map(task => ({ // map the forms to only the required fields
+			task_id: task.task_id,
+			title: task.title,
+			start_time: task.start_time,
+			end_time: task.end_time,
+			assigned_to: task.assigned_to.employee_name,
+			department_name: manager.department.department_name, 
+			evaluation_status: task.evaluation_status
+		}));
+		// console.log("forms", forms.filter(form => new Date(form.end_time) > new Date()))
+		res.status(200).json(alltasks);
+	}catch (error) {
+		console.log("error", error)
+		res.status(500).json({ error: 'Failed to fetch tasks. Please try again.' });
+	}
+
+});
+
+app.post("/getdeptemplyees", async (req, res) => {
+	const {manager_id} = req.body;
+	console.log("manager", manager_id);
+	const manager = await Manager.findOne({ employee_id: manager_id }).populate({
+		path: 'department',
+		model: 'Department',
+	})
+
+	// res.send("wow");
+	if (!manager) // if employee doesnt exist
+	{
+		return res.status(404).json({ message: 'Manager not found.' });
+	}
+	const employees = await Employee.find({ department: manager.department });
+
+
+	console.log("Employees! ", employees);
+	res.status(200).json(employees);
+
+});
+
+
+app.post("/updateStatus", async (req, res) =>
+{
+	const {task_id, user_role, status} = req.body;
+
+	try
+	{
+
+		if(user_role === "Manager")
+		{
+			await Task.updateOne({ task_id: task_id }, { evaluation_status: status });
+	
+		}
+		else
+		{
+			await Task.updateOne({ task_id: task_id }, { completion_status: status });
+			if(status =="completed")
+			{
+
+				await Task.updateOne({ task_id: task_id }, { evaluation_status: "evaluate" });
+			}
+	
+		}
+		res.send("Done!");
+	}catch (error)
+	{
+		res.send({error: error})
+	}
+	
+})
+
+app.post("/gettask", async (req, res) => {
+
+	const {task_id} = req.body;
+
+	const task = await Task.find({task_id: task_id});
+
+	console.log(task[0]);
+	res.send(task[0]);
+})
+
+app.post("/evaluate", async (req, res) => {
+	const {task_id, skills} = req.body
+
+	try
+	{
+
+		await Task.updateOne({ task_id: task_id }, { skills: skills });
+		console.log("DONE");
+		res.send("done");
+	} catch (error) {
+		res.send(error);
+	}
+})
+
+app.post("/getowntasks", async (req, res) => {
+	const {employee_id} = req.body;
+
+	try
+	{
+		const employee = await Employee.findOne({ employee_id: employee_id }).populate({
+			path: 'tasks',
+		})
+		
+		console.log("employee", employee.tasks);
+		res.send(employee.tasks)
+
+	} catch (error) {
+		console.log("eror", error);
+		res.send({error: error})
+	}
+
+})
 // just so i can make employees pls ignore
 
 const getDepartment = async (ddepartment_id) => {
@@ -531,5 +745,28 @@ app.post('/createdepartment', async (req, res) => {
 	  console.error('Error creating department:', error);
 	  res.status(500).json({ message: 'Failed to create department. Please try again.' });
   }
+});
+
+app.post("/createmanager", async (req, res) => {
+	const {employee_name, department, gender, age, address, phone_number} = req.body;
+
+	const dept = await getDepartment(department);
+	console.log("dept ", dept);
+	const manager_id = 5;
+
+	const newManager = new Manager({
+		employee_id: manager_id,
+		employee_name,
+		department: dept,
+		age,
+		gender,
+		address,
+		phone_number
+	});
+
+	await newManager.save();
+
+	res.status(201).json(newManager);
+
 });
 
