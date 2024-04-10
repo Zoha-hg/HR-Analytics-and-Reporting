@@ -34,12 +34,13 @@ export default function BarAnimation() {
       <BarChart
         height={300}
         slotProps={{ legend: { hidden: true } }}
+        leftAxis={null}
         series={series
           .slice(0, seriesNb)
           .map((s) => ({ ...s, data: s.data.slice(0, itemNb), showLabels: false }))}
       />
       <Typography id="input-item-number" gutterBottom>
-        Slide to change the number of Departments
+        Slide to change the number of Tasks
       </Typography>
       <Slider
         value={itemNb}
@@ -66,7 +67,7 @@ export default function BarAnimation() {
 
 const series = [
   {
-    label: 'series 1',
+    label: 'Eesha',
     data: [
       2423, 2210, 764, 1879, 1478, 1373, 1891, 2171, 620, 1269,
     ],
@@ -74,7 +75,7 @@ const series = [
     color: '#a6cee3',
   },
   {
-    label: 'series 2',
+    label: 'Zoha',
     data: [
       2362, 2254, 1962, 1336, 586, 1069, 2194, 1629, 2173, 2031,
     ],
@@ -82,7 +83,7 @@ const series = [
     color: '#1f78b4',
   },
   {
-    label: 'series 3',
+    label: 'Shahrez',
     data: [
       1145, 1214, 975, 2266, 1768, 2341, 747, 1282, 1780, 1766,
     ],
@@ -90,7 +91,7 @@ const series = [
     color: '#66c2a5',
   },
   {
-    label: 'series 4',
+    label: 'Sufia',
     data: [
       2361, 979, 2430, 1768, 1913, 2342, 1868, 1319, 1038, 2139,
     ],
@@ -98,7 +99,7 @@ const series = [
     color: '#17becf',
   },
   {
-    label: 'series 5',
+    label: 'Mustafa',
     data: [
       968, 1371, 1381, 1060, 1327, 934, 1779, 1361, 878, 1055,
     ],

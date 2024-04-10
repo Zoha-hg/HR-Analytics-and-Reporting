@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -10,7 +11,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Nunito, sans-serif, Manrope' , 
+    fontFamily: 'Nunito, Manrope, sans-serif', // font family. 
   },
   shape: {
     borderRadius: 20, // button border radius.

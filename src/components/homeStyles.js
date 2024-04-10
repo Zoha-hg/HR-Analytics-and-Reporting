@@ -3,21 +3,23 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles((theme) => ({
   root: {
     background: 'linear-gradient(to right, #39d6d3, #042434)',
+    minHeight: '100%', // Ensure gradient fills the entire viewport
+    fontFamily: 'Nunito, sans-serif',
+
   },
   homeContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
+    alignItems: 'center',
     minHeight: '100vh',
     color: '#fff',
     fontFamily: 'Nunito, sans-serif',
-    padding: '2em',
   },
   header: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '2em',
   },
   footer: {
     display: 'flex',
@@ -27,11 +29,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     paddingLeft: '2em',
     paddingRight: '2em',
-    marginTop: 'auto',
   },
   logo: {
-    width: '150px',
+    width: '100px',
     height: 'auto',
+    marginLeft: '2em',
   },
   brandName: {
     fontSize: '1.5em', 
@@ -42,31 +44,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 'auto',
-    marginTop: '2em',
-    marginBottom: '2em',
+    // margin: 'auto',
+    // marginTop: '2em',
+    // marginBottom: '2em',
   },
   leftContainer: {
-    // textAlign: 'left',
+    textAlign: 'left',
     alignItems: 'center',
-    margin: 'auto',
-    marginTop: '2em',
-    marginBottom: '2em',
-  },
-  signUpButton: {
-    textAlign: 'center',
-    marginRight: '1em',
-    fontSize: '1.5em', // Increase button font size
-    padding: '1em 2em',
-    backgroundColor: '#fff', // Set button background color to white
-    color: '#000', // Set button text color to black
-    marginTop: '1em', // Add spacing between text and button
-  },
-  loginButton: {
-    fontSize: '1.5em', // Increase button font size
-    padding: '1em 2em',
-    backgroundColor: '#fff', // Set button background color to white
-    color: '#000', // Set button text color to black
   },
 }));
 
