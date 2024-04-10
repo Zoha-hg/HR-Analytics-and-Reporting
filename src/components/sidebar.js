@@ -130,14 +130,14 @@ const Sidebar = () => {
 
     useEffect(() => {
         console.log('showSidebar value has been updated:', showSidebar && isMediumScreen);
-    }, [showSidebar]);
+    }, [isMediumScreen]);
 
     const toggleSideBar = () => {
         setOpenSideBar(!openSideBar);
     }
     return (
         <div>
-            {(showSidebar && !showExpandedSidebar && !isSmallScreen) || (showSidebar && isMediumScreen) && (
+            {((showSidebar && !showExpandedSidebar && !isSmallScreen) || (showSidebar && isMediumScreen)) && (
                 <div>
                     <div className={styles['top-bar']}>
                         <div className={styles["logo"]}>
