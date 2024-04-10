@@ -1,9 +1,41 @@
+.sidepanel {
+  width: 40px;
+  height: 100%;
+  /* background-color: #f0f0f0; */
+  background: radial-gradient( #39d6d3, #042434);
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+}
+
+.sidepanel ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidepanel li {
+  margin-bottom: 10px;
+}
+
+.sidepanel li button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.sidepanel li button img {
+  margin-top: 14px;
+  width: 20px;
+  height: 20px;
+}
 /* GmailDashboard.module.css */
 .dashboard {
-  display: flex;
+  display: flex; 
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
+  margin-left: 40px; 
+  font-family: 'Open Sans', sans-serif;
 }
 
 .title {
@@ -21,15 +53,15 @@
 }
 
 .messageSelected {
-  background-color: #e6f7ff; /* Change this color to whatever you want for selected messages */
+  background-color: #042434; 
 }
 .messagePreview {
   padding: 10px;
   border: 1px solid #e0e0e0;
   margin-bottom: 10px;
   cursor: pointer;
-  /* background-color: white; Default background */
-  transition: background-color 0.3s; /* Optional: adds a transition effect */
+  background-color: rgba(57, 214, 211, 0.2); 
+  transition: background-color 0.3s;
 }
 
 .senderName {
@@ -52,23 +84,28 @@
   width: 65%;
   border: 1px solid #e0e0e0;
   padding: 10px;
-  min-height: 200px; /* or adjust as needed */
+  min-height: 200px; 
+  font-family: 'Open Sans', sans-serif;
 }
 
 .messageSubject {
+  text-align: left;
   font-size: 1.2em;
   margin-bottom: 4px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .messageFrom {
   color: #999;
   margin-bottom: 4px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .messageDate {
   text-align: right;
   color: #ccc;
   margin-bottom: 10px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .messageBody {

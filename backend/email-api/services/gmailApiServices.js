@@ -30,7 +30,7 @@ async function listMessages(auth) {
   const gmail = google.gmail({ version: 'v1', auth });
   const res = await gmail.users.messages.list({
       userId: 'me',
-      maxResults: 10, // Adjusted to retrieve the first ten messages
+      maxResults: 2, // Adjusted to retrieve the first ten messages
       q: 'in:inbox', // Query to filter messages in the inbox
   });
 
@@ -108,7 +108,7 @@ async function listMessages(auth) {
   }
 
   module.exports = {
-    listLabels : listLabels,
+    // listLabels : listLabels,
     listMessages : listMessages,
     sendEmail : sendEmail
 }

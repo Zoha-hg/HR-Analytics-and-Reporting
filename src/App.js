@@ -11,6 +11,7 @@ import DisplayForm from './components/DisplayForm';
 import Dashboard from './components/Dashboard'; 
 import GmailIntegrate from './components/GmailIntegrate';
 import GmailDashboard from './components/GmailDashboard';
+import Sidebar from './components/sidebar';
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
     <UserProvider>
       <div className="App">
         <Router>
+        <div>
+          <Sidebar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignUpPage />} />
@@ -28,7 +31,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path= "/integrate-gmail" element={<GmailIntegrate/>} />
             <Route path= "/authorized" element={<GmailDashboard/>} />
-          </Routes>
+            </Routes>
+        </div>
         </Router>
       </div>
     </UserProvider>
