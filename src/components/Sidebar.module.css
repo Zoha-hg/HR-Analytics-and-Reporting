@@ -277,6 +277,8 @@ Link{
     .toggle_button{
         background-color: transparent;
         border: none;
-        height: 20px;
+    }
+    .toggle_button img{
+        width: 30px;
     }
 }

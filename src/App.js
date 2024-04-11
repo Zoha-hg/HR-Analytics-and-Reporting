@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './UserContext';
-import './App.css';
+// import './App.css';
 import Home from './components/Home';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
@@ -29,8 +29,8 @@ function App() {
             <Route path="/feedbackform/fillform" element={<FillForm />} />
             <Route path="/display" element={<DisplayForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path= "/integrate-gmail" element={<GmailIntegrate/>} />
-            <Route path= "/authorized" element={<GmailDashboard/>} />
+            <Route path= "/gmail" element={<GmailIntegrate/>} />
+            <Route path= "/gmail-authorized" element={<GmailDashboard/>} />
             </Routes>
         </div>
         </Router>

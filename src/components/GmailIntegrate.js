@@ -24,7 +24,7 @@ function GmailIntegrate() {
                 setPopup(newPopup);
             } else {
                 // If there's no URL, assume authorization is complete
-                navigate('/authorized'); // Redirect to the authorized-only page
+                navigate('/gmail-authorized'); // Redirect to the authorized-only page
             }
         } catch (error) {
             console.error('Error initiating Gmail integration:', error);

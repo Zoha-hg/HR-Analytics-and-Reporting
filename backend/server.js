@@ -13,7 +13,7 @@ const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
 const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
-const { listLabels, listMessages, sendEmail } = require("./email-api/services/gmailApiServices");
+const { listLabels, listDraftMessages, listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -393,13 +393,50 @@ app.get('/api/gmail/labels', authenticateToken, async (req, res) => {
 });
 
 
-app.get('/api/gmail/messages', authenticateToken, async (req, res) => {
+app.get('/api/gmail/inbox', authenticateToken, async (req, res) => {
     const username = req.user.username;  // Assuming this is set by authenticateToken
   
     const authClient = await authorize2(username);
   
     const messages = await listMessages(authClient);
     res.json(messages);
+});
+
+app.get('/api/gmail/sent', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listSentMessages(authClient);
+  res.json(messages);
+});
+
+app.get('/api/gmail/drafts', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listDraftMessages(authClient);
+  res.json(messages);
+});
+
+
+app.get('/api/gmail/junk', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listJunkMessages(authClient);
+  res.json(messages);
+});
+
+app.get('/api/gmail/deleted', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listTrashMessages(authClient);
+  res.json(messages);
 });
 
 app.post('/api/gmail/send', authenticateToken, async (req, res) => {
