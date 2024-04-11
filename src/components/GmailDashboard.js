@@ -54,10 +54,11 @@ function GmailDashboard() {
         }
     };
     const handleNewMailToggle = () => {
-        if (!showNewEmailForm) { // When opening the new email form, clear the selected message
-            setSelectedMessage(null);
-        }
+        setNewEmailContent({ to: '', subject: '', body: '' }); // Reset new email content
         setShowNewEmailForm(!showNewEmailForm); // Toggle visibility of the form
+        if (showNewEmailForm) {
+            setSelectedMessage(null); // Optionally clear the selected message
+        }
     };
 
     const handleSendMail = async () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -6,11 +6,17 @@ function GmailIntegrate() {
     const navigate = useNavigate();
     const [popup, setPopup] = useState(null);
 
+    useEffect(() => {
+        initiateAuthorization();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const initiateAuthorization = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 console.error('No token found');
+                navigate('/login'); // Redirect to login if no token is found
                 return;
             }
     
@@ -30,23 +36,6 @@ function GmailIntegrate() {
             console.error('Error initiating Gmail integration:', error);
         }
     };
-    
-
-    const handleLogout = () => {
-        
-        // remove the JWT token
-       
-        navigate('/login');
-    };
-
-    return (
-        <div>
-            <h1>Initiating Gmail Integration...</h1>
-            <p>Please wait while we initiate Gmail Integration.</p>
-            <button onClick={initiateAuthorization}>Initiate Integration</button>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
-    );
 }
 
 export default GmailIntegrate;
