@@ -23,13 +23,36 @@ function GmailDashboard() {
     }, [currentView]);
 
     const handleReply = () => {
-        console.log('Reply clicked');
-        // Here, you would add the logic to handle the reply action
+        if (selectedMessage) {
+            // Prepopulate the 'to' field with the sender of the selected message
+            // and prefix the subject with 'Re:'
+            const replyEmailContent = {
+                to: selectedMessage.from, 
+                subject: `Re: ${selectedMessage.subject}`,
+                body: `\n\n\n------\nReplying to:\n${selectedMessage.body}`, // Add the original message below
+            };
+    
+            setNewEmailContent(replyEmailContent);
+            setShowNewEmailForm(true); // Show the new email form
+            setSelectedMessage(null); // Optionally clear the selected message
+        }
     };
+    
 
     const handleForward = () => {
-        console.log('Forward clicked');
-        // Here, you would add the logic to handle the forward action
+        if (selectedMessage) {
+            // Prepopulate the subject with 'Fwd:' prefix and the body of the email
+            // Leave the 'to' field empty for the user to enter the recipient's address
+            const forwardEmailContent = {
+                to: '',
+                subject: `Fwd: ${selectedMessage.subject}`,
+                body: `------\nForwarded message:\n${selectedMessage.body}`, // Add the original message below
+            };
+    
+            setNewEmailContent(forwardEmailContent);
+            setShowNewEmailForm(true); // Show the new email form
+            setSelectedMessage(null); // Optionally clear the selected message
+        }
     };
     const handleNewMailToggle = () => {
         if (!showNewEmailForm) { // When opening the new email form, clear the selected message
@@ -92,6 +115,9 @@ function GmailDashboard() {
     };
 
     const handleSelectMessage = (message) => {
+        if (showNewEmailForm) {
+            setShowNewEmailForm(false); // Close the new email form if it's open
+        }
         setSelectedMessage(message);
     };
 
@@ -155,7 +181,13 @@ function GmailDashboard() {
                         <div className={styles.newEmailForm}>
                             <input type="text" name="to" placeholder="To" value={newEmailContent.to} onChange={handleInputChange} />
                             <input type="text" name="subject" placeholder="Subject" value={newEmailContent.subject} onChange={handleInputChange} />
-                            <textarea name="body" placeholder="Body" value={newEmailContent.body} onChange={handleInputChange}></textarea>
+                            <textarea
+                                name="body"
+                                placeholder="Body"
+                                value={newEmailContent.body}
+                                onChange={handleInputChange}
+                                rows="10" // This will set the initial height of the textarea
+                                ></textarea>
                             <button onClick={handleSendMail}>Send Email</button>
                         </div>
                     )}

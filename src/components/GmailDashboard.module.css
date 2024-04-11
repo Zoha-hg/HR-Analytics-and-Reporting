@@ -279,3 +279,39 @@
 .buttonWithIcon .icon {
   margin-right: 2%; /* Adjust the value as needed */
 }
+.newEmailForm {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.newEmailForm input,
+.newEmailForm textarea {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.newEmailForm button {
+  padding: 10px 20px;
+  background-color: #39d6d3;
+  font-weight: bold;
+  font-size: 1em;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.newEmailForm button:hover {
+  background-color: #0ed9d9;
+}
+.newEmailForm textarea {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  min-height: 150px; /* Or whatever minimum height you prefer */
+  resize: vertical; /* This allows users to resize the textarea vertically */
+}

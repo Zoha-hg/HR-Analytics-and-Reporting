@@ -375,7 +375,6 @@ async function listJunkMessages(auth) {
   }
   
   module.exports = {
-    // listLabels : listLabels,
     listDraftMessages : listDraftMessages,
     listSentMessages : listSentMessages,
     listMessages : listMessages,

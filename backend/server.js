@@ -193,30 +193,6 @@ app.get('/fillform', async (req, res) => {
   }
 });
 
-// app.post('/displayform', async (req, res) => {
-//     try {
-//         const {user} = req.body;
-// 		console.log(user)
-//         const employee = await Employee.findOne({ employee_id: user }).populate('feedback_forms.form');
-//         if (!employee) {
-// 			console.log(user)
-//             return res.status(404).json({ message: 'Employee not found.' });
-//         }
-
-//         const forms = employee.feedback_forms.map(form => ({
-//             formId: form.form._id,
-//             title: form.form.title,
-//             description: form.form.description,
-//             start_time: form.form.start_time,
-//             end_time: form.form.end_time,
-//             filled: form.filled
-//         }));
-//         res.status(200).json(forms);
-//     } catch (error) {
-//         console.error('Error fetching forms:', error);
-//         res.status(500).json({ message: 'Failed to fetch forms. Please try again.' });
-//     }
-// });
 
 app.get('/displayform', async (req, res) => {
 	try {
@@ -308,16 +284,6 @@ app.post('/createdepartment', async (req, res) => {
   }
 });
 
-// app.get('/start-gmail-authorization', async (req, res) => {
-//   try {
-//       // Call your authorization logic here
-//       authorize();
-//       res.status(200).send('Authorization initiated');
-//   } catch (error) {
-//       console.error('Authorization error:', error);
-//       res.status(500).send('Internal server error');
-//   }
-// });
 
 app.get('/start-gmail-authorization', authenticateToken ,async (req, res) => {
   console.log("here")
@@ -373,24 +339,6 @@ const getClient = async (req, res, next) => {
 };
 
 // Gmail routes
-app.get('/api/gmail/labels', authenticateToken, async (req, res) => {
-  try {
-      console.log("Attempting to fetch Gmail labels");
-      const username = req.user.username;  // Assuming this is set by authenticateToken
-
-      // Get the authorized client
-      const authClient = await authorize2(username);
-
-      // Once the client is obtained, use it to list labels
-      const labels = await listLabels(authClient);
-
-      // Send the labels as response
-      res.json(labels);
-  } catch (error) {
-      console.error("Error fetching labels: ", error);
-      res.status(500).send("Failed to fetch Gmail labels");
-  }
-});
 
 
 app.get('/api/gmail/inbox', authenticateToken, async (req, res) => {
