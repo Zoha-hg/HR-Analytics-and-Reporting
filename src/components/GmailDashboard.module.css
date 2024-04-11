@@ -122,11 +122,11 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.sidebar button:hover {
+.sidebarSection button:hover {
   background-color: #eaf3f3;
 }
 
-.sidebar button.active {
+.sidebarSection button.active {
   background-color: #deedee;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .newMailButton:hover {
-  background-color: #39d6d3; /* Slightly darker background on hover */
+  background-color: #0ed9d9; /* Slightly darker background on hover */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow on hover */
 }
 
