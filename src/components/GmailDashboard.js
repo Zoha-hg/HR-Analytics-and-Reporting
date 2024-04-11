@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './GmailDashboard.module.css';
 import { ReactComponent as NewMailIcon } from './assets/newmail.svg';
-import reply_icon from './assets/reply.svg';
-import forward_icon from './assets/forward.svg';
+import {ReactComponent as ReplyIcon} from './assets/reply.svg';
+import {ReactComponent as ForwardIcon} from './assets/forward.svg';
 
 function GmailDashboard() {
     const [messages, setMessages] = useState([]);
@@ -123,12 +123,12 @@ function GmailDashboard() {
             </header>
             <div className={styles.emailBody} dangerouslySetInnerHTML={{ __html: selectedMessage.body }} />
             <div className={styles.emailActions}>
-        <button className={styles.actionButton} onClick={handleReply}>
-            <img src={reply_icon} alt="Reply" className={styles.actionIcon} />
-            <span>Reply</span>
-        </button>
+            <button className={styles.actionButton} onClick={handleReply}>
+                <ReplyIcon className={styles.actionIcon} />
+                <span>Reply</span>
+            </button>
         <button className={styles.actionButton} onClick={handleForward}>
-            <img src={forward_icon} alt="Forward" className={styles.actionIcon} />
+            <ForwardIcon className={styles.actionIcon} />
             <span>Forward</span>
         </button>
     </div>
