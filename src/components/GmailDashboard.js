@@ -4,6 +4,11 @@ import styles from './GmailDashboard.module.css';
 import { ReactComponent as NewMailIcon } from './assets/newmail.svg';
 import {ReactComponent as ReplyIcon} from './assets/reply.svg';
 import {ReactComponent as ForwardIcon} from './assets/forward.svg';
+import {ReactComponent as InboxIcon} from './assets/inbox.svg';
+import {ReactComponent as DraftsIcon} from './assets/drafts.svg';
+import {ReactComponent as SentIcon} from './assets/sent.svg';
+import {ReactComponent as DeleteIcon} from './assets/deleted.svg';
+import { ReactComponent as JunkIcon } from './assets/junk.svg';
 
 function GmailDashboard() {
     const [messages, setMessages] = useState([]);
@@ -105,23 +110,28 @@ function GmailDashboard() {
                 <div className={styles.sidebarSection}>
                     <div className={styles.sidebarTitle}>Folders</div>
                     <button onClick={() => setCurrentView('inbox')} 
-                            className={currentView === 'inbox' ? styles.active : ''}>
+                            className={`${currentView === 'inbox' ? styles.active : ''} ${styles.buttonWithIcon}`}>
+                            <InboxIcon className={styles.icon}/>
                         Inbox
                     </button>
                     <button onClick={() => setCurrentView('sent')} 
-                            className={currentView === 'sent' ? styles.active : ''}>
+                            className={`${currentView === 'sent' ? styles.active : ''} ${styles.buttonWithIcon}`}>
+                            <SentIcon className={styles.icon}/>
                         Sent Items
                     </button>
                     <button onClick={() => setCurrentView('drafts')} 
-                            className={currentView === 'drafts' ? styles.active : ''}>
+                            className={`${currentView === 'drafts' ? styles.active : ''} ${styles.buttonWithIcon}`}>
+                            <DraftsIcon className={styles.icon}/>
                         Drafts
                     </button>
                     <button onClick={() => setCurrentView('deleted')} 
-                            className={currentView === 'deleted' ? styles.active : ''}>
+                            className={`${currentView === 'deleted' ? styles.active : ''} ${styles.buttonWithIcon}`}>
+                            <DeleteIcon className={styles.icon}/>
                         Deleted Items
                     </button>
                     <button onClick={() => setCurrentView('junk')} 
-                            className={currentView === 'junk' ? styles.active : ''}>
+                            className={`${currentView === 'junk' ? styles.active : ''} ${styles.buttonWithIcon}`}>
+                            <JunkIcon className={styles.icon}/>
                         Junk Email
                     </button>
                 </div>
