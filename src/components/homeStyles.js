@@ -3,13 +3,17 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles((theme) => ({
   root: {
     background: 'linear-gradient(to right, #39d6d3, #042434)',
-    minHeight: '100%', // Ensure gradient fills the entire viewport
+    minHeight: '100vh',
     fontFamily: 'Nunito, sans-serif',
-
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
   },
   homeContainer: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     minHeight: '100vh',
@@ -44,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    // margin: 'auto',
-    // marginTop: '2em',
-    // marginBottom: '2em',
   },
   leftContainer: {
     textAlign: 'left',
