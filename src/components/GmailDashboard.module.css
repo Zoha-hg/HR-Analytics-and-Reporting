@@ -268,3 +268,14 @@
 .newMailButton > span {
   line-height: 1; /* Adjust line height to align text vertically */
 }
+
+.buttonWithIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the content horizontally */
+}
+
+/* Assuming your icon has a class named `icon` */
+.buttonWithIcon .icon {
+  margin-right: 2%; /* Adjust the value as needed */
+}
