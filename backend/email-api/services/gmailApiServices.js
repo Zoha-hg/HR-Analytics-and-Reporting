@@ -117,15 +117,17 @@ async function listSentMessages(auth) {
             format: 'full' // Ensure you get the full message format including headers and parts
         });
   
+        // Extract necessary headers (Subject, From, Date)
         const headers = message.data.payload.headers;
         const subjectHeader = headers.find(header => header.name === 'Subject');
-        const fromHeader = headers.find(header => header.name === 'From');
+        const toHeader = headers.find(header => header.name === 'To');
         const dateHeader = headers.find(header => header.name === 'Date');
-  
+
+        // Extract the values, providing defaults if not found
         const subject = subjectHeader ? subjectHeader.value : 'No Subject';
-        const from = fromHeader ? fromHeader.value : 'Unknown Sender';
+        const to = toHeader ? toHeader.value : 'Unknown Recipient';
         const date = dateHeader ? new Date(dateHeader.value).toLocaleString() : 'Unknown Date';
-  
+   
         let bodyData = '';
         // Check if parts exist, if not, get the body data directly
         if (message.data.payload.parts) {
@@ -144,13 +146,13 @@ async function listSentMessages(auth) {
         const body = sanitizeText(decodedBodyData);
   
         console.log(`Subject: ${subject}`);
-        console.log(`From: ${from}`);
+        console.log(`From: ${to}`);
         console.log(`Date: ${date}`);
         console.log(`Message Body: ${body}`);
   
         messagesInfo.push({
             subject: subject,
-            from: from,
+            from: to,
             date: date,
             body: body
         });
@@ -190,12 +192,12 @@ async function listSentMessages(auth) {
         // Extract necessary headers (Subject, From, Date)
         const headers = message.data.payload.headers;
         const subjectHeader = headers.find(header => header.name === 'Subject');
-        const fromHeader = headers.find(header => header.name === 'From');
+        const toHeader = headers.find(header => header.name === 'To');
         const dateHeader = headers.find(header => header.name === 'Date');
 
         // Extract the values, providing defaults if not found
         const subject = subjectHeader ? subjectHeader.value : 'No Subject';
-        const from = fromHeader ? fromHeader.value : 'Unknown Sender';
+        const to = toHeader ? toHeader.value : 'Unknown Recipient';
         const date = dateHeader ? new Date(dateHeader.value).toLocaleString() : 'Unknown Date';
   
         // Initialize body data and decode if present
@@ -212,11 +214,11 @@ async function listSentMessages(auth) {
         const body = sanitizeText(decodedBodyData);
 
         // Log and push each message's details to the array
-        console.log(`Draft ID: ${messageId}, Subject: ${subject}, From: ${from}, Date: ${date}`);
+        console.log(`Draft ID: ${messageId}, Subject: ${subject}, From: ${to}, Date: ${date}`);
         messagesInfo.push({
             id: messageId,
             subject: subject,
-            from: from,
+            from: to,
             date: date,
             body: body
         });

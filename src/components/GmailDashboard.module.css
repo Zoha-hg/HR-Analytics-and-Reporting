@@ -112,7 +112,7 @@
 
 
 .sidebar button {
-  display: block;
+  justify-content: left;
   width: 100%;
   padding: 10px 20px;
   text-align: left;
@@ -126,7 +126,7 @@
   background-color: #eaf3f3;
 }
 
-.sidebarSection button.active {
+.sidebarSection   button.active {
   background-color: #deedee;
 }
 

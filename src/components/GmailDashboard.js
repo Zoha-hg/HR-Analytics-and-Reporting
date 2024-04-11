@@ -9,6 +9,9 @@ function GmailDashboard() {
     const [messages, setMessages] = useState([]);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [currentView, setCurrentView] = useState('inbox');
+    const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+    const [newEmailContent, setNewEmailContent] = useState({ to: '', subject: '', body: '' });
+
 
     useEffect(() => {
         fetchMessages();
@@ -23,10 +26,39 @@ function GmailDashboard() {
         console.log('Forward clicked');
         // Here, you would add the logic to handle the forward action
     };
-    const handleNewMail = () => {   
-        console.log('New Mail clicked');
-        // Here, you would add the logic to handle the new mail action
+    const handleNewMailToggle = () => {
+        if (!showNewEmailForm) { // When opening the new email form, clear the selected message
+            setSelectedMessage(null);
+        }
+        setShowNewEmailForm(!showNewEmailForm); // Toggle visibility of the form
     };
+
+    const handleSendMail = async () => {
+        try {
+            const { to, subject, body } = newEmailContent; // Destructure the newEmailContent object
+            const emailContent = `TO: ${to}\nSubject: ${subject}\nContent-Type: text/html; charset=utf-8\n\n${body}`;
+            const token = localStorage.getItem('token'); // Or however you're storing the token
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+    
+            const response = await axios.post('http://localhost:8000/api/gmail/send', { message: emailContent }, { headers });
+    
+            console.log('Email sent successfully:', response.data);
+            setShowNewEmailForm(false); // Hide form after sending the email
+            setNewEmailContent({ to: '', subject: '', body: '' }); // Reset form
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+    };
+    
+    
+    
+
+    const handleInputChange = (e) => {
+        setNewEmailContent({ ...newEmailContent, [e.target.name]: e.target.value });
+    };
+
     const fetchMessages = async () => {
         // Construct the URL based on the current view
         let url = `http://localhost:8000/api/gmail/${currentView}`;
@@ -66,7 +98,7 @@ function GmailDashboard() {
     return (
         <div className={styles.dashboard}>
             <div className={styles.sidebar}>
-            <button className={styles.newMailButton} onClick={handleNewMail}>
+                <button className={styles.newMailButton} onClick={handleNewMailToggle}>
                     <NewMailIcon className={styles.newMailIcon} />
                     <span>New Mail</span>
                 </button>
@@ -95,48 +127,57 @@ function GmailDashboard() {
                 </div>
             </div>
             <section className={styles.emailListSection}>
-            {messages.map((message, index) => (
-          <div key={index} 
-               className={selectedMessage === message ? styles.messageSelected : styles.messagePreview} 
-               onClick={() => handleSelectMessage(message)}>
-            <div className={styles.messageInfo}>
-              <div className={styles.senderName}>{message.fromName}</div>
-              <div className={styles.messageSubject}>{message.subject}</div>
-              <div className={styles.messageSnippet}>{message.snippet}</div>
-              <div className={styles.messageTime}>{message.date}</div>
-            </div>
-          </div>
-        ))}
+                {messages.map((message, index) => (
+                <div key={index} 
+                    className={selectedMessage === message ? styles.messageSelected : styles.messagePreview} 
+                    onClick={() => handleSelectMessage(message)}>
+                    <div className={styles.messageInfo}>
+                    <div className={styles.senderName}>{message.fromName}</div>
+                    <div className={styles.messageSubject}>{message.subject}</div>
+                    <div className={styles.messageSnippet}>{message.snippet}</div>
+                    <div className={styles.messageTime}>{message.date}</div>
+                    </div>
+                </div>
+            ))}
             </section>
             <section className={styles.emailContentSection}>
-        {selectedMessage && (
-          <article className={styles.emailContent}>
-            <header className={styles.emailHeader}>
-              <h2 className={styles.emailSubject}>{selectedMessage.subject}</h2>
-              <address className={styles.emailSenderInfo}>
-                <div className={styles.senderDetails}>
-                  <span className={styles.senderName}>{selectedMessage.senderName}</span>
-                  <span className={styles.senderEmail}>{selectedMessage.sender}</span>
+                {showNewEmailForm && (
+                        <div className={styles.newEmailForm}>
+                            <input type="text" name="to" placeholder="To" value={newEmailContent.to} onChange={handleInputChange} />
+                            <input type="text" name="subject" placeholder="Subject" value={newEmailContent.subject} onChange={handleInputChange} />
+                            <textarea name="body" placeholder="Body" value={newEmailContent.body} onChange={handleInputChange}></textarea>
+                            <button onClick={handleSendMail}>Send Email</button>
+                        </div>
+                    )}
+                {!showNewEmailForm && selectedMessage && (
+                <article className={styles.emailContent}>
+                    <header className={styles.emailHeader}>
+                        <h2 className={styles.emailSubject}>{selectedMessage.subject}</h2>
+                        <address className={styles.emailSenderInfo}>
+                            <div className={styles.senderDetails}>
+                            <span className={styles.senderName}>{selectedMessage.senderName}</span>
+                            <span className={styles.senderEmail}>{selectedMessage.sender}</span>
+                            </div>
+                            <time dateTime={selectedMessage.date}>{formatDate(selectedMessage.date)}</time>
+                        </address>
+                    </header>
+                    <div className={styles.emailBody} dangerouslySetInnerHTML={{ __html: selectedMessage.body }} />
+                    <div className={styles.emailActions}>
+                    <button className={styles.actionButton} onClick={handleReply}>
+                        <ReplyIcon className={styles.actionIcon} />
+                        <span>Reply</span>
+                    </button>
+                    <button className={styles.actionButton} onClick={handleForward}>
+                        <ForwardIcon className={styles.actionIcon} />
+                        <span>Forward</span>
+                    </button>
+                    
                 </div>
-                <time dateTime={selectedMessage.date}>{formatDate(selectedMessage.date)}</time>
-              </address>
-            </header>
-            <div className={styles.emailBody} dangerouslySetInnerHTML={{ __html: selectedMessage.body }} />
-            <div className={styles.emailActions}>
-            <button className={styles.actionButton} onClick={handleReply}>
-                <ReplyIcon className={styles.actionIcon} />
-                <span>Reply</span>
-            </button>
-        <button className={styles.actionButton} onClick={handleForward}>
-            <ForwardIcon className={styles.actionIcon} />
-            <span>Forward</span>
-        </button>
-    </div>
-          </article>
+            </article>
         )}
-      </section>
+        </section>
             
-        </div>
+    </div>
     );
 }
 
