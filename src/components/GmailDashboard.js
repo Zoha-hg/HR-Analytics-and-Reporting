@@ -5,7 +5,6 @@ import { ReactComponent as NewMailIcon } from './assets/newmail.svg';
 import {ReactComponent as ReplyIcon} from './assets/reply.svg';
 import {ReactComponent as ForwardIcon} from './assets/forward.svg';
 import {ReactComponent as InboxIcon} from './assets/inbox.svg';
-import {ReactComponent as DraftsIcon} from './assets/drafts.svg';
 import {ReactComponent as SentIcon} from './assets/sent.svg';
 import {ReactComponent as DeleteIcon} from './assets/deleted.svg';
 import { ReactComponent as JunkIcon } from './assets/junk.svg';
@@ -144,11 +143,6 @@ function GmailDashboard() {
                             className={`${currentView === 'sent' ? styles.active : ''} ${styles.buttonWithIcon}`}>
                             <SentIcon className={styles.icon}/>
                         Sent Items
-                    </button>
-                    <button onClick={() => setCurrentView('drafts')} 
-                            className={`${currentView === 'drafts' ? styles.active : ''} ${styles.buttonWithIcon}`}>
-                            <DraftsIcon className={styles.icon}/>
-                        Drafts
                     </button>
                     <button onClick={() => setCurrentView('deleted')} 
                             className={`${currentView === 'deleted' ? styles.active : ''} ${styles.buttonWithIcon}`}>

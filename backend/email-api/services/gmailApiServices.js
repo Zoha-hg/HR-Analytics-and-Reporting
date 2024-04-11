@@ -162,70 +162,6 @@ async function listSentMessages(auth) {
   }
   
 
-  async function listDraftMessages(auth) {
-    const gmail = google.gmail({ version: 'v1', auth });
-    // Fetch messages labeled as drafts
-    const res = await gmail.users.messages.list({
-        userId: 'me',
-        maxResults: 10, // Adjust this value as needed
-        q: 'in:drafts', // Query to filter for draft messages
-    });
-  
-    if (!res.data.messages || res.data.messages.length === 0) {
-        console.log('No draft messages found.');
-        return [];
-    }
-  
-    let messagesInfo = [];
-
-    // Iterate over each message in the drafts
-    for (let i = 0; i < res.data.messages.length; i++) {
-        const messageId = res.data.messages[i].id;
-
-        // Retrieve the full details of each message
-        const message = await gmail.users.messages.get({
-            userId: 'me',
-            id: messageId,
-            format: 'full'
-        });
-
-        // Extract necessary headers (Subject, From, Date)
-        const headers = message.data.payload.headers;
-        const subjectHeader = headers.find(header => header.name === 'Subject');
-        const toHeader = headers.find(header => header.name === 'To');
-        const dateHeader = headers.find(header => header.name === 'Date');
-
-        // Extract the values, providing defaults if not found
-        const subject = subjectHeader ? subjectHeader.value : 'No Subject';
-        const to = toHeader ? toHeader.value : 'Unknown Recipient';
-        const date = dateHeader ? new Date(dateHeader.value).toLocaleString() : 'Unknown Date';
-  
-        // Initialize body data and decode if present
-        let bodyData = '';
-        if (message.data.payload.parts) {
-            const part = message.data.payload.parts.find(part => part.mimeType === 'text/html');
-            bodyData = part && part.body.data ? part.body.data : '';
-        } else if (message.data.payload.body && message.data.payload.body.data) {
-            bodyData = message.data.payload.body.data;
-        }
-
-        // Decode and sanitize the body content
-        const decodedBodyData = Buffer.from(bodyData, 'base64').toString('utf-8');
-        const body = sanitizeText(decodedBodyData);
-
-        // Log and push each message's details to the array
-        console.log(`Draft ID: ${messageId}, Subject: ${subject}, From: ${to}, Date: ${date}`);
-        messagesInfo.push({
-            id: messageId,
-            subject: subject,
-            from: to,
-            date: date,
-            body: body
-        });
-    }
-  
-    return messagesInfo;
-}
 
 
   async function sendEmail(auth, content){
@@ -375,7 +311,6 @@ async function listJunkMessages(auth) {
   }
   
   module.exports = {
-    listDraftMessages : listDraftMessages,
     listSentMessages : listSentMessages,
     listMessages : listMessages,
     sendEmail : sendEmail,

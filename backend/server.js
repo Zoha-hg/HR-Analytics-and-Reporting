@@ -13,7 +13,7 @@ const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
 const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
-const { listLabels, listDraftMessages, listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages } = require("./email-api/services/gmailApiServices");
+const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -359,14 +359,6 @@ app.get('/api/gmail/sent', authenticateToken, async (req, res) => {
   res.json(messages);
 });
 
-app.get('/api/gmail/drafts', authenticateToken, async (req, res) => {
-  const username = req.user.username;  // Assuming this is set by authenticateToken
-
-  const authClient = await authorize2(username);
-
-  const messages = await listDraftMessages(authClient);
-  res.json(messages);
-});
 
 
 app.get('/api/gmail/junk', authenticateToken, async (req, res) => {
