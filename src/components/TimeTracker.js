@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TimeTracker.css';
+import { Line } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement, // This was missing and is necessary for line charts
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+
+
 
 const FULL_CIRCLE_SECONDS = 60;
 
@@ -13,6 +29,7 @@ const TimeTracker = () => {
     const [totalTime, setTotalTime] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [progress, setProgress] = useState(0);
+    const [graphData, setGraphData] = useState({});
 
     useEffect(() => {
         if (isTracking) {
@@ -71,13 +88,26 @@ const TimeTracker = () => {
         }
         try {
             const response = await axios.get(url, getAuthHeaders());
-            const duration = response.data.totalDurationInSeconds;
-            const formattedTime = formatDuration(duration);
-            setTotalTime(formattedTime);
-        } catch (error) {
+            if(response.data.timeEntries) {
+              const dataForGraph = {
+                labels: response.data.timeEntries.map(entry => entry.date),
+                datasets: [{
+                  label: 'Total Time',
+                  data: response.data.timeEntries.map(entry => entry.duration),
+                  fill: false,
+                  borderColor: 'rgb(75, 192, 192)',
+                  tension: 0.1
+                }]
+              };
+              setGraphData(dataForGraph);
+            } else {
+              // Handle the case where timeEntries is not present or not an array
+              console.error('timeEntries is not an array or not present in the response:', response.data);
+            }
+          } catch (error) {
             console.error(`Error fetching total time for the ${period}:`, error);
-        }
-    };
+          }
+        };
 
     const formatElapsedTime = elapsedTime => {
         const totalSeconds = Math.floor(elapsedTime);
@@ -134,6 +164,11 @@ const TimeTracker = () => {
             <button onClick={() => fetchTotalTime('monthly')}>Get Total Time for Month</button>
           </div>
           {totalTime && <p>Total Time Tracked: {totalTime}</p>}
+          {graphData.labels && (
+      <div className="chart-container">
+        <Line data={graphData} options={{ responsive: true }} />
+      </div>
+    )}
         </div>
     );
 };

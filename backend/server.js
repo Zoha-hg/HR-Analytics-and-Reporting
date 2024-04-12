@@ -478,6 +478,12 @@ app.get('/total-time/:date', authenticateToken1, async (req, res) => {
       endTime: { $lte: endOfDay }
     });
 
+    const timeEntries = timeLogs.map(log => ({
+      date: log.startTime.toISOString().split('T')[0],
+      duration: log.duration,
+      // Include any other relevant details you want to show for each log
+    }));
+    
     const totalDuration = timeLogs.reduce((total, log) => {
       return total + (log.duration || 0);
     }, 0);
@@ -485,7 +491,8 @@ app.get('/total-time/:date', authenticateToken1, async (req, res) => {
     res.json({
       date: dateString,
       totalDurationInSeconds: totalDuration,
-      totalDurationFormatted: formatDuration(totalDuration)
+      totalDurationFormatted: formatDuration(totalDuration),
+      timeEntries, // Include the array in the response
     });
   } catch (error) {
     console.error('Error calculating total time:', error);
@@ -510,14 +517,19 @@ app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
           startTime: { $gte: weekStart },
           endTime: { $lte: weekEnd }
       });
-
+      const timeEntries = timeLogs.map(log => ({
+        date: log.startTime.toISOString().split('T')[0],
+        duration: log.duration,
+        // Include any other relevant details you want to show for each log
+      }));
       const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
 
       res.json({
-          weekStarting: weekStart.toISOString().split('T')[0],
-          weekEnding: weekEnd.toISOString().split('T')[0],
-          totalDurationInSeconds: totalDuration,
-          totalDurationFormatted: formatDuration(totalDuration)
+        weekStarting: weekStart.toISOString().split('T')[0],
+        weekEnding: weekEnd.toISOString().split('T')[0],
+        totalDurationInSeconds: totalDuration,
+        totalDurationFormatted: formatDuration(totalDuration),
+        timeEntries, // Include the array in the response
       });
   } catch (error) {
       console.error('Error calculating weekly total time:', error);
@@ -527,29 +539,42 @@ app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
 
 app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
   try {
-      const inputDate = new Date(req.params.date);  // Assumes 'YYYY-MM-DD' format
-      const monthStart = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1)); // Set to the first day of the month
-      const monthEnd = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0, 23, 59, 59, 999)); // Set to the last day of the month
+    const inputDate = new Date(req.params.date); // Assumes 'YYYY-MM-DD' format
+    const monthStart = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1)); // Set to the first day of the month
+    const monthEnd = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0, 23, 59, 59, 999)); // Set to the last day of the month
 
-      const timeLogs = await TimeLog.find({
-          user: req.user,
-          startTime: { $gte: monthStart },
-          endTime: { $lte: monthEnd }
-      });
+    // Query to find time logs within the start and end of the month
+    const timeLogs = await TimeLog.find({
+      user: req.user._id, // Assuming req.user._id contains the ID of the authenticated user
+      startTime: { $gte: monthStart },
+      endTime: { $lte: monthEnd }
+    });
 
-      const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+    // Mapping timeLogs to timeEntries
+    const timeEntries = timeLogs.map(log => ({
+      date: log.startTime.toISOString().split('T')[0],
+      duration: log.duration,
+      // Include any other relevant details you want to show for each log
+    }));
 
-      res.json({
-          monthStarting: monthStart.toISOString().split('T')[0],
-          monthEnding: monthEnd.toISOString().split('T')[0],
-          totalDurationInSeconds: totalDuration,
-          totalDurationFormatted: formatDuration(totalDuration)
-      });
+    // Reducing timeLogs to calculate totalDuration
+    const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+    // Sending the response
+    res.json({
+      monthStarting: monthStart.toISOString().split('T')[0],
+      monthEnding: monthEnd.toISOString().split('T')[0],
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+      timeEntries, // Include the array in the response
+    });
+
   } catch (error) {
-      console.error('Error calculating monthly total time:', error);
-      res.status(500).json({ message: 'Failed to calculate monthly total time. Please try again.' });
+    console.error('Error calculating monthly total time:', error);
+    res.status(500).json({ message: 'Failed to calculate monthly total time. Please try again.' });
   }
 });
+
 
 
 function formatDuration(totalSeconds) {
