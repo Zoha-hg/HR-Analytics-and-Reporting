@@ -1,0 +1,32 @@
+const size = 200;
+const strokeWidth = 6;
+const center = size / 2;
+const radius = size / 2 - strokeWidth / 2;
+const circumference = 2 * Math.PI * radius;
+const progressPercent = 25; // For example purposes, 25% progress
+
+return (
+  <svg width={size} height={size}>
+    <circle
+      stroke="#e6e6e6"
+      fill="none"
+      cx={center}
+      cy={center}
+      r={radius}
+      strokeWidth={strokeWidth}
+    />
+    <circle
+      stroke="#7e57c2"
+      fill="none"
+      cx={center}
+      cy={center}
+      r={radius}
+      strokeWidth={strokeWidth}
+      strokeDasharray={circumference}
+      strokeDashoffset={circumference - (progressPercent / 100) * circumference}
+      strokeLinecap="round"
+      transform={`rotate(-90 ${center} ${center})`}
+      style={{ transition: 'stroke-dashoffset 0.5s ease 0s' }}
+    />
+  </svg>
+);

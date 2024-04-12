@@ -1,0 +1,68 @@
+
+  
+.time-tracker-container {
+    margin-left: 60px;
+    text-align: center; /* Center everything */
+  }
+  
+  .timer {
+    position: relative;
+    margin: 2rem auto; /* Center the timer */
+    width: 200px; /* Same as SVG width */
+    height: 200px; /* Same as SVG height */
+  }
+  
+  .timer-svg {
+    transform: rotate(-90deg); /* Rotate so progress starts from the top */
+  }
+  
+  .timer-circle-bg {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 6;
+  }
+  
+
+  
+  .timer-circle-fg {
+    fill: none;
+    stroke: #7e57c2; /* Adjust the progress color as needed */
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s linear;
+  }
+
+  
+  .timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .timer-button {
+    padding: 10px 20px;
+    margin-top: 15px; /* Add some space between the button and the timer */
+    font-size: 1rem;
+    color: white;
+    background-color: #00aaff; /* Adjust button color as needed */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .timer-button:hover {
+    background-color: #0088cc; /* Darker shade for hover effect */
+  }
+  
+  .reset-button {
+    background-color: #ff6b6b; /* red color for reset */
+    margin-top: 10px; /* additional space from the start/stop button */
+  }
+  
+  .reset-button:hover {
+    background-color: #ff5252; /* slightly darker red for hover effect */
+  }
+  

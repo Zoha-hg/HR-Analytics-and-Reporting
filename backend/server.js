@@ -12,6 +12,7 @@ const managerModel = require("./models/manager_model");
 const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
+const TimeLog = require("./models/timeLog_model");
 const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
 const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages } = require("./email-api/services/gmailApiServices");
 
@@ -392,3 +393,168 @@ app.post('/api/gmail/send', authenticateToken, async (req, res) => {
       res.status(500).json({ message: 'Failed to send email' });
   }
 });
+
+const authenticateToken1 = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+    if (err) return res.sendStatus(403);
+
+    try {
+      // Assuming the JWT token was created with the username
+      const user = await User.findOne({ username: decoded.username });
+      if (!user) {
+        return res.sendStatus(404); // User not found
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      console.error('Error fetching user from token:', error);
+      res.status(500).json({ message: 'Failed to authenticate token.' });
+    }
+  });
+};
+
+
+app.post('/start-time-log', authenticateToken1, async (req, res) => {
+  try {
+    const newTimeLog = new TimeLog({
+      user: req.user._id,  // Use the full user object's _id
+      startTime: new Date(),
+    });
+
+    await newTimeLog.save();
+    res.status(201).json(newTimeLog);
+  } catch (error) {
+    console.error('Error starting time log:', error);
+    res.status(500).json({ message: 'Failed to start time log. Please try again.' });
+  }
+});
+
+
+app.post('/stop-time-log', authenticateToken1, async (req, res) => {
+  try {
+    const { timeLogId } = req.body;
+    const timeLog = await TimeLog.findById(timeLogId);
+
+    if (!timeLog) {
+      return res.status(404).send('Time log not found');
+    }
+
+    if (timeLog.user.toString() !== req.user._id.toString()) {
+      return res.status(403).send('Unauthorized to modify this time log');
+    }
+
+    timeLog.endTime = new Date();
+    timeLog.duration = (timeLog.endTime - timeLog.startTime) / 1000; // Duration in seconds
+    console.log("timeLog", timeLog)
+    await timeLog.save();
+
+    res.status(200).json(timeLog);
+  } catch (error) {
+    console.error('Error stopping time log:', error);
+    res.status(500).json({ message: 'Failed to stop time log. Please try again.' });
+  }
+});
+app.get('/total-time/:date', authenticateToken1, async (req, res) => {
+  try {
+    const dateString = req.params.date; // 'YYYY-MM-DD' format assumed
+    const userTimezoneOffset = req.user.timezoneOffset || 0; // Assuming timezone offset in minutes might be stored in user profile
+
+    const date = new Date(dateString);
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    startOfDay.setMinutes(startOfDay.getMinutes() + userTimezoneOffset);
+
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    const timeLogs = await TimeLog.find({
+      user: req.user,
+      startTime: { $gte: startOfDay },
+      endTime: { $lte: endOfDay }
+    });
+
+    const totalDuration = timeLogs.reduce((total, log) => {
+      return total + (log.duration || 0);
+    }, 0);
+
+    res.json({
+      date: dateString,
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration)
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
+
+
+app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
+  try {
+      const inputDate = new Date(req.params.date);  // Assumes 'YYYY-MM-DD' format
+      const weekStart = new Date(inputDate);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Set to Sunday (start of week)
+      weekStart.setUTCHours(0, 0, 0, 0);  // Start of the day in UTC
+
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);  // Move to Saturday (end of week)
+      weekEnd.setUTCHours(23, 59, 59, 999);  // End of the day in UTC
+
+      const timeLogs = await TimeLog.find({
+          user: req.user,
+          startTime: { $gte: weekStart },
+          endTime: { $lte: weekEnd }
+      });
+
+      const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+      res.json({
+          weekStarting: weekStart.toISOString().split('T')[0],
+          weekEnding: weekEnd.toISOString().split('T')[0],
+          totalDurationInSeconds: totalDuration,
+          totalDurationFormatted: formatDuration(totalDuration)
+      });
+  } catch (error) {
+      console.error('Error calculating weekly total time:', error);
+      res.status(500).json({ message: 'Failed to calculate weekly total time. Please try again.' });
+  }
+});
+
+app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
+  try {
+      const inputDate = new Date(req.params.date);  // Assumes 'YYYY-MM-DD' format
+      const monthStart = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1)); // Set to the first day of the month
+      const monthEnd = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0, 23, 59, 59, 999)); // Set to the last day of the month
+
+      const timeLogs = await TimeLog.find({
+          user: req.user,
+          startTime: { $gte: monthStart },
+          endTime: { $lte: monthEnd }
+      });
+
+      const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+      res.json({
+          monthStarting: monthStart.toISOString().split('T')[0],
+          monthEnding: monthEnd.toISOString().split('T')[0],
+          totalDurationInSeconds: totalDuration,
+          totalDurationFormatted: formatDuration(totalDuration)
+      });
+  } catch (error) {
+      console.error('Error calculating monthly total time:', error);
+      res.status(500).json({ message: 'Failed to calculate monthly total time. Please try again.' });
+  }
+});
+
+
+function formatDuration(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
