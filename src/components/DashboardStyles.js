@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: 240,
     background: 'linear-gradient(to bottom, #39d6d3, #042434)',
-    color: 'white',
   },
   drawerItem: {
     color: '#fff', // Set the text color to white

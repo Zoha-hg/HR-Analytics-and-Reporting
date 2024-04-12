@@ -3,6 +3,7 @@ import { Typography, Drawer, List, ListItem, ListItemText, Toolbar, AppBar, Box 
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import DashboardStyles from './DashboardStyles'; // Import the styles
+import CreateIcon from '@mui/icons-material/Create';
 import Logo from './assets/HR logo.png'; // Import logo image
 import Company from './assets/logo.png'
 
@@ -37,13 +38,13 @@ const Dashboard = () => {
       case 'admin':
         return (
           <List>
-            <ListItem component={Link} to="/form">
+            <ListItem component={Link} to="/form" className={classes.drawerItem}>
               <ListItemText primary="Create a Form" />
             </ListItem>
-            <ListItem component={Link} to="/fill">
+            <ListItem component={Link} to="/fill" className={classes.drawerItem}>
               <ListItemText primary="Fill a Form" />
             </ListItem>
-            <ListItem component={Link} to="/display">
+            <ListItem component={Link} to="/display" className={classes.drawerItem}>
               <ListItemText primary="Display Forms" />
             </ListItem>
           </List>
@@ -51,10 +52,10 @@ const Dashboard = () => {
       case 'hr professional':
         return (
           <List>
-            <ListItem component={Link} to="/form">
+            <ListItem component={Link} to="/form" className={classes.drawerItem}>
               <ListItemText primary="Create a Form" />
             </ListItem>
-            <ListItem component={Link} to="/display">
+            <ListItem component={Link} to="/display" className={classes.drawerItem}>
               <ListItemText primary="Display Forms" />
             </ListItem>
           </List>
@@ -62,10 +63,10 @@ const Dashboard = () => {
       case 'employee':
         return (
           <List>
-            <ListItem component={Link} to="/fill">
+            <ListItem component={Link} to="/fill" className={classes.drawerItem}>
               <ListItemText primary="Fill a Form" />
             </ListItem>
-            <ListItem component={Link} to="/display">
+            <ListItem component={Link} to="/display" className={classes.drawerItem}>
               <ListItemText primary="Display Forms" />
             </ListItem>
           </List>
@@ -73,10 +74,10 @@ const Dashboard = () => {
       case 'manager':
         return (
           <List>
-            <ListItem component={Link} to="/fill">
+            <ListItem component={Link} to="/fill" className={classes.drawerItem}>
               <ListItemText primary="Fill a Form" />
             </ListItem>
-            <ListItem component={Link} to="/display">
+            <ListItem component={Link} to="/display" className={classes.drawerItem}>
               <ListItemText primary="Display Forms" />
             </ListItem>
           </List>
@@ -105,6 +106,44 @@ const Dashboard = () => {
             </ListItem>
         </List>
         {drawerContent()}
+        <List>
+            <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Dashboard"/>
+                </Box>
+            </ListItem>
+            <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Employee"/>
+                </Box>
+            </ListItem>
+            <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Feedback Forms"/>
+                </Box>
+            </ListItem>
+            <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Calendar"/>
+                </Box>
+            </ListItem>
+            <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Calendar"/>
+                </Box>
+            </ListItem>
+            <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5}} />
+                    <ListItemText primary="Email"/>
+                </Box>
+            </ListItem>
+        </List>
       </Drawer>
       <Box component="main" className={classes.mainContent}>
         <Typography variant="h2">Welcome to the {role} Dashboard</Typography>
