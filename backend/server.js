@@ -155,7 +155,7 @@ app.post('/createform', async (req, res) => {
 		//get last filled form id and increment it by 1
 		const {filled, title, description, start_time, end_time, questions } = req.body;
 
-		const form_id = new mongoose.Types.ObjectId();
+		const form_id = parseInt(new mongoose.Types.ObjectId().toString().substring(0, 8), 16);
 	
 		// make a new form
 		const newForm = await Feedback.create({
@@ -299,8 +299,8 @@ app.post("/fillform", async (req, res) => {
 				path: 'feedback_forms.form',
 				model: 'Feedback', 
 			});
-			const formIndex = manager.feedback_forms.findIndex(formObj => formObj.form.form_id === form_id);
-			
+			console.log("formIndex ", manager.feedback_forms)
+			const formIndex = manager.feedback_forms.findIndex(formObj => formObj.form.form_id == form_id);
 			const form = manager.feedback_forms[formIndex].form;
 			
 			console.log("before update ", manager.feedback_forms[formIndex].form);

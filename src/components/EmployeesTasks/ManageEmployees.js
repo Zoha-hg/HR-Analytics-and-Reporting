@@ -1,6 +1,8 @@
 import React, { useState , useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './TaskView.css';
+
 
 const ManageEmployees = () => {
     const [manager_id, setManagerId] = useState('');
@@ -62,8 +64,7 @@ const ManageEmployees = () => {
             console.log("employees", tasks_data.data);
             if(tasks_data.error === undefined) {
                 setTasks(tasks_data.data);
-                console.log(tasks_data.data);
-                console.log("TASKS ", tasks);
+                console.log("TASKS ", tasks_data.data);
             }
             console.log("yoooo");
         }
@@ -107,17 +108,53 @@ const ManageEmployees = () => {
         }
     }
     
+    const formatDate = (date) => {
+        const year = date.split('-')[0];
+        const month = date.split('-')[1];
+        const day = date.split('-')[2].split('T')[0]
+        return day + "/" + month + "/" + year;
+    }
+
+    const selectClass = (status) => {
+        if(status === 'completed')
+        {
+            return 'completed';
+        }
+        else if(status === 'in progress')
+        {
+            return 'inprogress';
+        }
+        else
+        {
+            return 'notstarted';
+        }
+    }
+
+    const evalClass = (status) => {
+        if(status === 'evaluate')
+        {
+            return 'Evaluate';
+        }
+        else if(status === 'pending')
+        {
+            return 'Pending';
+        }
+        else
+        {
+            return 'Completed';
+        }
+    }
     return(
         <div>
 
             { user_role === "Manager" && (
-                <div>
-                    <h1>Manage Employees</h1>
-                    <Link to="/employees/createtask"><button>+ Add new</button></Link>
-                    <ul>
+                <div className='Tasks'>
                     {tasks.length > 0 ? (
-                        <ul style={{ listStyleType: 'none', padding: 0 }}>
-                            <table>
+                        <div>
+
+                            <h1>{tasks[0].department_name} Task Board</h1>
+                            <Link to="/employees/createtask"><button className='addnew'>+ Add new</button></Link>
+                            <table className="task_view">
                                 <thead>
                                     <tr>
                                     <th>Title</th>
@@ -129,32 +166,31 @@ const ManageEmployees = () => {
                                 <tbody>
                                     {tasks.map((taskObj, index) => (
                                     <tr key={index}>
-                                        <td>{taskObj.title}</td>
+                                        <td className='title'>{taskObj.title}</td>
                                         <td>{taskObj.assigned_to}</td>
-                                        <td>{taskObj.start_time}</td>
+                                        <td>{formatDate(taskObj.start_time)}</td>
                                         {taskObj.evaluation_status === 'evaluate' ? (
-                                            <Link to={"/employees/evaluatetask/?task_id="+taskObj.task_id}><button>Evaluate</button></Link>
+                                            <td><Link to={"/employees/evaluatetask/?task_id="+taskObj.task_id}><button className='evaluate'>Evaluate</button></Link></td>
                                         ) : (
-                                            <td>{taskObj.evaluation_status}</td>
+                                            <td className='status_eval'><span className={evalClass(taskObj.evaluation_status)}>{evalClass(taskObj.evaluation_status)}</span></td>
                                         )}
                                     </tr>
                                     ))}
                                 </tbody>
                             </table>
-                        </ul>
+                        </div>
                     ) : (
                         <p>No tasks assigned</p>
                     )}
-                </ul>
             </div>)}
 
             {
                 user_role === "Employee" && (
-                    <div>
-                        <h1>hi</h1>
+                    <div className='Tasks'>
+                        <h1>My Tasks</h1>
                             {tasks.length > 0 ? (
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    <table>
+                                    <table className="task_view">
                                         <thead>
                                             <tr>
                                             <th>Title</th>
@@ -166,17 +202,23 @@ const ManageEmployees = () => {
                                             {tasks.map((taskObj, index) => (
                                             <tr key={index}>
                                                 <td>{taskObj.title}</td>
-                                                <td>{taskObj.start_time}</td>
+                                                <td>{formatDate(taskObj.start_time)}</td>
                                                 <td>
-                                                <select value={taskObj.completion_status}
-                                                    data-index={index}
-                                                    onChange={handleStatusChange}
-                                                >
-                                                        <option value={taskObj.completion_status}>{taskObj.completion_status}</option>
-                                                        <option value="not started">Not started</option>
-                                                        <option value="in progress">In progress</option>
-                                                        <option value="completed">Completed</option>
-                                                    </select>
+                                                    {
+                                                        taskObj.completion_status === 'completed' ? (
+                                                            <span className="completed">Completed</span>
+                                                        ) : (
+                                                            <select value={taskObj.completion_status}
+                                                                data-index={index}
+                                                                onChange={handleStatusChange} className={selectClass(taskObj.completion_status)}
+                                                            >
+                                                                    <option className={taskObj.completion_status} value={taskObj.completion_status}>{taskObj.completion_status}</option>
+                                                                    <option className='notstarted' value="not started">Not started</option>
+                                                                    <option className='1' value="in progress">In progress</option>
+                                                                    <option id="completed" value="completed">Completed</option>
+                                                                </select>
+                                                        )
+                                                    }
                                                 </td>
 
                                             </tr>

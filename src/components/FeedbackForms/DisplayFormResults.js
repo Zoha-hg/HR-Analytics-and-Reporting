@@ -108,9 +108,9 @@ function DisplayResults()
     return (
         
         <div>        
-            <div className='form-results'>
-                <h1>Results for form {form.title}</h1>
-                <h3>{form.description}</h3>
+            <div className='container'>
+                <h1 >Results for form {form.title}</h1>
+                <h3 style={{ marginBottom: '0px'}}>{form.description}</h3>
 
                 {!has_data && (
                     <div>
@@ -141,10 +141,10 @@ function DisplayResults()
                         </label>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
-                            {results.map(({ question, rating1, rating2, rating3, rating4, rating5 }) => (
+                        <div className='graphs'>
+                            {results.map(({ question, rating1, rating2, rating3, rating4, rating5 }, index) => (
                                 <div key={question}>
-                                    <h3>{question}</h3>
+                                    <h3>Q{index+1}. {question}</h3>
                                     {chartType === 'bar' ? (
                                         <Bar
                                             data={{

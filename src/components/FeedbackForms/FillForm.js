@@ -1,7 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Fillform.css';
+import { styled } from '@mui/material/styles';
+import Rating, { IconContainerProps } from '@mui/material/Rating';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+
+const StyledRating = styled(Rating)(({ theme }) => ({
+    '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
+        color: theme.palette.action.disabled,
+    },
+}));
+
+const customIcons = {
+    1: {
+        icon: <SentimentVeryDissatisfiedIcon color="error" />,
+        label: 'Very Dissatisfied',
+    },
+    2: {
+        icon: <SentimentDissatisfiedIcon color="error" />,
+        label: 'Dissatisfied',
+    },
+    3: {
+        icon: <SentimentSatisfiedIcon color="warning" />,
+        label: 'Neutral',
+    },
+    4: {
+        icon: <SentimentSatisfiedAltIcon color="success" />,
+        label: 'Satisfied',
+    },
+    5: {
+        icon: <SentimentVerySatisfiedIcon color="success" />,
+        label: 'Very Satisfied',
+    },
+};
+
+function IconContainer(props) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+}
 
 function FillForm() {
     const [user, setUser] = useState('');
@@ -107,7 +147,6 @@ function FillForm() {
                 return;
             }
             const response = axios.post('http://localhost:8000/fillform', {form_id: form_id, employee_id: user, user_role: user_role, answers: answers});
-            alert("filled form successfully!!");
             navigate('/feedbackform');
             if(response.data === "error")
             {
@@ -131,7 +170,7 @@ function FillForm() {
     };
     
     return (
-        <div>
+        <div className='container'>
             <h1>Fill Form</h1>
             {form_data &&(
                 <div>
@@ -140,25 +179,19 @@ function FillForm() {
                 </div>
             )}
             {form_data && form_data.questions.map((question, index) => (
-                <div key={index}> {/* Added key prop here */}
-                    <label>{index} {question.question}</label>
-                    <button onClick={() => handleCircleClick(index, 1)}> 1</button>
-                    <button onClick={() => handleCircleClick(index,2)}> 2</button>
-                    <button onClick={() => handleCircleClick(index,3)}> 3</button>
-                    <button onClick={() => handleCircleClick(index,4)}> 4</button>
-                    <button onClick={() => handleCircleClick(index,5)}> 5</button>
-                    {/* <div className="circle-container">
-                        {[1, 2, 3, 4, 5].map(value => (
-                            <div
-                                key={value}
-                                className={`circle ${selectedValue === value ? 'selected' : ''}`}
-                                onClick={() => handleCircleClick(index, value)}
-                            ></div>
-                        ))}
-                    </div> */}
-                </div>
+                <div key={index} className='formfill'>
+                <label>{index + 1}. {question.question}</label>
+                <StyledRating
+                    value={answers[index]}
+                    onChange={(event, newValue) => setAns(index, newValue)}
+                    IconContainerComponent={IconContainer}
+                    getLabelText={(value) => customIcons[value]?.label || ''}
+                    highlightSelectedOnly
+                    max={5}
+                />
+            </div>
             ))}
-            <button onClick={onSubmit}>Submit</button> {/* Fixed typo onSumbit to onSubmit */}
+            <button className="submit" onClick={onSubmit}>Submit</button> {/* Fixed typo onSumbit to onSubmit */}
         </div>
     );
 }

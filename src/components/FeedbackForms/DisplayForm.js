@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-
+import "./CreateForm.css";
 
 
 function DisplayForms() {
@@ -98,75 +98,95 @@ function DisplayForms() {
     const endedForms = forms.filter(form => new Date(form.end_time) < new Date());
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date());
 
+    const formatDate = (date) => {
+        const year = date.split('-')[0];
+        const month = date.split('-')[1];
+        const day = date.split('-')[2].split('T')[0]
+        return day + "/" + month + "/" + year;
+    }
+
     return (
-        <div>
+        <div  className='container forms'>
             
             <div>
                 {user_role === "HR professional" && (
                     <div>
-                        <h1>Feedback Forms</h1>
-                        <Link to="/feedbackform/createform"><button>Create a Form</button></Link>
-                        <h2>Finished</h2>
-                        <ul>
-                            {endedForms.length > 0 ? (
-                                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    {endedForms.map(form => (
-                                        <li key={form.form_id}>
-                                            <button type="button" onClick={() => handleGoToForm(form.form_id)}>
-                                                <h3>{form.title}</h3>
-                                                <p>{form.description}</p>
-                                                <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>None</p>
-                            )}
-                        </ul>
-                        <h2>Ongoing</h2>
-                        <ul>
-                            {ongoingForms.length > 0 ? (
-                                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    {ongoingForms.map(form => (
-                                        <li key={form.form_id}>
-                                                <h3>{form.title}</h3>
-                                                <p>{form.description}</p>
-                                                <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>None</p>
-                            )}
-                        </ul>
+                        <div>
+                            <h1>Feedback Forms</h1>
+                            <Link to="/feedbackform/createform"><button className="createform">Create a Form</button></Link>
+                        </div>
+                        <div className='incomplete-forms' >
+                            <h2>Finished</h2>
+                            <ul className='form-cards'>
+                                {endedForms.length > 0 ? (
+                                    <ul>
+                                        {endedForms.map(form => (
+                                            <li key={form.form_id}>
+                                                <button className="form-button" type="button" onClick={() => handleGoToForm(form.form_id)}>
+                                                    <h3>{form.title}</h3>
+                                                    <h4>Start: {formatDate(form.start_time)}</h4>
+                                                    <h4>Due: {formatDate(form.end_time)}</h4>
+                                                    <p>{form.description}</p>
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>None</p>
+                                )}
+                            </ul>
+
+                        </div>
+                        <div className='complete-forms'>
+                            <h2>Ongoing</h2>
+                            <ul>
+                                {ongoingForms.length > 0 ? (
+                                    <ul style={{ listStyleType: 'none'}}>
+                                        {ongoingForms.map(form => (
+                                            <li key={form.form_id}>
+                                                <div className='form-card'>
+                                                    <h3>{form.title}</h3>
+                                                    <h4>Start Time: {formatDate(form.start_time)}</h4>
+                                                    <h4>Due: {formatDate(form.end_time)}</h4>
+                                                    <p>{form.description}</p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>None</p>
+                                )}
+                            </ul>
+                            
+                        </div>
                     </div>
                 )}
 
-                {user_role === "Employee" && (
+                {(user_role === "Employee" || user_role === "Manager" )&& (
                     <div>
                         <h1>Feedback Forms</h1>
-                        <div  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
+                        <div>
                             <div className='incomplete-forms' >
                                 <h2>Incomplete</h2>
-                                <ul className='form-display'>
+                                <ul className='form-cards'>
                                     {unfilledForms.length > 0 ? (
-                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                        <ul>
                                             {unfilledForms.map(form => (
                                                 <li key={form.form_id}>
                                                     <button className="form-button" type="button" onClick={() => handleGoToForm(form.form_id)}>
                                                         <h3>{form.title}</h3>
+                                                        <h4>Due: {formatDate(form.end_time)}</h4>
                                                         <p>{form.description}</p>
-                                                        <p>Start Time: {form.start_time}</p>
-                                                        <p>End Time: {form.end_time}</p>
+                                                        {/* <p>Start Time: {form.start_time}</p> */}
                                                     </button>
                                                 </li>
                                             ))}
                                         </ul>
                                     ) : (
-                                        <p>None</p>
+                                        <div>
+
+                                            <p >None</p>
+                                        </div>
                                     )}
                                 </ul>
                             </div>
@@ -174,18 +194,20 @@ function DisplayForms() {
                                 <h2>Complete</h2>
                                 <ul>
                                     {filledForms.length > 0 ? (
-                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                        <ul className='form-cards'>
                                             {filledForms.map(form => (
                                                 <li key={form.form_id}>
+                                                    <div className='form-card'>
                                                         <h3>{form.title}</h3>
+                                                        <h4>Due: {formatDate(form.end_time)}</h4>
                                                         <p>{form.description}</p>
-                                                        <p>Start Time: {form.start_time}</p>
-                                                        <p>End Time: {form.end_time}</p>
+                                                        {/* <p>Start Time: {form.start_time}</p> */}
+                                                    </div>
                                                 </li>
                                             ))}
                                         </ul>
                                     ) : (
-                                        <p>None</p>
+                                        <p style={{border: 'none'}}>None</p>
                                     )}
                                 </ul>
                             </div>
@@ -193,7 +215,7 @@ function DisplayForms() {
                     </div>
                 )}
 
-                {user_role === "Manager" && (
+                {/* {user_role === "Manager" && (
                     <div>
                         <h1>Feedback Forms</h1>
                         <h2>Incomplete</h2>
@@ -201,12 +223,12 @@ function DisplayForms() {
                             {unfilledForms.length > 0 ? (
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                                     {unfilledForms.map(form => (
-                                        <li key={form.form_id}>
+                                        <li className='form-card' key={form.form_id}>
                                             <button type="button" onClick={() => handleGoToForm(form.form_id)}>
                                                 <h3>{form.title}</h3>
+                                                <h4>Due: {form.end_time}</h4>
                                                 <p>{form.description}</p>
                                                 <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
                                             </button>
                                         </li>
                                     ))}
@@ -222,9 +244,9 @@ function DisplayForms() {
                                     {filledForms.map(form => (
                                         <li key={form.form_id}>
                                                 <h3>{form.title}</h3>
+                                                <h4>Due: {form.end_time}</h4>
                                                 <p>{form.description}</p>
                                                 <p>Start Time: {form.start_time}</p>
-                                                <p>End Time: {form.end_time}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -233,7 +255,7 @@ function DisplayForms() {
                             )}
                         </ul>
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );

@@ -1,6 +1,47 @@
 import React, { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import Rating, { IconContainerProps } from '@mui/material/Rating';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+
+const StyledRating = styled(Rating)(({ theme }) => ({
+    '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
+        color: theme.palette.action.disabled,
+    },
+}));
+
+const customIcons = {
+    1: {
+        icon: <SentimentVeryDissatisfiedIcon color="error" />,
+        label: 'Very Dissatisfied',
+    },
+    2: {
+        icon: <SentimentDissatisfiedIcon color="error" />,
+        label: 'Dissatisfied',
+    },
+    3: {
+        icon: <SentimentSatisfiedIcon color="warning" />,
+        label: 'Neutral',
+    },
+    4: {
+        icon: <SentimentSatisfiedAltIcon color="success" />,
+        label: 'Satisfied',
+    },
+    5: {
+        icon: <SentimentVerySatisfiedIcon color="success" />,
+        label: 'Very Satisfied',
+    },
+};
+
+function IconContainer(props) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+}
 
 const EvaluateTask = () => {
 
@@ -75,11 +116,10 @@ const EvaluateTask = () => {
     }, [task_id]); 
 
 
-    const handleChange = (event, index) => {
-        const { value } = event.target;
-        console.log("Selected rating:", value, "for skill at index:", index);
-        task.skills[index].rating = value;
-        console.log(task.skills[index])
+    const handleChange = (event, index, newValue) => {
+        console.log("Selected rating:", newValue, "for skill at index:", index);
+        task.skills[index].rating = newValue;
+        setTask({ ...task });
         // Perform any necessary actions with the selected rating
     }
 
@@ -118,26 +158,29 @@ const EvaluateTask = () => {
 
     }
     return (
-        <div>
-            <h1>Evaluate Task</h1>
+        <div className='Tasks'>
+            <h1>Evaluate Task: </h1>
             <h2>{task.title}</h2>
-            <ul>
-                {task.skills.map((skill, index) => (
-                    <li style={{ color: "black" }} key={index}>
-                        {skill.skill}
-                        <label>Rating</label>
-                        <select onChange={(event) => handleChange(event, index)}>
-                            <option value="">Select rating</option>
-                            <option value={1}>1</option>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                            <option value={4}>4</option>
-                            <option value={5}>5</option>
-                        </select>
-                    </li>
-                ))}
-            </ul>
-            <button onClick={handleSubmit}>Evaluate</button>
+            <div className='line'></div>
+            <div className='skill-eval'>
+                <ul className='skills'>
+                    {task.skills.map((skill, index) => (
+                        <li style={{ color: "black" }} key={index}>
+                            <span>{skill.skill}</span>
+                            <StyledRating
+                                name={`skill-rating-${index}`}
+                                value={skill.rating || 0}
+                                onChange={(event, newValue) => handleChange(event, index, newValue)}
+                                IconContainerComponent={IconContainer}
+                                getLabelText={(value) => customIcons[value].label}
+                                highlightSelectedOnly
+                            />
+                        </li>
+                    ))}
+                </ul>
+
+            </div>
+            <button className="submit" onClick={handleSubmit}>Evaluate</button>
         </div>
     )
 }

@@ -40,7 +40,7 @@ const Sidebar = () => {
 
     const managerpages = [
         { icon: dashboard_icon, name: 'Dashboard', path: '/dashboard', bold: bold_dashboard_icon},
-        { icon: employee_icon, name: 'employees', path: '/employees', bold: bold_employee_icon},
+        { icon: employee_icon, name: 'Employees', path: '/employees', bold: bold_employee_icon},
         { icon: feedback_icon, name: 'Feedback Forms', path: '/feedbackform', bold: bold_feedback_icon},
         { icon: turnover_icon, name: 'Turnover', path: '/turnover', bold: bold_turnover_icon},
         { icon: calendar_icon, name: 'Calendar', path: '/calendar', bold: bold_calendar_icon},
@@ -144,10 +144,12 @@ const Sidebar = () => {
                             <img src={logo} alt="Logo" />
                         </div>
                         <div className={styles['top-right-bar']}>
-                            <div className={styles["search-bar"]}>
+                            {/* <div className={styles["search-bar"]}>
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
-                            </div>
+                            </div> */}
+                            <p><Link to={"/"}>Log Out</Link></p>
+
                         </div>
                     </div>
                     <div className={styles["line"]}></div>
@@ -187,10 +189,12 @@ const Sidebar = () => {
                             </div>
                         </div>
                         <div className={styles['top-right-bar']}>
-                            <div className={styles["search-bar"]}>
+                            {/* <div className={styles["search-bar"]}>
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
-                            </div>
+                            </div> */}
+                        <p><Link to={"/"}>Log Out</Link></p>
+
                         </div>
                     </div>
                     <div className={styles["line"]}></div>
@@ -238,16 +242,17 @@ const Sidebar = () => {
                         <div className={styles["logo"]}>
                             <img src={logo} alt="Logo" />
                         </div>
-                        <div className={styles['expanded-top-right-bar']}>
-                            <div className={styles["search-bar"]}>
+                        <div className={styles['top-right-bar']}>
+                            {/* <div className={styles["search-bar"]}>
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
-                            </div>
+                            </div> */}
+                            <p><Link to={"/"}>Log Out</Link></p>
                         </div>
                     </div>
                     <div className={styles["expanded-line"]}></div>
                     <div className={[styles.expanded_sidebar].join(' ')}>
-                        <img className={styles["applogo"]} src={datalogo}></img>
+                        <img className={styles["applogo"]} alt="app logo" src={datalogo}></img>
                         <div className={styles['nav-links']}>
                             <ul>
                                 <li className={styles["mainmenu"]}>MAIN MENU</li>

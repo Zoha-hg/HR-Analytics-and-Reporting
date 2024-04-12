@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-
+import "./CreateNewTask.css";
 const CreateNewTask = () => {
     const [manager_id, setManagerId] = useState('');
     // const [employee_id, setEmployeeId] = useState('');
@@ -114,9 +114,10 @@ const CreateNewTask = () => {
         }
     }
     return(
-        <div>
+        <div className='Tasks task-create'>
 
-<h1>Create Task</h1>
+            <h1>Create Task</h1>
+            
             <label htmlFor="title">Title:</label>
             <input
                 type='text'
@@ -145,14 +146,7 @@ const CreateNewTask = () => {
                 ))}
             </select>
             <label htmlFor="skill">Skill:</label>
-            <input
-                type='text'
-                name='skill'
-                value={newSkill}
-                onChange={handleSkillChange}
-            />
-            <button onClick={addSkill}>Add Skill</button>
-            <ul>
+            <ul className='skills'>
                 {newTask.skills.map((skill, index) => (
                     <li style={{color: "black"}} key={index}>
                         <p>{skill}</p>
@@ -160,7 +154,17 @@ const CreateNewTask = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={newTaskSubmit}>Add Task</button>
+            <div className='addskill'>
+                <input
+                    type='text'
+                    name='skill'
+                    value={newSkill}
+                    onChange={handleSkillChange}
+                />
+                <button onClick={addSkill}>Add Skill</button>
+
+            </div>
+            <button className="submit" onClick={newTaskSubmit}>Add Task</button>
         </div>
     )
 }

@@ -94,9 +94,9 @@ function CreateForm() {
         <div>
             <div>
             <div>
-                <div className="form-container">
-                    <div className="form-card">
-                        <h2>Create Form</h2>   
+                <div className="container forms-create">
+                    <div>
+                        <h1>Create Form</h1>   
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="title">Title:</label>
@@ -105,7 +105,7 @@ function CreateForm() {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="description">Description:</label>
-                                <textarea id="description" name="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+                                <textarea class="fixed-size-textarea" id="description" name="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
                                 {formErrors.description && <span className="error">{formErrors.description}</span>}
                             </div>
                             <div className="form-group">
@@ -121,16 +121,16 @@ function CreateForm() {
                             <div className="questions">
                                 <h3>Questions</h3>
                                 {formData.questions.map((question, index) => (
-                                    <div key={index}>
+                                    <div  className='addqs' key={index}>
                                         <label htmlFor={`question_${index}`}>Question {index + 1}:</label>
                                         <input type="text" id={`question_${index}`} name="question" value={question.question} onChange={(e) => handleChange(e, index)} required />
                                         {formErrors[`question_${index}`] && <span className="error">{formErrors[`question_${index}`]}</span>}
-                                        <button type="button" className="remove-question-button" onClick={() => removeQuestion(index)}>Remove</button>
+                                        <button type="button" className="remove-question" onClick={() => removeQuestion(index)}>Remove</button>
                                     </div>
                                 ))}
-                                <button type="button" className="add-question-button" onClick={addQuestion}>Add Question</button>
+                                <button type="button" className="add-question" onClick={addQuestion}>Add Question</button>
                             </div>
-                            <button type="submit" className="create-form-button">Create Form</button>
+                            <button type="submit" className="submit">Create Form</button>
                         </form>
                     </div>
                 </div>
