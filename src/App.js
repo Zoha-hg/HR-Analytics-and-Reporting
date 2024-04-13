@@ -13,6 +13,7 @@ import GmailIntegrate from './components/GmailIntegrate';
 import GmailDashboard from './components/GmailDashboard';
 import Sidebar from './components/sidebar';
 import TimeTracker from './components/TimeTracker';
+import Unread from './components/unreadGmail';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path= "/gmail" element={<GmailIntegrate/>} />
             <Route path= "/gmail-authorized" element={<GmailDashboard/>} />
             <Route path= "/calendar" element={<TimeTracker/>} />
+            <Route path="/unread" element={<Unread/>}/>
             </Routes>
         </div>
         </Router>

@@ -14,7 +14,7 @@ const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
 const TimeLog = require("./models/timeLog_model");
 const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
-const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages } = require("./email-api/services/gmailApiServices");
+const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages, listUnreadMessages } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -349,6 +349,14 @@ app.get('/api/gmail/inbox', authenticateToken, async (req, res) => {
   
     const messages = await listMessages(authClient);
     res.json(messages);
+});
+app.get('/api/gmail/unread', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listUnreadMessages(authClient);
+  res.json(messages);
 });
 
 app.get('/api/gmail/sent', authenticateToken, async (req, res) => {
@@ -734,3 +742,10 @@ function formatDuration(totalSeconds) {
   const seconds = totalSeconds % 60;
   return `${hours}h ${minutes}m ${seconds}s`;
 }
+
+// Example endpoint to check Gmail authorization status
+app.get('/api/gmail/check-authorization', authenticateToken, async (req, res) => {
+  const username = req.user.username;
+  const client = await loadSavedCredentialsIfExists(username);
+  res.status(200).json({ isAuthorized: !!client });
+});
