@@ -1,13 +1,10 @@
 /* Main container to hold both the progress ring and the graph side by side */
 .timer {
   position: relative;
-  /* margin: 2rem auto; Center the timer */
-  /* width: 200px; Same as SVG width */
-  /* height: 200px; Same as SVG height */
-  /* display: flex; Makes the div a flex container */
+
+  height: 430px;
   justify-content: center; 
   align-items: center; /* Center vertically */
-  /* flex-direction: column; Stack flex items vertically */
 }
 
 .time-tracker-container {
@@ -37,8 +34,9 @@
 
 /* SVG and progress ring styles */
 .timer-svg {
+  padding-top: 50px;
   width: 100%; /* Adjust as needed for the size of the ring */
-  height: 90%;
+  height: 80%;
 }
 
 /* Ensure buttons take up equal width and look uniform */
@@ -88,17 +86,13 @@ button:active {
   animation: pulse 1s infinite;
 
 }
-/* button:active {
-  background-color: #042434;
-  color: white;
-  animation: pulse 1s infinite;
-} */
+
 
 .timer-text {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-70%, -150%);
+  transform: translate(-70%, -70%);
   font-size: 2.5rem; /* Adjust font-size as needed */
   color: #333;
 }
