@@ -14,7 +14,7 @@ const dailyTrackingModel = require("./models/daily_tracking_model");
 const authorize = require("./email-api/services/googleApiAuthService");
 const TimeLog = require("./models/timeLog_model");
 const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
-const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages, listUnreadMessages } = require("./email-api/services/gmailApiServices");
+const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages, listUnreadMessages, countUnreadMessages } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -749,3 +749,18 @@ app.get('/api/gmail/check-authorization', authenticateToken, async (req, res) =>
   const client = await loadSavedCredentialsIfExists(username);
   res.status(200).json({ isAuthorized: !!client });
 });
+
+app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  try {
+      const unreadCount = await countUnreadMessages(authClient);
+      res.json({ unreadCount: unreadCount });
+  } catch (error) {
+      console.error('Failed to count unread messages:', error);
+      res.status(500).json({ message: 'Failed to count unread messages.' });
+  }
+});
+

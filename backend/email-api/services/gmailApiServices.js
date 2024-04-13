@@ -378,7 +378,26 @@ async function listUnreadMessages(auth) {
   
     return messagesInfo;
   }
+  async function countUnreadMessages(auth) {
+    const gmail = google.gmail({ version: 'v1', auth });
   
+    try {
+      const res = await gmail.users.messages.list({
+        userId: 'me',
+        // Using 'q' parameter to filter for unread messages in the inbox
+        q: 'in:inbox is:unread'
+      });
+  
+      // The number of unread messages is the length of the messages array
+      const unreadCount = res.data.messages ? res.data.messages.length : 0;
+  
+      console.log(`Total unread messages: ${unreadCount}`);
+      return unreadCount;
+    } catch (error) {
+      console.error('The API returned an error: ' + error);
+      throw error; // Rethrow the error so the caller is aware an error occurred
+    }
+  }
   
   module.exports = {
     listSentMessages : listSentMessages,
@@ -386,5 +405,6 @@ async function listUnreadMessages(auth) {
     sendEmail : sendEmail,
     listJunkMessages : listJunkMessages,
     listTrashMessages: listTrashMessages,
-    listUnreadMessages: listUnreadMessages
+    listUnreadMessages: listUnreadMessages,
+    countUnreadMessages: countUnreadMessages
 }
