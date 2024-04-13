@@ -23,12 +23,14 @@ const TimeTracker = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [timer, setTimer] = useState(null);
     const [timeLogId, setTimeLogId] = useState(null);
-    const [totalTime, setTotalTime] = useState('');
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    // const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [progress, setProgress] = useState(0);
     const [graphData, setGraphData] = useState({});
     const [currentPeriod, setCurrentPeriod] = useState('daily');
     const [totalTimeDisplay, setTotalTimeDisplay] = useState('');
+    const [selectedDate, setSelectedDate] = useState(
+        new Date().toLocaleDateString('en-CA') // 'en-CA' gives YYYY-MM-DD format
+      );
 
     const options = {
         scales: {
@@ -45,18 +47,17 @@ const TimeTracker = () => {
             title: {
               display: true,
               text: currentPeriod === 'daily' ? ' Duration (minutes)':
-              'Duration (hours)',
+              'Duration (minutes)',
             },
             beginAtZero: true,
           }
         },
-        // Include other options as needed for your chart
       };
       
 
       useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
-        fetchTotalTimeForDate(today); // Fetch graph data for the current date
+        fetchTotalTimeForDate(selectedDate); // Fetch graph data for the current date
         setCurrentPeriod('daily');
       }, []);
       
