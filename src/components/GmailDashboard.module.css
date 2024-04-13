@@ -315,3 +315,19 @@
   min-height: 150px; /* Or whatever minimum height you prefer */
   resize: vertical; /* This allows users to resize the textarea vertically */
 }
+
+.total-time-display {
+  font-family: 'Segment7', monospace; /* Example font */
+  display: flex;
+  align-items: baseline;
+}
+
+.time-unit {
+  font-size: 2em; /* Big size for the digits */
+  padding: 0 0.2em;
+}
+
+.time-label {
+  font-size: 0.5em; /* Smaller size for the labels */
+  padding-left: 0.1em;
+}

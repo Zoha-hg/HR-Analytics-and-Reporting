@@ -27,22 +27,26 @@ const TimeTracker = () => {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [progress, setProgress] = useState(0);
     const [graphData, setGraphData] = useState({});
+    const [currentPeriod, setCurrentPeriod] = useState('daily');
+    const [totalTimeDisplay, setTotalTimeDisplay] = useState('');
+
     const options = {
         scales: {
           x: {
             title: {
               display: true,
-              text: 'Hour of the Day', // X-axis label
+              text: currentPeriod === 'daily' ? 'Hour of the Day' :
+                    currentPeriod === 'weekly' ? 'Day of the Week' :
+                    'Day of the Month', // Change the label based on the current period
             },
-            // If using Chart.js 3, you can set beginAtZero to true if you want the axis to start at 0
             beginAtZero: true,
           },
           y: {
             title: {
               display: true,
-              text: 'Duration (minutes)', // Y-axis label
+              text: currentPeriod === 'daily' ? ' Duration (minutes)':
+              'Duration (hours)',
             },
-            // If using Chart.js 3, you can set beginAtZero to true if you want the axis to start at 0
             beginAtZero: true,
           }
         },
@@ -50,9 +54,12 @@ const TimeTracker = () => {
       };
       
 
-    useEffect(() => {
-        fetchTotalTimeGraph(); // Fetch graph data for the current date
-    }, []);
+      useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        fetchTotalTimeForDate(today); // Fetch graph data for the current date
+        setCurrentPeriod('daily');
+      }, []);
+      
 
     useEffect(() => {
         if (isTracking) {
@@ -74,7 +81,24 @@ const TimeTracker = () => {
         const token = localStorage.getItem('token');
         return { headers: { Authorization: `Bearer ${token}` } };
     };
-
+    const handleDailyClick = () => {
+        const selected = selectedDate;
+        fetchTotalTimeForDate(selected); // Fetches the total time graph for the selected date
+        setCurrentPeriod('daily');
+      };
+      
+      const handleWeeklyClick = () => {
+        const selected = selectedDate;
+        fetchTotalTimeGraphWeekly(selected); // Fetches the total time graph for the selected week
+        setCurrentPeriod('weekly');
+      };
+      
+      const handleMonthlyClick = () => {
+        const selected = selectedDate;
+        fetchTotalTimeGraphMonthly(selected); // Fetches the total time graph for the selected month
+        setCurrentPeriod('monthly');
+      };
+      
     const handleStart = async () => {
         try {
             const response = await axios.post('http://localhost:8000/start-time-log', {}, getAuthHeaders());
@@ -87,6 +111,28 @@ const TimeTracker = () => {
         }
     };
 
+    
+      function formatDuration(totalSeconds) {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        // Create an array of the time components
+        const timeComponents = [
+            hours, minutes, seconds
+        ].map(val => val < 10 ? `0${val}` : val.toString()); // Pad with leading zeros if necessary
+
+        // Construct the formatted time string
+        let formattedTime = timeComponents.join(':');
+
+        // Remove the hours component if it's "00"
+        if (formattedTime.startsWith('00:')) {
+            formattedTime = formattedTime.substring(3);
+        }
+
+        return formattedTime;
+        }
+
     const handleStop = async () => {
         if (!timeLogId) {
             console.error('No timeLogId set');
@@ -96,60 +142,20 @@ const TimeTracker = () => {
             await axios.post('http://localhost:8000/stop-time-log', { timeLogId }, getAuthHeaders());
             setIsTracking(false);
             setTimeLogId(null);
-            fetchTotalTimeGraph();
+            if (currentPeriod === 'daily') {
+                fetchTotalTimeForDate(selectedDate);
+              } else if (currentPeriod === 'weekly') {
+                fetchTotalTimeGraphWeekly(selectedDate);
+              } else if (currentPeriod === 'monthly') {
+                fetchTotalTimeGraphMonthly(selectedDate);
+              }
         } catch (error) {
             console.error('Error stopping the timer:', error);
         }
     };
-    const fetchTotalTimeGraph = async () => {
-        const url = `http://localhost:8000/total-time-graph`;
-        try {
-            const response = await axios.get(url, getAuthHeaders());
-      
-            // If durations are provided for each hour, generate labels 0 to 23
-            if (response.data && response.data.durations) {
-                // Convert durations from seconds to minutes
-                const durationsInMinutes = response.data.durations.map(duration => duration / 60);
-      
-                const dataForGraph = {
-                    labels: Array.from({ length: 24 }, (_, i) => i), // Generates labels [0, 1, 2, ..., 23]
-                    datasets: [{
-                        label: 'Total Time',
-                        data: durationsInMinutes,
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                };
-                setGraphData(dataForGraph);
-            } else {
-                console.error('No time entries found for today:', response.data);
-                setGraphData({}); // Clears graph area or shows a "no data" message
-            }
-        } catch (error) {
-            console.error('Error fetching graph data:', error);
-        }
-      };
-      
-      
-const fetchTotalTime = async (period = 'daily') => {
-        let url = `http://localhost:8000/total-time/${selectedDate}`;
-        if (period === 'weekly') {
-            url = `http://localhost:8000/total-time-weekly/${selectedDate}`;
-        } else if (period === 'monthly') {
-            url = `http://localhost:8000/total-time-monthly/${selectedDate}`;
-        }
-        try {
-            const response = await axios.get(url, getAuthHeaders());
-            const duration = response.data.totalDurationInSeconds;
-            const formattedTime = formatDuration(duration);
-            setTotalTime(formattedTime);
-        } catch (error) {
-            console.error(`Error fetching total time for the ${period}:`, error);
-        }
-    };
+    
     const fetchTotalTimeForDate = async (date) => {
-        const url = `http://localhost:8000/total-time/${date}`;
+        const url = `http://localhost:8000/total-time-graph/${date}`;
         try {
             const response = await axios.get(url, getAuthHeaders());
       
@@ -165,6 +171,8 @@ const fetchTotalTime = async (period = 'daily') => {
                     }]
                 };
                 setGraphData(dataForGraph); // Update state to trigger re-render
+                const totalDurationInSeconds = response.data.dailyDurations.reduce((sum, current) => sum + current, 0);
+                setTotalTimeDisplay(formatDuration(totalDurationInSeconds));
             } else {
                 console.error('No hourly data found for date:', date);
                 setGraphData({});
@@ -181,17 +189,20 @@ const fetchTotalTime = async (period = 'daily') => {
           // Map durations to days of the week for the graph
           if (response.data && response.data.dailyDurations) {
             const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const durationsInHours = response.data.dailyDurations.map(duration => duration / 3600);
             const dataForGraph = {
               labels: labels,
               datasets: [{
                 label: 'Total Time',
-                data: response.data.dailyDurations,
+                data: durationsInHours,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
               }]
             };
             setGraphData(dataForGraph);
+            const totalDurationInSeconds = response.data.dailyDurations.reduce((sum, current) => sum + current, 0);
+            setTotalTimeDisplay(formatDuration(totalDurationInSeconds));
           } else {
             console.error('No data found for the week:', date);
             setGraphData({});
@@ -200,7 +211,7 @@ const fetchTotalTime = async (period = 'daily') => {
           console.error('Error fetching weekly graph data:', error);
         }
       };
-      const fetchTotalTimeGraphMonthly = async (date) => {
+    const fetchTotalTimeGraphMonthly = async (date) => {
         const url = `http://localhost:8000/total-time-graph-monthly/${date}`;
         try {
           const response = await axios.get(url, getAuthHeaders());
@@ -208,26 +219,30 @@ const fetchTotalTime = async (period = 'daily') => {
           if (response.data && response.data.dailyDurations) {
             const daysInMonth = response.data.dailyDurations.length;
             const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1); // Create labels for each day of the month
+            // Convert durations from seconds to hours
+            const durationsInHours = response.data.dailyDurations.map(duration => duration / 3600);
             const dataForGraph = {
               labels: labels,
               datasets: [{
-                label: 'Total Time',
-                data: response.data.dailyDurations,
+                label: 'Total Time (Hours)',
+                data: durationsInHours,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
               }]
             };
             setGraphData(dataForGraph);
+            const totalDurationInSeconds = response.data.dailyDurations.reduce((sum, current) => sum + (current * 3600), 0);
+            setTotalTimeDisplay(formatDuration(totalDurationInSeconds));
           } else {
             console.error('No data found for the month:', date);
-            setGraphData({});
+            setGraphData({}); // Clears graph area or shows a "no data" message
           }
         } catch (error) {
           console.error('Error fetching monthly graph data:', error);
         }
       };
-            
+      
     const formatElapsedTime = elapsedTime => {
         const totalSeconds = Math.floor(elapsedTime);
         const hours = Math.floor(totalSeconds / 3600);
@@ -236,14 +251,8 @@ const fetchTotalTime = async (period = 'daily') => {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const formatDuration = totalSeconds => {
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        return `${hours}h ${minutes}m ${seconds}s`;
-    };
-
-    const size = 200;
+   
+    const size = 300;
     const strokeWidth = 6;
     const center = size / 2;
     const radius = size / 2 - strokeWidth / 2;
@@ -252,6 +261,7 @@ const fetchTotalTime = async (period = 'daily') => {
 
     return (
         <div className="time-tracker-container">
+        <div className="progress-container">
           <div className="timer">
             <svg width={size} height={size} className="timer-svg">
                 <circle
@@ -271,26 +281,26 @@ const fetchTotalTime = async (period = 'daily') => {
                   strokeDashoffset={strokeDashoffset}
                 />
             </svg>
-            <span>{formatElapsedTime(elapsedTime)}</span>
-          </div>
-          <button onClick={isTracking ? handleStop : handleStart} className="timer-button">
-            {isTracking ? 'Stop' : 'Start'} Tracking
-          </button>
-          <div>
-            <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
-            <button onClick={() => fetchTotalTime('daily')}>Get Total Time for Date</button>
-            <button onClick={() => fetchTotalTime('weekly')}>Get Total Time for Week</button>
-            <button onClick={() => fetchTotalTime('monthly')}>Get Total Time for Month</button>
-          </div>
-          {totalTime && <p>Total Time Tracked: {totalTime}</p>}
-          <div className="chart-container">
-                {graphData.labels ? (
-                    <Line data={graphData} options={options} />
-                ) : (
-                    <p>No graph data available.</p>
-                )}
-            </div>
+            <span className="timer-text">{formatElapsedTime(elapsedTime)}</span>
+            <button onClick={isTracking ? handleStop : handleStart} className="timer-button">
+                {isTracking ? 'Stop' : 'Start'} Tracking
+            </button>
         </div>
+    </div>
+    <div className="chart-container">
+        <div className="button-container">
+            <button onClick={handleDailyClick}>Get Total Time for Date</button>
+            <button onClick={handleWeeklyClick}>Get Total Time for Week</button>
+            <button onClick={handleMonthlyClick}>Get Total Time for Month</button>
+        </div>
+        {graphData.labels ? (
+            <Line data={graphData} options={options} />
+            ) : (
+                <p>No graph data available.</p>
+                )}
+                <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+    </div>
+</div>
     );
 };
 
