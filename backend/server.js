@@ -477,12 +477,6 @@ app.get('/total-time/:date', authenticateToken1, async (req, res) => {
       startTime: { $gte: startOfDay },
       endTime: { $lte: endOfDay }
     });
-
-    const timeEntries = timeLogs.map(log => ({
-      date: log.startTime.toISOString().split('T')[0],
-      duration: log.duration,
-      // Include any other relevant details you want to show for each log
-    }));
     
     const totalDuration = timeLogs.reduce((total, log) => {
       return total + (log.duration || 0);
@@ -492,14 +486,78 @@ app.get('/total-time/:date', authenticateToken1, async (req, res) => {
       date: dateString,
       totalDurationInSeconds: totalDuration,
       totalDurationFormatted: formatDuration(totalDuration),
-      timeEntries, // Include the array in the response
     });
   } catch (error) {
     console.error('Error calculating total time:', error);
     res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
   }
 });
+// app.get('/total-time-graph', authenticateToken1, async (req, res) => {
+//   try {
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0); // Set to start of today
+//     const endOfDay = new Date(today);
+//     endOfDay.setHours(23, 59, 59, 999); // Set to end of today
 
+//     const timeLogs = await TimeLog.find({
+//       user: req.user._id,
+//       startTime: { $gte: today },
+//       endTime: { $lte: endOfDay }
+//     });
+
+//     const timeEntries = timeLogs.map(log => ({
+//       date: log.startTime.toISOString().split('T')[0],
+//       duration: log.duration,
+//     }));
+
+//     const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+//     res.json({
+//       date: today.toISOString().split('T')[0],
+//       totalDurationInSeconds: totalDuration,
+//       totalDurationFormatted: formatDuration(totalDuration),
+//       timeEntries,
+//     });
+//   } catch (error) {
+//     console.error('Error calculating total time:', error);
+//     res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+//   }
+// });
+app.get('/total-time-graph', authenticateToken1, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of today
+
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: today },
+      endTime: { $lte: endOfDay }
+    });
+
+    // Here, you map timeLogs to create an array of time entries with hourly labels.
+    const timeEntries = timeLogs.map(log => ({
+      // Assuming startTime is stored as a Date object in your database.
+      // Extract the hours and minutes as labels.
+      label: `${log.startTime.getHours().toString().padStart(2, '0')}:${log.startTime.getMinutes().toString().padStart(2, '0')}`,
+      duration: log.duration,
+    }));
+
+    const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+    // Now, instead of sending back the date, you send back an array of the generated labels and durations.
+    res.json({
+      labels: timeEntries.map(entry => entry.label), // This will be the x-axis labels (hours)
+      durations: timeEntries.map(entry => entry.duration), // This will be the y-axis data (durations)
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
 
 app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
   try {
@@ -517,11 +575,7 @@ app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
           startTime: { $gte: weekStart },
           endTime: { $lte: weekEnd }
       });
-      const timeEntries = timeLogs.map(log => ({
-        date: log.startTime.toISOString().split('T')[0],
-        duration: log.duration,
-        // Include any other relevant details you want to show for each log
-      }));
+      
       const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
 
       res.json({
@@ -529,7 +583,6 @@ app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
         weekEnding: weekEnd.toISOString().split('T')[0],
         totalDurationInSeconds: totalDuration,
         totalDurationFormatted: formatDuration(totalDuration),
-        timeEntries, // Include the array in the response
       });
   } catch (error) {
       console.error('Error calculating weekly total time:', error);
@@ -550,12 +603,7 @@ app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
       endTime: { $lte: monthEnd }
     });
 
-    // Mapping timeLogs to timeEntries
-    const timeEntries = timeLogs.map(log => ({
-      date: log.startTime.toISOString().split('T')[0],
-      duration: log.duration,
-      // Include any other relevant details you want to show for each log
-    }));
+    
 
     // Reducing timeLogs to calculate totalDuration
     const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
@@ -566,7 +614,6 @@ app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
       monthEnding: monthEnd.toISOString().split('T')[0],
       totalDurationInSeconds: totalDuration,
       totalDurationFormatted: formatDuration(totalDuration),
-      timeEntries, // Include the array in the response
     });
 
   } catch (error) {
