@@ -292,33 +292,88 @@ const Dashboard = () => {
           </Toolbar>
             <Divider/>
           {/* specific dashboard content. */}
+          {/* first row and its grids. */}
             <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
-                <Grid item sx={{ minWidth: 50 }}>
-                    <Card variant='outlined' sx={{ minWidth: 50 }}>
-                        <CardContent>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Learn More</Button>
-                        </CardActions>
-                    </Card>
+                <Grid container className={classes.firstRow}>
+                    <Grid item className={classes.cardItem}>
+                        <Card variant='outlined' sx={{ minWidth: 450, minHeight: 300 }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}> 
+                                    date, upcoming schedule, etc.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Grid item className={classes.cardItem}>
+                        <Card variant='outlined' sx={{ minWidth: 450, minHeight: 300 }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
+                                    Turnover Reports
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Box className={classes.stack} sx={{ flexGrow: 1 }}>
+                        <Grid container direction={'column'}>
+                            <Grid item className={classes.cardItem}>
+                                <Card variant='outlined' sx={{ minWidth: 100, minHeight: 100 }}>
+                                    <CardContent>
+                                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
+                                            unread emails.
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                            <Grid item className={classes.cardItem}>
+                                <Card variant='outlined' sx={{ minWidth: 100, minHeight: 100 }}>
+                                    <CardContent>
+                                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
+                                            calendar
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Grid>
-                <Grid item>
-                    <Card variant='outlined' sx={{ minWidth: 50 }}>
-                        <CardContent>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Learn More</Button>
-                        </CardActions>
-                    </Card>
-                </Grid>
-                <Grid item>
-                    <Card variant='outlined' sx={{ minWidth: 50 }}>
-                        <CardContent>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Learn More</Button>
-                        </CardActions>
-                    </Card>
+                {/* second row and its grids. */}
+                <Grid container className={classes.secondRow}>
+                    <Grid item className={classes.cardItem}>
+                        <Card variant='outlined' sx={{ minWidth: 900, minHeight: 250 }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
+                                    performance chart.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Grid item className={classes.cardItem}>
+                        <Card variant='outlined' sx={{ minWidth: 400, minHeight: 250 }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
+                                    feedback forms.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
                 </Grid>
           </Grid>
         </Box>

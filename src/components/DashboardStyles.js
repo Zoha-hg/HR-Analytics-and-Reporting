@@ -26,9 +26,23 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#ffff',
   },
   cards: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    flexWrap: 'wrap',
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'flex-start',
+    // flexWrap: 'wrap',
+    padding: theme.spacing(3),
+  },
+  firstRow: {
+    direction: 'row',
+    // display: 'flex',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
+    // flexWrap: 'wrap',
+  },
+  stack: {
+    // direction: 'column',
+  },
+  cardItem: {
     padding: theme.spacing(2),
   },
 }));
