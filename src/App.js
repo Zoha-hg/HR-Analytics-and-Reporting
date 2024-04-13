@@ -13,7 +13,7 @@ import DisplayResults from './components/FeedbackForms/DisplayFormResults';
 import ManageEmployees from './components/EmployeesTasks/ManageEmployees';
 import CreateNewTask from './components/EmployeesTasks/CreateNewTask'
 import EvaluateTask from './components/EmployeesTasks/EvaluateTask';
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/sidebar';
 
 function App() {
   return (
