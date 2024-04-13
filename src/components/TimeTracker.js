@@ -189,12 +189,13 @@ const TimeTracker = () => {
           // Map durations to days of the week for the graph
           if (response.data && response.data.dailyDurations) {
             const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const durationsInHours = response.data.dailyDurations.map(duration => duration / 3600);
+            // Convert duration from seconds to minutes
+            const durationsInMinutes = response.data.dailyDurations.map(duration => duration);
             const dataForGraph = {
               labels: labels,
               datasets: [{
-                label: 'Total Time',
-                data: durationsInHours,
+                label: 'Total Time (Minutes)',
+                data: durationsInMinutes,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -202,7 +203,7 @@ const TimeTracker = () => {
             };
             setGraphData(dataForGraph);
             const totalDurationInSeconds = response.data.dailyDurations.reduce((sum, current) => sum + current, 0);
-            setTotalTimeDisplay(formatDuration(totalDurationInSeconds));
+            setTotalTimeDisplay(formatDuration(totalDurationInSeconds)); // Keep in mind to format the display correctly
           } else {
             console.error('No data found for the week:', date);
             setGraphData({});
@@ -211,6 +212,7 @@ const TimeTracker = () => {
           console.error('Error fetching weekly graph data:', error);
         }
       };
+      
     const fetchTotalTimeGraphMonthly = async (date) => {
         const url = `http://localhost:8000/total-time-graph-monthly/${date}`;
         try {
@@ -220,7 +222,7 @@ const TimeTracker = () => {
             const daysInMonth = response.data.dailyDurations.length;
             const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1); // Create labels for each day of the month
             // Convert durations from seconds to hours
-            const durationsInHours = response.data.dailyDurations.map(duration => duration / 3600);
+            const durationsInHours = response.data.dailyDurations.map(duration => duration);
             const dataForGraph = {
               labels: labels,
               datasets: [{
