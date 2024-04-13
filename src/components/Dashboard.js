@@ -46,40 +46,40 @@ const Dashboard = () => {
       case 'admin':
         return (
             <List>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
                 </ListItem>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -90,40 +90,40 @@ const Dashboard = () => {
       case 'hr professional':
         return (
             <List>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
                 </ListItem>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -134,34 +134,34 @@ const Dashboard = () => {
       case 'employee':
         return (
             <List>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
                 </ListItem>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItemButton component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -172,40 +172,40 @@ const Dashboard = () => {
       case 'manager':
         return (
             <List>
-                <ListItem component={Link} to="/" className={classes.drawerItem}>
+                <ListItem component={Link} to="/">
                     <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard" className={classes.drawerItem}>
+                <ListItem component={Link} to="/dashboard">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -232,14 +232,21 @@ const Dashboard = () => {
             }}
         >
             <List>
-            <ListItem component={Link} to="/" className={classes.drawerItem}>
-                <Box display="flex" alignItems="center">
-                <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5 }} />
-                <ListItemText style={{ color: '#ffff', }} primary="Data Drive" />
-                </Box>
-            </ListItem>
+                <ListItem component={Link} to="/">
+                    <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5 }} />
+                    <ListItemText style={{ color: '#ffff', }} primary="Data Drive" />
+                    </Box>
+                </ListItem>
+                {drawerContent()}
+                <ListItemButton component={Link} to="/">
+                    <Box display="flex" alignItems="center">
+                    {/* <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5 }} /> */}
+                    <ListItemText style={{ color: '#ffff', }} primary="Log Out" />
+                    </Box>
+                </ListItemButton>
             </List>
-            {drawerContent()}
+            
         </Drawer>
       </Grid>
       {/* Main content */}

@@ -6,19 +6,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#ffff',
   },
   container: {
-    display: 'flex',
+    // display: 'flex',
     // alignItems: 'stretch', // Stretch the items vertically
-    justifyContent: 'space-evenly', // Stretch the items horizontally
-    width: '100%',
-    height: '100vh',
-    backgroundColor: '#ffff',
-    overflow: 'auto'
+    // justifyContent: 'space-evenly', // Stretch the items horizontally
+    // width: '100%',
+    // height: '100vh',
+    // backgroundColor: '#ffff',
+    // overflow: 'auto'
+    flexGrow: 1,
   },
   drawerPaper: {
     background: 'linear-gradient(to bottom, #39d6d3, #042434)',
-  },
-  drawerItem: {
-    color: '#fff',
   },
   mainContent: {
     flexGrow: 1,

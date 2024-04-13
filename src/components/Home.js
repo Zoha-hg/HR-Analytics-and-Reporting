@@ -9,7 +9,7 @@ const Home = () => {
   const classes = useStyles(); // Apply styles
 
   return (
-    <Grid container spacing={2} className={classes.homeContainer}>
+    <Grid container spacing={0} className={classes.homeContainer}>
       {/* Header */}
       <Grid item xs={12} className={classes.header}>
         <img src={logo} alt="Logo" className={classes.logo} />

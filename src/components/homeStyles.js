@@ -2,17 +2,17 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: 'linear-gradient(to right, #39d6d3, #042434)',
-    minHeight: '100vh',
-    fontFamily: 'Nunito, sans-serif',
-    margin: 0,
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
+    // minHeight: '100vh',
+    // fontFamily: 'Nunito, sans-serif',
+    // margin: 0,
+    // padding: 0,
+    // display: 'flex',
+    // flexDirection: 'column',
+    // overflow: 'hidden',
   },
   homeContainer: {
-    position: 'fixed',
+    background: 'linear-gradient(to right, #39d6d3, #042434)',
+    // position: 'fixed',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
@@ -29,11 +29,13 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     fontSize: '0.8em',
     width: '100%',
     paddingLeft: '2em',
     paddingRight: '2em',
+    padding: '1em',
+    boxSizing: 'border-box',
   },
   logo: {
     width: '100px',

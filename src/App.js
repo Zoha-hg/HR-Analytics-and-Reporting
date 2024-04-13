@@ -18,7 +18,7 @@ function App() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}> {/* to apply the background color gradient */}
+    <div> {/* to apply the background color gradient */}
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <UserProvider>
