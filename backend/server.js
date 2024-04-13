@@ -492,37 +492,47 @@ app.get('/total-time/:date', authenticateToken1, async (req, res) => {
     res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
   }
 });
-// app.get('/total-time-graph', authenticateToken1, async (req, res) => {
-//   try {
-//     const today = new Date();
-//     today.setHours(0, 0, 0, 0); // Set to start of today
-//     const endOfDay = new Date(today);
-//     endOfDay.setHours(23, 59, 59, 999); // Set to end of today
+app.get('/total-time-graph', authenticateToken1, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of today
 
-//     const timeLogs = await TimeLog.find({
-//       user: req.user._id,
-//       startTime: { $gte: today },
-//       endTime: { $lte: endOfDay }
-//     });
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: today },
+      endTime: { $lte: endOfDay }
+    }).sort({ startTime: 1 }); // Make sure to sort by startTime
 
-//     const timeEntries = timeLogs.map(log => ({
-//       date: log.startTime.toISOString().split('T')[0],
-//       duration: log.duration,
-//     }));
+    // Assuming you want to group durations by hour, you may need a more complex aggregation.
+    // Below is a simple map for demonstration.
+    const hourlyDurations = new Array(24).fill(0); // Array to hold sums of durations for each hour
+    timeLogs.forEach(log => {
+      const hour = log.startTime.getHours();
+      hourlyDurations[hour] += log.duration; // Add duration to the corresponding hour
+    });
 
-//     const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+    // Map hourly durations to the response
+    const timeEntries = hourlyDurations.map((duration, hour) => ({
+      label: hour, // Hour labels from 1 to 24
+      duration: duration,
+    }));
 
-//     res.json({
-//       date: today.toISOString().split('T')[0],
-//       totalDurationInSeconds: totalDuration,
-//       totalDurationFormatted: formatDuration(totalDuration),
-//       timeEntries,
-//     });
-//   } catch (error) {
-//     console.error('Error calculating total time:', error);
-//     res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
-//   }
-// });
+    const totalDuration = hourlyDurations.reduce((total, duration) => total + duration, 0);
+
+    res.json({
+      labels: timeEntries.map(entry => entry.label),
+      durations: timeEntries.map(entry => entry.duration),
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
+
 app.get('/total-time-graph', authenticateToken1, async (req, res) => {
   try {
     const today = new Date();
@@ -623,6 +633,100 @@ app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
 });
 
 
+app.get('/total-time-graph/:date', authenticateToken1, async (req, res) => {
+  try {
+    const dateString = req.params.date; // 'YYYY-MM-DD' format assumed
+    const date = new Date(dateString);
+    date.setHours(0, 0, 0, 0); // Set to start of given date
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of given date
+
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: date },
+      endTime: { $lte: endOfDay }
+    }).sort({ startTime: 1 }); // Sort by startTime
+
+    const hourlyDurations = new Array(24).fill(0); // Initialize array for hourly durations
+    timeLogs.forEach(log => {
+      const hour = log.startTime.getHours();
+      hourlyDurations[hour] += log.duration / 60; // Convert to minutes and add to the correct hour
+    });
+
+    res.json({
+      date: dateString,
+      hourlyDurations: hourlyDurations, // Send the hourly durations
+    });
+  } catch (error) {
+    console.error('Error calculating total time for the date:', error);
+    res.status(500).json({ message: 'Failed to calculate total time for the date. Please try again.' });
+  }
+});
+app.get('/total-time-graph-weekly/:date', authenticateToken1, async (req, res) => {
+  try {
+    const inputDate = new Date(req.params.date);
+    // Get the first day of the week (Sunday) based on inputDate
+    const startOfWeek = new Date(inputDate.setDate(inputDate.getDate() - inputDate.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    // Fetch logs within the week and map data to days of the week
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: startOfWeek },
+      endTime: { $lte: endOfWeek }
+    });
+
+    // Initialize array for daily durations
+    const dailyDurations = Array.from({ length: 7 }, () => 0);
+    timeLogs.forEach(log => {
+      const dayOfWeek = log.startTime.getDay(); // Get the day of the week, 0 (Sunday) - 6 (Saturday)
+      dailyDurations[dayOfWeek] += log.duration / 60; // Convert to minutes
+    });
+
+    res.json({
+      weekStarting: startOfWeek.toISOString().split('T')[0],
+      dailyDurations: dailyDurations,
+    });
+  } catch (error) {
+    console.error('Error calculating weekly graph data:', error);
+    res.status(500).json({ message: 'Failed to calculate weekly graph data. Please try again.' });
+  }
+});
+app.get('/total-time-graph-monthly/:date', authenticateToken1, async (req, res) => {
+  try {
+    const inputDate = new Date(req.params.date);
+    // Get the first and last day of the month
+    const startOfMonth = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1));
+    const endOfMonth = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0));
+    endOfMonth.setHours(23, 59, 59, 999);
+
+    // Fetch logs within the month and map data to each day of the month
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: startOfMonth },
+      endTime: { $lte: endOfMonth }
+    });
+
+    // Initialize array for daily durations
+    const daysInMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 1, 0).getDate();
+    const dailyDurations = Array.from({ length: daysInMonth }, () => 0);
+    timeLogs.forEach(log => {
+      const dayOfMonth = log.startTime.getDate() - 1; // Get day of month (0 index)
+      dailyDurations[dayOfMonth] += log.duration / 60; // Convert to minutes
+    });
+
+    res.json({
+      monthStarting: startOfMonth.toISOString().split('T')[0],
+      dailyDurations: dailyDurations,
+    });
+  } catch (error) {
+    console.error('Error calculating monthly graph data:', error);
+    res.status(500).json({ message: 'Failed to calculate monthly graph data. Please try again.' });
+  }
+});
 
 function formatDuration(totalSeconds) {
   const hours = Math.floor(totalSeconds / 3600);
