@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
   },
   homeContainer: {
+    position: 'fixed',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
