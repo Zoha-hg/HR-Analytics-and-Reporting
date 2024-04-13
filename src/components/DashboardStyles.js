@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100vh',
     backgroundColor: '#ffff',
+    overflow: 'auto'
   },
   drawerPaper: {
     background: 'linear-gradient(to bottom, #39d6d3, #042434)',
@@ -22,27 +23,24 @@ const useStyles = makeStyles((theme) => ({
   mainContent: {
     flexGrow: 1,
     padding: theme.spacing(2),
-    minHeight: '100vh',
+    minHeight: '100%',
     backgroundColor: '#ffff',
   },
   cards: {
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'flex-start',
-    // flexWrap: 'wrap',
     padding: theme.spacing(3),
+    textColor: '#fff',
   },
   firstRow: {
     direction: 'row',
-    // display: 'flex',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
-    // flexWrap: 'wrap',
   },
   stack: {
     // direction: 'column',
   },
+  secondRow: {
+    direction: 'row',
+  },
   cardItem: {
+    color: '#fff',
     padding: theme.spacing(2),
   },
 }));
