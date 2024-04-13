@@ -1,7 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './UserContext';
-// import './App.css';
+import './App.css';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import useStyles from './components/homeStyles';
+import theme from './CreateTheme'
 import Home from './components/Home';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
@@ -16,29 +20,36 @@ import EvaluateTask from './components/EmployeesTasks/EvaluateTask';
 import Sidebar from './components/sidebar';
 
 function App() {
+  const classes = useStyles();
+
   return (
-    <UserProvider>
-      <div className="App">
-        <Router>
-        <div>
-          <Sidebar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/feedbackform" element={<DisplayForm />} />
-            <Route path="/feedbackform/displayresults" element={<DisplayResults />} />
-            <Route path="/feedbackform/createform" element={<CreateForm />} />
-            <Route path="/feedbackform/fillform" element={<FillForm />} />
-            <Route path="/employees" element={<ManageEmployees />} />
-            <Route path="/employees/createtask" element={<CreateNewTask />} />
-            <Route path="/employees/evaluatetask" element={<EvaluateTask />} />
-          </Routes>
-        </div>
-        </Router>
-      </div>
-    </UserProvider>
+    <div>
+    <CssBaseline />
+    <ThemeProvider theme={theme}>
+        <UserProvider>
+          <div className="App">
+            <Router>
+            <div>
+              <Sidebar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/feedbackform" element={<DisplayForm />} />
+                <Route path="/feedbackform/displayresults" element={<DisplayResults />} />
+                <Route path="/feedbackform/createform" element={<CreateForm />} />
+                <Route path="/feedbackform/fillform" element={<FillForm />} />
+                <Route path="/employees" element={<ManageEmployees />} />
+                <Route path="/employees/createtask" element={<CreateNewTask />} />
+                <Route path="/employees/evaluatetask" element={<EvaluateTask />} />
+              </Routes>
+            </div>
+            </Router>
+          </div>
+        </UserProvider>
+      </ThemeProvider>
+    </div>
   );
 }
 

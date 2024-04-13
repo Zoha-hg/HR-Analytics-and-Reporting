@@ -1,16 +1,39 @@
 # HR-Analytics-and-Reporting
 HR Analytics and Reporting Group-16
 
-1. **Clone the Main Branch**:
+Ensure you have the following software installed on your machine:
 
-2. **Install Dependencies in Parent Folder**:
-Navigate to the parent folder (the folder containing `backend` and `src` folders) in your terminal and run: npm install
+- Node.js (https://nodejs.org/)
+- MongoDB (https://www.mongodb.com/)
 
-3. **Install Dependencies in Backend Folder**:
-Navigate to the `backend` folder in your terminal and run: npm install
+## Installation
 
-4. **Start Backend Server**:
-Navigate back to the `backend` folder in your terminal and run: npm start
+1. Clone this repository to your local machine using Git:
+    git clone https://github.com/yourusername/your-repo.git
 
-5. **Start Frontend Server**:
-Finally, navigate to the `src` folder in your terminal and run: npm start
+2. Navigate into the project directory:
+    cd your-repo
+
+3. Install dependencies in the root directory:
+    npm install
+
+4. Install dependencies in the backend folder:
+    cd backend
+    npm install
+
+## Running the Application
+
+1. Start the MongoDB server.
+
+2. Start the backend server:
+    cd ../backend
+    npm start
+
+4. Access the application in your web browser:
+    ```plaintext
+    http://localhost:3000/
+
+## Contributing
+
+- Before contributing, make sure to create a separate branch and work there:
+    git checkout -b your-branch-name
