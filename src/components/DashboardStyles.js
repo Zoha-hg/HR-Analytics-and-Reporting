@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardItem: {
     color: '#fff',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }));
 

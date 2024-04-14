@@ -30,7 +30,7 @@ const ManagerDashboard = ({ role }) => {
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to="/employeeperformance" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2 }}>
