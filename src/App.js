@@ -18,9 +18,14 @@ import ManageEmployees from './components/EmployeesTasks/ManageEmployees';
 import CreateNewTask from './components/EmployeesTasks/CreateNewTask'
 import EvaluateTask from './components/EmployeesTasks/EvaluateTask';
 import Sidebar from './components/sidebar';
+import GmailIntegrate from './components/GmailIntegrate';
+import GmailDashboard from './components/GmailDashboard';
+import TimeTracker from './components/TimeTracker';
+import Unread from './components/unreadGmail';
+
 
 function App() {
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return (
     <div>
@@ -43,6 +48,11 @@ function App() {
                 <Route path="/employees" element={<ManageEmployees />} />
                 <Route path="/employees/createtask" element={<CreateNewTask />} />
                 <Route path="/employees/evaluatetask" element={<EvaluateTask />} />
+                <Route path= "/gmail" element={<GmailIntegrate/>} />
+                <Route path= "/gmail-authorized" element={<GmailDashboard/>} />
+                {/* calendar ka naam change kar lena. */}
+                <Route path= "/calendar" element={<TimeTracker/>} /> 
+                <Route path="/unread" element={<Unread/>}/>
               </Routes>
             </div>
             </Router>
