@@ -13,10 +13,11 @@ const EmployeeDashboard = ({ role }) => {
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserRole = async () => {
+        const fetchUserRole = async () => { // gets user role
             const token = localStorage.getItem('token');
             try {
                 const response = await axios.get('http://localhost:8000/user-role', {
@@ -30,31 +31,8 @@ const EmployeeDashboard = ({ role }) => {
                 navigate('/login');
             }
         };
-
-        // const fetchTasks = async () => {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get('http://localhost:8000/user-role', {
-        //             headers: { Authorization: `Bearer ${token}` }
-        //         });
-        //         const userRole = response.data.role;
-        //         setUserRole(userRole);
-        //         if (userRole === 'Manager') {
-        //             // Fetch tasks for managers
-        //             // const tasksResponse = await axios.post('http://localhost:8000/getdepttasks', { manager_id: /* provide manager id here */ });
-        //             // setTasks(tasksResponse.data);
-        //         } else if (userRole === 'Employee') {
-        //             // Fetch tasks for employees
-        //             // const tasksResponse = await axios.post('http://localhost:8000/getowntasks', { employee_id: /* provide employee id here */ });
-        //             // setTasks(tasksResponse.data);
-        //         }
-        //     } catch (error) {
-        //         console.error('Error fetching tasks:', error);
-        //         alert('Failed to fetch tasks. Please try again.');
-        //     }
-        // };
-
-        const fetchUserName = async () => {
+        
+        const fetchUserName = async () => { // gets username aka employee id
             const token = localStorage.getItem('token');
             try {
                 const response = await axios.get('http://localhost:8000/user-name', {
@@ -66,6 +44,44 @@ const EmployeeDashboard = ({ role }) => {
                 console.error('Error fetching user name:', error);
             }
         };
+
+        const fetchTasks = async (manager_id) => { // gets department tasks for the manager
+            let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
+
+            setTasks(tasks_data.data);
+            console.log(tasks_data.data);
+            console.log("TASKS ", tasks);
+        }
+
+        const getEmployeeTasks = async (employee_id) => { // gets employees own tasks
+            let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
+            console.log("employees", tasks_data.data);
+            if(tasks_data.error === undefined) {
+                setTasks(tasks_data.data);
+                console.log("TASKS ", tasks_data.data);
+            }
+            console.log("yoooo");
+        }
+        
+        const getData2 = async () => { // gets the tasks according to user role
+            let user = await fetchUserName();
+            console.log("user", user);
+            let userrole = await fetchUserRole();
+            setUserRole(userrole);
+            console.log("role ", userRole);
+            if(userrole == "Manager")
+            {
+                fetchTasks(user);
+            }
+            else if(userrole == "Employee")
+            {
+                console.log("woah");
+                getEmployeeTasks(user);
+            }
+        }
+
+        getData2();
+
 
         const fetchData = async (username, role) => {
             try {
@@ -123,11 +139,20 @@ const EmployeeDashboard = ({ role }) => {
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/employeeperformance" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to="/employee" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        date, upcoming schedule, etc.
+                        {tasks.length != 0 && (
+                            tasks.map(task => {
+                                return (
+                                    <div>
+                                        <Typography>{task.title}</Typography>
+                                        <Typography>{task.completion_status}</Typography>
+                                    </div>
+                                )
+                            })
+                        )}
                     </Typography>
                     </CardContent>
                     <CardActions>
