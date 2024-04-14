@@ -58,28 +58,31 @@ const Sidebar = () => {
 
     // for fetching user role
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8000/user-role', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                if (response.data.role === "HR professional" || response.data.role === "Admin") {
-                    setPages(HRpages);
-                    console.log('HR pages:', HRpages)
-                } else if (response.data.role === "Employee") {
-                    setPages(emppages);
-                } else if (response.data.role === "Manager") {
-                    setPages(managerpages);
+        if(showSidebar)
+        {
+            const fetchData = async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await axios.get('http://localhost:8000/user-role', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (response.data.role === "HR professional" || response.data.role === "Admin") {
+                        setPages(HRpages);
+                        console.log('HR pages:', HRpages)
+                    } else if (response.data.role === "Employee") {
+                        setPages(emppages);
+                    } else if (response.data.role === "Manager") {
+                        setPages(managerpages);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                    alert(' Please log in again.');
+                    window.location.href = '/login';
                 }
-            } catch (error) {
-                console.error('Error fetching user role:', error);
-                alert('Failed to fetch user role. Please log in again.');
-                window.location.href = '/login';
-            }
-        };
-        fetchData();
-    }, []);
+            };
+            fetchData();
+        }
+    }, [showSidebar]);
 
     // for responsive sidebar
     useEffect(() => {

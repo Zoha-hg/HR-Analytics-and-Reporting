@@ -667,11 +667,22 @@ app.post("/getowntasks", async (req, res) => {
 	}
 
 })
+
+
 // just so i can make employees pls ignore
 
 const getDepartment = async (ddepartment_id) => {
 	try {
 		const departments = await Department.findOne({department_id: ddepartment_id});
+		return departments
+	} catch (error) {
+		console.error('Error fetching departments:', error);
+	}
+  }
+
+  const getDepartment2 = async (ddepartment_id) => {
+	try {
+		const departments = await Department.findOne({department_name: ddepartment_id});
 		return departments
 	} catch (error) {
 		console.error('Error fetching departments:', error);
@@ -770,3 +781,154 @@ app.post("/createmanager", async (req, res) => {
 
 });
 
+app.post('/createdepartments', async (req, res) => {
+    try {
+        const { department_names } = req.body;
+
+        if (!Array.isArray(department_names) || department_names.length !== 5) {
+            return res.status(400).json({ message: 'Please provide an array of 5 department names.' });
+        }
+
+        const lastDepartment = await Department.find().sort({ department_id: -1 }).limit(1);
+        let last_department_id = 0;
+
+        if (lastDepartment.length !== 0) {
+            last_department_id = lastDepartment[0].department_id;
+        }
+
+        const newDepartments = [];
+        for (let i = 0; i < department_names.length; i++) {
+            const department_id = last_department_id + 1 + i;
+            const newDepartment = {
+                department_id,
+                department_name: department_names[i],
+            };
+
+            const createdDepartment = await Department.create(newDepartment);
+            newDepartments.push(createdDepartment);
+        }
+
+        res.status(201).json(newDepartments);
+    } catch (error) {
+        console.error('Error creating departments:', error);
+        res.status(500).json({ message: 'Failed to create departments. Please try again.' });
+    }
+});
+
+app.post('/createemployees', async (req, res) => {
+    try {
+        const { employeeData } = req.body;
+
+        if (!Array.isArray(employeeData)) {
+            return res.status(400).json({ message: 'Please provide an array of employee data.' });
+        }
+
+        const newEmployees = [];
+        let nextUserId = 10000; // Start user ID at 1 and make it 5 digits long (e.g. 10000)
+
+        // Iterate through the employee data
+        for (const data of employeeData) {
+            const { employee_name, dept, gender, position, salary, age, address, phone_number } = data;
+
+            // Find the department
+            const department = await Department.findOne({ department_name: dept });
+            if (!department) {
+                continue; // Skip if the department doesn't exist
+            }
+
+            // Create a new employee
+            const newEmployee = new Employee({
+                employee_id: nextUserId, // Assign the next user ID
+                employee_name,
+                department: department._id, // Assign department reference
+                gender,
+                position,
+                salary,
+                age,
+                address,
+                phone_number,
+            });
+
+            // Save the new employee to the database
+            await newEmployee.save();
+
+            // Add the new employee to the department's employees array
+            department.employees.push(newEmployee._id);
+            await department.save();
+
+            // Increment the user ID for the next employee
+            nextUserId += 1;
+
+            // Add the new employee to the list of new employees
+            newEmployees.push(newEmployee);
+        }
+
+        res.status(201).json({ message: 'Employees created successfully.', employees: newEmployees });
+    } catch (error) {
+        console.error('Error creating employees:', error);
+        res.status(500).json({ message: 'Failed to create employees. Please try again.' });
+    }
+});
+
+
+app.post("/createmanagers", async (req, res) => {
+    try {
+        // Extract an array of manager data from the request body
+        const managersData = req.body;
+
+        // Initialize an array to store the created managers
+        const createdManagers = [];
+
+        // Iterate through each manager data in the request body
+        for (let i = 0; i < managersData.length; i++) {
+            const managerData = managersData[i];
+
+            // Destructure the manager data
+            const {
+                employee_name,
+                department,
+                gender,
+                age,
+                address,
+                phone_number
+            } = managerData;
+
+            // Find the appropriate department in the database
+            const dept = await Department.findOne({ department_name: department });
+            if (!dept) {
+                console.log(`Department ${department} not found.`);
+                continue; // Skip if the department doesn't exist
+            }
+
+            // Calculate the manager ID, starting from 2 and being 5 digits long
+            const manager_id = (i + 2).toString().padStart(5, '0');
+
+            // Create a new manager document
+            const newManager = new Manager({
+                employee_id: manager_id,
+                employee_name,
+                department: dept._id,
+                age,
+                gender,
+                address,
+                phone_number,
+            });
+
+            // Save the new manager to the database
+            await newManager.save();
+
+            // Update the department's manager field with the new manager's _id
+            dept.manager = newManager._id;
+            await dept.save();
+
+            // Add the created manager to the array
+            createdManagers.push(newManager);
+        }
+
+        // Send a response with the created managers
+        res.status(201).json({ createdManagers });
+    } catch (error) {
+        console.error("Error creating managers:", error);
+        res.status(500).json({ message: "Failed to create managers. Please try again." });
+    }
+});
