@@ -101,11 +101,11 @@ const HRProfessionalDashboard = ({ role }) => {
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/employeeperformance" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        date, upcoming schedule, etc.
+                        Unread Emails
                     </Typography>
                     </CardContent>
                     <CardActions>
@@ -132,18 +132,7 @@ const HRProfessionalDashboard = ({ role }) => {
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
                     <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 40 }}>
-                        <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                            unread emails.
-                        </Typography>
-                        </CardContent>
-                    </Card>
-                    </Link>
-                </Grid>
-                <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 200 }}>
+                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
                         <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                             Time tracking.
@@ -181,7 +170,7 @@ const HRProfessionalDashboard = ({ role }) => {
             <Box flexGrow={1}>
               <Grid item className={classes.cardItem}>
                 <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 400, maxHeight: 295 }}>
+                <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
                         Ongoing Feedback Forms
