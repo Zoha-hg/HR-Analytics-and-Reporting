@@ -1,19 +1,26 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Typography, Grid, Drawer, List, ListItem, ListItemText, Toolbar, Divider, Box, Avatar, ListItemButton} from '@mui/material';
 import { Card, CardContent, CardActions, Button } from '@mui/material/';
-import { Link, useLocation } from 'react-router-dom';
 import { LineChart } from '@mui/x-charts/LineChart';
-import axios from 'axios';
+import Company from './assets/logo.png'
+import profile from './assets/profile.png'
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import DashboardStyles from './DashboardStyles'; // Import the styles
 import Logo from './assets/HR logo.png'; // Import logo image
-import Company from './assets/logo.png'
-import calendar from './assets/calendar.png'
-import email from './assets/email.svg'
-import feedback from './assets/feedback.png'
-import employee from './assets/employee.png'
-import reports from './assets/reports.png'
-import dashboard from './assets/dashboard.png'
-import profile from './assets/profile.png'
+import calendar from './assets/Calendar.svg'
+import email from './assets/envelope.svg'
+import feedback from './assets/Feedback.svg'
+import employee from './assets/Employee.svg'
+import reports from './assets/Turnover.svg'
+import dashboard from './assets/Dashboard.svg'
+
+import AdminDashboard from './Dashboards/AdminDashboard';
+import HRProfessionalDashboard from './Dashboards/HRDashboard';
+import EmployeeDashboard from './Dashboards/EmployeeDashboard';
+import ManagerDashboard from './Dashboards/ManagerDashboard';
 
 const Dashboard = () => {
   const classes = DashboardStyles(); // Use the defined styles
@@ -55,31 +62,31 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/employeeperformance">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/feedbackform">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/turnover">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/calendar">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/gmail">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -99,31 +106,31 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/employeeperformance">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/feedbackform">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/turnover">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/calendar">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/gmail">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -143,25 +150,25 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/employeeperformance">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/feedbackform">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/calendar">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/dashboard">
+                <ListItemButton component={Link} to="/gmail">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -181,31 +188,31 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/employeeperformance">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/feedbackform">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/turnover">
                     <Box display="flex" alignItems="center">
                         <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/calendar">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/dashboard">
+                <ListItem component={Link} to="/gmail">
                     <Box display="flex" alignItems="center">
                         <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Email"/>
@@ -213,6 +220,21 @@ const Dashboard = () => {
                 </ListItem>
             </List>
         );
+      default:
+        return null;
+    }
+  };
+
+  const renderDashboardContent = () => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return <AdminDashboard role={role}/>;
+      case 'hr professional':
+        return <HRProfessionalDashboard role={role}/>;
+      case 'employee':
+        return <EmployeeDashboard role={role}/>;
+      case 'manager':
+        return <ManagerDashboard role={role}/>;
       default:
         return null;
     }
@@ -239,130 +261,22 @@ const Dashboard = () => {
                     </Box>
                 </ListItem>
                 {drawerContent()}
+            </List>
+            <List alignItems='flex-end'>
+                <Divider />
                 <ListItemButton component={Link} to="/">
                     <Box display="flex" alignItems="center">
-                    {/* <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5 }} /> */}
+                    <LogoutIcon style={{ color: '#ffff', marginRight: 10, marginLeft: 5}} />
                     <ListItemText style={{ color: '#ffff', }} primary="Log Out" />
                     </Box>
                 </ListItemButton>
+                <Divider />
             </List>
-            
         </Drawer>
       </Grid>
       {/* Main content */}
       <Grid item xs={9.25} md={10} lg={10.5}>
-        <Box className={classes.mainContent}>
-          <Toolbar>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-              <img src={Company} alt="Company Logo" style={{ width: 150}} />
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'right', marginRight:2 }}>
-                {role} Dashboard
-              </Typography>
-            </Box>
-            {/* Avatar */}
-            <Divider orientation="vertical" flexItem/>
-            <Avatar alt="Avatar" src={profile} sx={{marginLeft:2}}/>
-          </Toolbar>
-            <Divider/>
-          {/* specific dashboard content. */}
-          {/* first row and its grids. */}
-            <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
-                <Grid container className={classes.firstRow}>
-                    {/* <Box flexGrow={1}> */}
-                        <Grid item className={classes.cardItem}>
-                            <Card variant='outlined' sx={{ minWidth: 450, minHeight: 305 }}>
-                                <CardContent>
-                                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}> 
-                                        date, upcoming schedule, etc.
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Learn More</Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    {/* </Box> */}
-                    <Grid item className={classes.cardItem}>
-                        <Card variant='outlined' sx={{ minWidth: 450, minHeight: 305 }}>
-                            <CardContent>
-                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
-                                    Turnover Reports
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
-                    <Box className={classes.stack} sx={{ flexGrow: 1 }}>
-                        <Grid container direction={'column'}>
-                            <Grid item className={classes.cardItem}>
-                                <Card variant='outlined' sx={{ minWidth: 100, minHeight: 40 }}>
-                                    <CardContent>
-                                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:0 }}>
-                                            unread emails.
-                                        </Typography>
-                                    </CardContent>
-                                    {/* <CardActions>
-                                        <Button size="small">Learn More</Button>
-                                    </CardActions> */}
-                                </Card>
-                            </Grid>
-                            <Grid item className={classes.cardItem}>
-                                <Card variant='outlined' sx={{ minWidth: 100, minHeight: 200 }}>
-                                    <CardContent>
-                                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
-                                            calendar
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button size="small">Learn More</Button>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Grid>
-                {/* second row and its grids. */}
-                <Grid container className={classes.secondRow}>
-                    {/* <Box flexGrow={1}> */}
-                        <Grid item className={classes.cardItem}>
-                            <Card variant='outlined' sx={{ minWidth: 932, minHeight: 250 }}>
-                                <CardContent>
-                                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:0 }}>
-                                        performance chart.
-                                    </Typography>
-                                    <LineChart
-                                        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-                                        series={[
-                                            {
-                                            data: [2, 5.5, 2, 8.5, 1.5, 5],
-                                            },
-                                        ]}
-                                        width={900}
-                                        height={200}
-                                        />
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    {/* </Box> */}
-                    <Box flexGrow={1}>
-                        <Grid item className={classes.cardItem}>
-                            <Card variant='outlined' sx={{ minWidth: 20, minHeight: 250 }}>
-                                <CardContent>
-                                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign:'center', marginBottom:2 }}>
-                                        feedback forms.
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Learn More</Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    </Box>
-                </Grid>
-            </Grid>
-        </Box>
+        {renderDashboardContent()}
       </Grid>
     </Grid>
   );

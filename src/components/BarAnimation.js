@@ -39,7 +39,7 @@ export default function BarAnimation() {
           .slice(0, seriesNb)
           .map((s) => ({ ...s, data: s.data.slice(0, itemNb), showLabels: false }))}
       />
-      <Typography id="input-item-number" gutterBottom>
+      {/* <Typography id="input-item-number" gutterBottom>
         Slide to change the number of Tasks
       </Typography>
       <Slider
@@ -60,7 +60,7 @@ export default function BarAnimation() {
         min={1}
         max={5}
         aria-labelledby="input-series-number"
-      />
+      /> */}
     </Box>
   );
 }
