@@ -92,9 +92,10 @@ function DisplayForms() {
         }
     }
 
+    // filled + unfilled ae for employees + managers
     const filledForms = forms.filter(form => form.filled || new Date(form.end_time) < new Date());
     const unfilledForms = forms.filter(form => !form.filled && (new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()));
-
+    // ongoing + ended are for HR professionals
     const endedForms = forms.filter(form => new Date(form.end_time) < new Date());
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date());
 

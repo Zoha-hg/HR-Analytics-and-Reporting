@@ -119,6 +119,8 @@ const EmployeeDashboard = ({ role }) => {
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
     const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
 
+    const unfilledForms = forms.filter(form => !form.filled && (new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()));
+
   return (
     <Grid container>
       <Box className={classes.mainContent}>
@@ -235,14 +237,14 @@ const EmployeeDashboard = ({ role }) => {
                 <Card variant="outlined" sx={{ minWidth: 453, maxWidth: 453, maxHeight: 295, minHeight: 295 }}>
                     <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Ongoing Feedback Forms
+                        Incomplete Feedback Forms
                         </Typography>
-                        {ongoingForms.length === 0 ? ( // Check if there are no ongoing forms
+                        {unfilledForms.length === 0 ? ( // Check if there are no ongoing forms
                         <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
                             No Pending Forms!
                         </Typography>
                         ) : (
-                        ongoingForms.map(form => (
+                        unfilledForms.map(form => (
                             <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
                             <div key={form.form_id}>
                                 <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>

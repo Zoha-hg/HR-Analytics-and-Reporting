@@ -7,7 +7,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Company from '../assets/logo.png'
 import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
-import DisplayForms from '../FeedbackForms/DisplayForm';
+import UnreadEmail from '../unreadGmail'; 
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -101,18 +101,16 @@ const HRProfessionalDashboard = ({ role }) => {
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                {/* <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}> */}
                 <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                         Unread Emails
                     </Typography>
                     </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
+                    <UnreadEmail />
                 </Card>
-                </Link>
+                {/* </Link> */}
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Typography, Box, Paper, Button} from '@mui/material';
 import axios from 'axios';
 
 function GmailIntegrate() {
@@ -85,7 +86,7 @@ function GmailIntegrate() {
     }
 
     return (
-        <div>
+        <Box justifyContent={'center'}>
             {isAuthorized ? (
                 <div>
                     <p>Gmail integration is set up.</p>
@@ -104,10 +105,10 @@ function GmailIntegrate() {
             ) : (
                 <div>
                     <p>User not authorized. No unread messages can be shown.</p>
-                    <button onClick={initiateAuthorization}>Authorize Gmail</button>
+                    <Button variant='outlined' onClick={initiateAuthorization}>Authorize Gmail</Button>
                 </div>
             )}
-        </div>
+        </Box>
     );
 }
 
