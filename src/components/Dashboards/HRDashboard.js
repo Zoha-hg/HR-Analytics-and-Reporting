@@ -4,10 +4,10 @@ import axios from 'axios';
 import { Typography, Grid, Toolbar, Divider, Box, Avatar, Paper,} from '@mui/material';
 import { Card, CardContent, CardActions, Button } from '@mui/material/';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Company from '../assets/logo.png'
-import profile from '../assets/profile.png'
+import Company from '../assets/logo.png';
+import profile from '../assets/profile.png';
 import DashboardStyles from '../DashboardStyles';
-import UnreadEmail from '../unreadGmail'; 
+import UnreadEmail from '../unreadGmail';
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();

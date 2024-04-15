@@ -7,6 +7,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Company from '../assets/logo.png'
 import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
+import UnreadEmail from '../unreadGmail'; 
 
 const EmployeeDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -201,6 +202,7 @@ const EmployeeDashboard = ({ role }) => {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                             unread emails.
                         </Typography>
+                        <UnreadEmail />
                         </CardContent>
                     </Card>
                     </Link>
