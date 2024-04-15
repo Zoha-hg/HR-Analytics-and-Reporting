@@ -31,6 +31,7 @@ const TimeTracker = () => {
     const [selectedDate, setSelectedDate] = useState(
         new Date().toLocaleDateString('en-CA') // 'en-CA' gives YYYY-MM-DD format
       );
+    const [activeButton, setActiveButton] = useState(null);
 
     const options = {
         scales: {
@@ -83,22 +84,27 @@ const TimeTracker = () => {
         return { headers: { Authorization: `Bearer ${token}` } };
     };
     const handleDailyClick = () => {
-        const selected = selectedDate;
-        fetchTotalTimeForDate(selected); // Fetches the total time graph for the selected date
-        setCurrentPeriod('daily');
-      };
-      
-      const handleWeeklyClick = () => {
-        const selected = selectedDate;
-        fetchTotalTimeGraphWeekly(selected); // Fetches the total time graph for the selected week
-        setCurrentPeriod('weekly');
-      };
-      
-      const handleMonthlyClick = () => {
-        const selected = selectedDate;
-        fetchTotalTimeGraphMonthly(selected); // Fetches the total time graph for the selected month
-        setCurrentPeriod('monthly');
-      };
+      const selected = selectedDate;
+      fetchTotalTimeForDate(selected);
+      setCurrentPeriod('daily');
+      setActiveButton('daily');
+  };
+  
+  const handleWeeklyClick = () => {
+      const selected = selectedDate;
+      fetchTotalTimeGraphWeekly(selected);
+      setCurrentPeriod('weekly');
+      setActiveButton('weekly');
+  };
+  
+  const handleMonthlyClick = () => {
+      const selected = selectedDate;
+      fetchTotalTimeGraphMonthly(selected);
+      setCurrentPeriod('monthly');
+      setActiveButton('monthly');
+  };
+  
+  
       
     const handleStart = async () => {
         try {
@@ -195,7 +201,7 @@ const TimeTracker = () => {
             const dataForGraph = {
               labels: labels,
               datasets: [{
-                label: 'Total Time (Minutes)',
+                label: 'Total Time',
                 data: durationsInMinutes,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -227,7 +233,7 @@ const TimeTracker = () => {
             const dataForGraph = {
               labels: labels,
               datasets: [{
-                label: 'Total Time (Hours)',
+                label: 'Total Time',
                 data: durationsInHours,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -283,25 +289,45 @@ const TimeTracker = () => {
                   strokeDasharray={circumference}
                   strokeDashoffset={strokeDashoffset}
                 />
+                <foreignObject x={1.25*center - radius} y={center - radius} width={radius * 2} height={radius * 2}>
+                  <span className="timer-text">{formatElapsedTime(elapsedTime)}</span>
+                  
+              </foreignObject>
             </svg>
-            <span className="timer-text">{formatElapsedTime(elapsedTime)}</span>
             <button onClick={isTracking ? handleStop : handleStart} className="timer-button">
                 {isTracking ? 'Stop' : 'Start'} Tracking
             </button>
         </div>
     </div>
     <div className="chart-container">
-        <div className="button-container">
-            <button onClick={handleDailyClick}>Get Total Time for Date</button>
-            <button onClick={handleWeeklyClick}>Get Total Time for Week</button>
-            <button onClick={handleMonthlyClick}>Get Total Time for Month</button>
-        </div>
+          <div className="button-container">
+              
+            <button onClick={handleDailyClick} className={`timer1-button ${activeButton === 'daily' ? 'active' : ''}`}>
+              Get Total Time for Date
+            </button>
+            <button onClick={handleWeeklyClick} className={`timer1-button ${activeButton === 'weekly' ? 'active' : ''}`}>
+              Get Total Time for Week
+            </button>
+            <button onClick={handleMonthlyClick} className={`timer1-button ${activeButton === 'monthly' ? 'active' : ''}`}>
+              Get Total Time for Month
+            </button>
+
+          </div>
         {graphData.labels ? (
             <Line data={graphData} options={options} />
             ) : (
                 <p>No graph data available.</p>
                 )}
-                <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+                <input type="date" value={selectedDate} onChange={(e) => {
+                setSelectedDate(e.target.value);
+                if (currentPeriod === 'daily') {
+                    fetchTotalTimeForDate(e.target.value);
+                } else if (currentPeriod === 'weekly') {
+                    fetchTotalTimeGraphWeekly(e.target.value);
+                } else if (currentPeriod === 'monthly') {
+                    fetchTotalTimeGraphMonthly(e.target.value);
+                }
+            }} />
     </div>
 </div>
     );
