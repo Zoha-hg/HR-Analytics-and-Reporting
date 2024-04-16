@@ -134,15 +134,12 @@ app.post("/signup", async (req, res) => {
 
 const verifyEmail = async (email) => {
 	// Checking if the email is valid by using the hunter API
-	console.log(`API Key: ${process.env.HUNTER_API_KEY}`);
 
 	const url = `https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${process.env.HUNTER_API_KEY}`;
+
 	try{
-		console.log("in try block")
 		const response = await axios.get(url);
-		console.log(response.data);
-		if (response.data.status === 'valid'){
-			console.log("valid email");
+		if (response.data.data.status === 'valid'){
 			return true;
 		}
 		else{
