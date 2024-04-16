@@ -1315,3 +1315,63 @@ app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/api/performancereports', authenticateToken, async (req, res) => {
+    try {
+        // Fetch all employees
+        const employees = await Employee.find({});
+
+        const aggregatedTimelogs = await TimeLog.aggregate([
+            {
+                $group: {
+                    _id: '$user',
+                    totalDuration: { $sum: '$duration' } 
+                }
+            }
+        ]);
+
+        const tasksWithSkillsAndCount = await Task.aggregate([
+            {
+                $match: {
+                    evaluation_status: "completed" 
+                }
+            },
+            {
+                $unwind: '$skills' 
+            },
+            {
+                $group: {
+                    _id: '$assigned_to', 
+                    averageSkills: { $avg: '$skills.rating' }, 
+                    completedTasksCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+
+        const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
+            item._id.toString(), 
+            { averageSkills: item.averageSkills, completedTasksCount: item.completedTasksCount }
+        ]));
+        const durationMap = new Map(aggregatedTimelogs.map(item => [item._id.toString(), item.totalDuration]));
+
+        const performanceReports = employees.map(employee => {
+            const employeeIdString = employee._id.toString();
+            const totalDuration = durationMap.get(employeeIdString) || 0;
+            const employeeSkillsAndCount = skillsAndCountMap.get(employeeIdString) || { averageSkills: 0, completedTasksCount: 0 };
+            
+            return {
+                ...employee._doc,
+                totalHoursWorked: totalDuration / 3600,
+                averageSkills: employeeSkillsAndCount.averageSkills,
+                totalCompletedTasks: employeeSkillsAndCount.completedTasksCount
+            };
+        });
+
+        console.log("performanceReports", performanceReports);
+        res.json({ employees: performanceReports });
+    } catch (error) {
+        console.error('Error fetching performance reports:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
