@@ -132,9 +132,6 @@ const EmployeeDashboard = ({ role }) => {
               {role} Dashboard
             </Typography>
           </Box>
-          {/* Avatar */}
-          <Divider orientation="vertical" flexItem />
-          <Avatar alt="Avatar" src={profile} sx={{ marginLeft: 2 }} />
         </Toolbar>
         <Divider />
         {/* specific dashboard content. */}
@@ -196,7 +193,7 @@ const EmployeeDashboard = ({ role }) => {
             <Box className={classes.stack} sx={{ flexGrow: 1 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {/* <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}> */}
                     <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
                         <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
@@ -205,7 +202,7 @@ const EmployeeDashboard = ({ role }) => {
                         <UnreadEmail />
                         </CardContent>
                     </Card>
-                    </Link>
+                    {/* </Link> */}
                 </Grid>
               </Grid>
             </Box>

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Box, Paper, Button} from '@mui/material';
+import { Typography, Box, Paper, Button, List, ListItem, ListItemText} from '@mui/material';
 import axios from 'axios';
 
-function GmailIntegrate() {
+function GmailIntegrate({handleUnreadEmailCount}) {
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -21,6 +21,7 @@ function GmailIntegrate() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUnreadCount(response.data.unreadCount); // Set the unread count state with the fetched data
+            handleUnreadEmailCount(response.data.unreadCount);
         } catch (error) {
             console.error('Error fetching unread message count:', error);
         }
@@ -33,6 +34,7 @@ function GmailIntegrate() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessages(response.data); // Set the messages state with the fetched data
+            
         } catch (error) {
             console.error('Error fetching unread messages:', error);
         }
@@ -73,7 +75,7 @@ function GmailIntegrate() {
             if (response.data.url) {
                 window.open(response.data.url, 'Gmail Integration', 'width=600,height=400');
             } else {
-                navigate('/unread'); // Navigate to your unread messages route
+                // navigate('/unread'); // Navigate to your unread messages route
                 window.location.reload(); 
             }
         } catch (error) {
@@ -86,26 +88,36 @@ function GmailIntegrate() {
     }
 
     return (
-        <Box justifyContent={'center'}>
+        <Box textAlign="center">
             {isAuthorized ? (
                 <div>
-                    <p>Gmail integration is set up.</p>
-                    <p>You have {unreadCount} unread messages.</p> {/* Display the unread message count */}
-                    <ul>
-                        {messages.map((message, index) => (
-                            <li key={index}>
-                                <div><strong>From:</strong> {message.from}</div>
-                                <div><strong>Subject:</strong> {message.subject}</div>
-                                <div><strong>Date:</strong> {message.date}</div>
-                                <div><strong>Snippet:</strong> {message.snippet}</div>
-                            </li>
-                        ))}
-                    </ul>
+                <List>
+                    {messages.map((message, index) => (
+                    <Paper className="form-card">
+                    <ListItem key={index}>
+                        <ListItemText
+                        primary={`From: ${message.from}`}
+                        secondary={
+                            <React.Fragment>
+                            <Typography component="span" variant="body2">
+                                Subject: {message.subject}
+                            </Typography>
+                            <br />
+                            <Typography component="span" variant="body2">
+                                Date: {message.date}
+                            </Typography>
+                            </React.Fragment>
+                        }
+                        />
+                    </ListItem>
+                    </Paper>
+                    ))}
+                </List>
                 </div>
             ) : (
                 <div>
-                    <p>User not authorized. No unread messages can be shown.</p>
-                    <Button variant='outlined' onClick={initiateAuthorization}>Authorize Gmail</Button>
+                <Typography variant="body1">User not authorized. No unread messages can be shown.</Typography>
+                <Button variant="outlined" onClick={initiateAuthorization}>Authorize Gmail</Button>
                 </div>
             )}
         </Box>

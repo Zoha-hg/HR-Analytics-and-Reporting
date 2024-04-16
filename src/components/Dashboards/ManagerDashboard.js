@@ -129,9 +129,6 @@ const ManagerDashboard = ({ role }) => {
               {role} Dashboard
             </Typography>
           </Box>
-          {/* Avatar */}
-          <Divider orientation="vertical" flexItem />
-          <Avatar alt="Avatar" src={profile} sx={{ marginLeft: 2 }} />
         </Toolbar>
         <Divider />
         {/* specific dashboard content. */}

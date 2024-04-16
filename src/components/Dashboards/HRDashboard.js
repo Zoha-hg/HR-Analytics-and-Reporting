@@ -14,6 +14,7 @@ const HRProfessionalDashboard = ({ role }) => {
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -78,6 +79,10 @@ const HRProfessionalDashboard = ({ role }) => {
         return day + "/" + month + "/" + year;
     }
 
+    const handleUnreadEmailCount = (count) => {
+        setNumUnreadEmails(count);
+    }
+
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
     const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
 
@@ -91,26 +96,27 @@ const HRProfessionalDashboard = ({ role }) => {
               {role} Dashboard
             </Typography>
           </Box>
-          {/* Avatar */}
-          <Divider orientation="vertical" flexItem />
-          <Avatar alt="Avatar" src={profile} sx={{ marginLeft: 2 }} />
         </Toolbar>
-        <Divider />
+        <Divider/>
         {/* specific dashboard content. */}
         {/* first row and its grids. */}
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                {/* <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}> */}
-                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305 }}>
+            <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305, overflow: 'hidden', paddingBottom:2 }}>
                     <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Unread Emails
-                    </Typography>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
+                            You have {numUnreadEmails} unread messages.
+                        </Typography>
+                        <div style={{ maxHeight: 305, overflowY: 'auto', paddingRight: '1px', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
+                            <Grid container>
+                                <UnreadEmail handleUnreadEmailCount={handleUnreadEmailCount}/>
+                            </Grid>
+                        </div>
                     </CardContent>
-                    <UnreadEmail />
                 </Card>
-                {/* </Link> */}
+            </Link>
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -168,34 +174,36 @@ const HRProfessionalDashboard = ({ role }) => {
             <Box flexGrow={1}>
               <Grid item className={classes.cardItem}>
                 <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Ongoing Feedback Forms
-                        </Typography>
-                        {ongoingForms.length === 0 ? ( // Check if there are no ongoing forms
-                        <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                            No Pending Forms
-                        </Typography>
-                        ) : (
-                        ongoingForms.map(form => (
-                            <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
-                            <div key={form.form_id}>
-                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>
-                                {form.title}
+                    <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
+                        <CardContent>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
+                                Ongoing Feedback Forms
+                            </Typography>
+                            {ongoingForms.length === 0 ? (
+                                <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                    No Pending Forms
                                 </Typography>
-                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                                Due: {formatDate(form.end_time)}
-                                </Typography>
-                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                                Description: {form.description}
-                                </Typography>
-                            </div>
-                            </Paper>
-                        ))
-                        )}
-                    </CardContent>
-                </Card>
+                            ) : (
+                                <div style={{ maxHeight: 200, overflowY: 'auto', paddingRight: '1px', scrollbarWidth: 'none', WebkitScrollbar: 'none' }}>
+                                    {ongoingForms.map(form => (
+                                        <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
+                                            <div key={form.form_id}>
+                                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>
+                                                    {form.title}
+                                                </Typography>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                                    Due: {formatDate(form.end_time)}
+                                                </Typography>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                                    Description: {form.description}
+                                                </Typography>
+                                            </div>
+                                        </Paper>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
                 </Link>
               </Grid>
             </Box>
