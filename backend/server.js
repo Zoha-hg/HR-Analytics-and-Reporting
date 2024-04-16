@@ -46,6 +46,7 @@ connection.once("open", () =>
 });
 
 const usersRouter = require("./routes/users");
+const { default: axios } = require("axios");
 const { all } = require("axios");
 const e = require("express");
 app.use("/users", usersRouter);
@@ -99,22 +100,83 @@ app.get('/user-name', authenticateToken, async (req, res) => {
 
 
 app.post("/signup", async (req, res) => {
-	try
-	{
-		const { username, email, password, role } = req.body;
+  try {
+    const { username, email, password, role } = req.body;
+	// Ensuring that all of the fields are filled
+	if (!username || !email || !password || !role) {
+	  return res.status(400).json({ message: 'All fields are required' });
+	}
+	// Checking if the email is valid
+	const validEmail = await verifyEmail(email);
+	if (validEmail){
 		const hashedPassword = await bcrypt.hash(password, 10);
-		const newUser = new User({ username, email, password: hashedPassword, role });
-		await newUser.save();
-		res.status(201).json({ message: "Signup successful" });
-
+		if (role == "Employee"){
+			// Checking if the user already exists in the employee database:
+			const existingEmployee = await Employee.findOne({ employee_id: username });
+			if (!existingEmployee) {
+				return res.status(401).json({ message: 'Employee does not exist' });
+		}}
+		if (role == "Manager"){
+			// Checking if the user already exists in the manager database:
+			const existingManager = await Manager.findOne({ employee_id: username });
+			if (!existingManager) {
+				return res.status(401).json({ message: 'Manager does not exist' });
+		}}
+		// Checking if the email or username already exist in the database.
+		const existing = await User.findOne({ $or: [{ username }, { email }] });
+		if (existing) {
+		return res.status(401).json({ message: 'User already exists' });
+		}
+		else{
+		// Checking if the password is valid and contains at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.
+		const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+		if (!password.match(passwordRegex)) {
+			// console.log('Password invalid:', password)
+			return res.status(400).json({ message: 'Password must contain at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.' });
+		}
+		else {
+			const newUser = new User({ username, email, password: hashedPassword, role });
+			await newUser.save();
+			// Adding the user's credentials to the relevant database
+			await addUser(username, email, role);
+			res.status(201).json({ message: "Signup successful" });
+		}
+		}
 	}
-	catch (error)
-	{
-		console.error('SignUp error:', error);
-		res.status(500).json({ message: 'Failed to sign up. Please try again.' });
+	else{
+		return res.status(400).json({ message: 'Could not verify Email. Please try with a different Email.' });
 	}
+  } catch (error) {
+    console.error('SignUp error:', error);
+    res.status(500).json({ message: 'Failed to sign up. Please try again.' });
+  }
 });
 
+const verifyEmail = async (email) => {
+	// Checking if the email is valid by using the hunter API
+
+	const url = `https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${process.env.HUNTER_API_KEY}`;
+
+	try{
+		const response = await axios.get(url);
+		if (response.data.data.status === 'valid'){
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	} catch(error){
+		console.log("Error message:", error.message);
+		console.log("Error details:", error.response ? error.response.data : "No response data");
+
+		return false;
+	};
+}
+
+const addUser = async (username, email, role) => {
+	//Adding the details of the user to the rest of the database
+}
 
 app.post("/login", async (req, res) => 
 {
