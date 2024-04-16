@@ -1,127 +1,287 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Typography, Grid, Drawer, List, ListItem, ListItemText, Toolbar, Divider, Box, Avatar, ListItemButton} from '@mui/material';
+import { Card, CardContent, CardActions, Button } from '@mui/material/';
+import { LineChart } from '@mui/x-charts/LineChart';
+import Company from './assets/logo.png'
+import profile from './assets/profile.png'
+import LogoutIcon from '@mui/icons-material/Logout';
 
+import DashboardStyles from './DashboardStyles'; // Import the styles
+import Logo from './assets/HR logo.png'; // Import logo image
+import calendar from './assets/Calendar.svg'
+import email from './assets/envelope.svg'
+import feedback from './assets/Feedback.svg'
+import employee from './assets/Employee.svg'
+import reports from './assets/Turnover.svg'
+import dashboard from './assets/Dashboard.svg'
+
+import AdminDashboard from './Dashboards/AdminDashboard';
+import HRProfessionalDashboard from './Dashboards/HRDashboard';
+import EmployeeDashboard from './Dashboards/EmployeeDashboard';
+import ManagerDashboard from './Dashboards/ManagerDashboard';
 
 const Dashboard = () => {
-    const [role, setRole] = useState('');
-    const navigate = useNavigate();
+  const classes = DashboardStyles(); // Use the defined styles
+  const [role, setRole] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(true); // Drawer is initially open
+  const location = useLocation(); // Get current location to highlight active link
 
-    useEffect(() => {
-        const fetchUserRole = async () => {
-            const token = localStorage.getItem('token');
-            // console.log('Token:', token);
-            try {
-                // console.log('Fetching user role...')
-                // Make a GET request to the /user-role endpoint to extract the user's role based on the token
-                const response = await axios.get('http://localhost:8000/user-role', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                // console.log('User role response:', response);
-                setRole(response.data.role);
-            } catch (error) {
-                console.error('Error fetching user role:', error);
-                // If there's an error, redirect to the login page
-                alert('Failed to fetch user role. Please log in again.');
-                navigate('/login');
-            }
-        };
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('http://localhost:8000/user-role', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setRole(response.data.role);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+        alert('Failed to fetch user role. Please log in again.');
+        // Redirect to login page if role fetching fails
+        window.location.href = '/login';
+      }
+    };
 
-        fetchUserRole();
-    }, []);
+    fetchUserRole();
+  }, []);
 
-    return (
-        <div className="dashboard-container">
-            <h1>Welcome to the Dashboard</h1>
-            {role === 'Admin' && (
-                // Admin Dashboard content
-                <div>
-                    <h2>Admin Dashboard</h2>
-                    <p>Admin can see all the data</p>
-                    <Link to="/form"><button>Create a Form</button></Link>
-                    <Link to="/fill"><button>Fill a Form</button></Link>
-                    <Link to="/display"><button>Display Forms</button></Link>
-                </div>
-            )}
-            {role === 'HR professional' && (
-                // HR Dashboard content
-                <div>
-                    <h2>HR Dashboard</h2>
-                    <p>HR can see all the data</p>
-                    <Link to="/form"><button>Create a Form</button></Link>
-                    <Link to="/display"><button>Display Forms</button></Link>
-                </div>
-            )}
-            {role === 'Employee' && (
-                // Employee Dashboard content
-                <div>
-                    <h2>Employee Dashboard</h2>
-                    <p>User can see only their data</p>
-                    <Link to="/fill"><button>Fill a Form</button></Link>
-                    <Link to="/display"><button>Display Forms</button></Link>
-                </div>
-            )}
-            {role === 'Manager' && (
-                // Manager Dashboard content
-                <div>
-                    <h2>Manager Dashboard</h2>
-                    <p>Manager can see only their department data</p>
-                    <Link to="/fill"><button>Fill a Form</button></Link>
-                    <Link to="/display"><button>Display Forms</button></Link>
-                 </div>
-            )}
-        </div>
-    );
+  // Define drawer content based on user role
+  const drawerContent = () => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return (
+            <List>
+                <ListItem component={Link} to="/dashboard">
+                    <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
+                </ListItem>
+                <ListItemButton component={Link} to="/dashboard">
+                    <Box display="flex" alignItems="center">
+                        <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/employeeperformance">
+                    <Box display="flex" alignItems="center">
+                        <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/feedbackform">
+                    <Box display="flex" alignItems="center">
+                        <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/turnover">
+                    <Box display="flex" alignItems="center">
+                        <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/calendar">
+                    <Box display="flex" alignItems="center">
+                        <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/gmail">
+                    <Box display="flex" alignItems="center">
+                        <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Email"/>
+                    </Box>
+                </ListItemButton>
+            </List>
+        );
+      case 'hr professional':
+        return (
+            <List>
+                <ListItem component={Link} to="/dashboard">
+                    <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
+                </ListItem>
+                <ListItemButton component={Link} to="/dashboard">
+                    <Box display="flex" alignItems="center">
+                        <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
+                    </Box>
+                </ListItemButton>
+                <ListItem component={Link} to="/employeeperformance">
+                    <Box display="flex" alignItems="center">
+                        <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/feedbackform">
+                    <Box display="flex" alignItems="center">
+                        <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/turnover">
+                    <Box display="flex" alignItems="center">
+                        <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/calendar">
+                    <Box display="flex" alignItems="center">
+                        <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/gmail">
+                    <Box display="flex" alignItems="center">
+                        <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Email"/>
+                    </Box>
+                </ListItem>
+            </List>
+        );
+      case 'employee':
+        return (
+            <List>
+                <ListItem component={Link} to="/dashboard">
+                    <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
+                </ListItem>
+                <ListItemButton component={Link} to="/dashboard">
+                    <Box display="flex" alignItems="center">
+                        <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/employees">
+                    <Box display="flex" alignItems="center">
+                        <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/feedbackform">
+                    <Box display="flex" alignItems="center">
+                        <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/calendar">
+                    <Box display="flex" alignItems="center">
+                        <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                    </Box>
+                </ListItemButton>
+                <ListItemButton component={Link} to="/gmail">
+                    <Box display="flex" alignItems="center">
+                        <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Email"/>
+                    </Box>
+                </ListItemButton>
+            </List>
+        );
+      case 'manager':
+        return (
+            <List>
+                <ListItem component={Link} to="/">
+                    <ListItemText style={{ color: '#ffff', }} primary="MAIN MENU"/>
+                </ListItem>
+                <ListItem component={Link} to="/dashboard">
+                    <Box display="flex" alignItems="center">
+                        <img src={dashboard} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/employees">
+                    <Box display="flex" alignItems="center">
+                        <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/feedbackform">
+                    <Box display="flex" alignItems="center">
+                        <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/turnover">
+                    <Box display="flex" alignItems="center">
+                        <img src={reports} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/calendar">
+                    <Box display="flex" alignItems="center">
+                        <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                    </Box>
+                </ListItem>
+                <ListItem component={Link} to="/gmail">
+                    <Box display="flex" alignItems="center">
+                        <img src={email} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
+                        <ListItemText style={{ color: '#ffff', }} primary="Email"/>
+                    </Box>
+                </ListItem>
+            </List>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderDashboardContent = () => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return <AdminDashboard role={role}/>;
+      case 'hr professional':
+        return <HRProfessionalDashboard role={role}/>;
+      case 'employee':
+        return <EmployeeDashboard role={role}/>;
+      case 'manager':
+        return <ManagerDashboard role={role}/>;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Grid container className={classes.container}>
+      {/* Drawer */}
+      {/* can also try left side margin/padding padding better. */}
+      <Grid item xs={2.75} md={2} lg={1.5}> 
+        <Drawer
+            variant="permanent"
+            anchor="left"
+            open={drawerOpen}
+            classes={{
+            paper: classes.drawerPaper,
+            }}
+        >
+            <List>
+                <ListItem component={Link} to="/">
+                    <Box display="flex" alignItems="center">
+                    <img src={Logo} alt="Logo" style={{ width: 60, marginRight: 5 }} />
+                    <ListItemText style={{ color: '#ffff', }} primary="Data Drive" />
+                    </Box>
+                </ListItem>
+                {drawerContent()}
+            </List>
+            <List alignItems='flex-end'>
+                <Divider />
+                <ListItemButton component={Link} to="/">
+                    <Box display="flex" alignItems="center">
+                    <LogoutIcon style={{ color: '#ffff', marginRight: 10, marginLeft: 5}} />
+                    <ListItemText style={{ color: '#ffff', }} primary="Log Out" />
+                    </Box>
+                </ListItemButton>
+                <Divider />
+            </List>
+        </Drawer>
+      </Grid>
+      {/* Main content */}
+      <Grid item xs={9.25} md={10} lg={10.5}>
+        {renderDashboardContent()}
+      </Grid>
+    </Grid>
+  );
 };
 
+
+
 export default Dashboard;
-
-// import React from 'react';
-// import { useLocation, Link } from 'react-router-dom';
-
-// const Dashboard = () => {
-//     const location = useLocation();
-//     const userContext = location.state || {}; // Default to an empty object if state is null
-
-//     return (
-//         <div className="dashboard-container">
-//             <h1>Welcome to the Dashboard</h1>
-//             {userContext.role === 'admin' && (
-//                 <div>
-//                     <h2>Admin Dashboard</h2>
-//                     <p>Admin can see all the data</p>
-//                     <Link to="/form"><button>Create a Form</button></Link>
-//                     <Link to="/fill"><button>Fill a Form</button></Link>
-//                     <Link to="/display"><button>Display Forms</button></Link>
-//                 </div>
-//             )}
-//             {userContext.role === 'HR professional' && (
-                // <div>
-                //     <h2>HR Dashboard</h2>
-                //     <p>HR can see all the data</p>
-                //     <Link to="/form"><button>Create a Form</button></Link>
-                //     <Link to="/display"><button>Display Forms</button></Link>
-                // </div>
-//             )}
-//             {userContext.role === 'Employee' && (
-                // <div>
-                //     <h2>Employee Dashboard</h2>
-                //     <p>User can see only their data</p>
-                //     <Link to="/form"><button>Create a Form</button></Link>
-                //     <Link to="/fill"><button>Fill a Form</button></Link>
-                //     <Link to="/display"><button>Display Forms</button></Link>
-                // </div>
-//             )}
-//             {userContext.role === 'Manager' && (
-//                 <div>
-//                     <h2>Manager Dashboard</h2>
-//                     <p>Manager can see only their department data</p>
-//                     <Link to="/fill"><button>Fill a Form</button></Link>
-//                     <Link to="/display"><button>Display Forms</button></Link>
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default Dashboard;

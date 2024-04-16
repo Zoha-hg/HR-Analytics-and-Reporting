@@ -37,8 +37,16 @@ const managerSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Feedback',
         },
-        filled: { type: Boolean, required: true }
+        filled: { type: Boolean, required: true },
+        ratingList: [{type: Number}]
     }],
+    tasks: 
+    [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Task',
+        }
+    ]
 });
 
 module.exports = managerSchema;

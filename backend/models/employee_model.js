@@ -40,7 +40,8 @@ const employeeSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Feedback',
         },
-        filled: { type: Boolean, required: true }
+        filled: { type: Boolean, required: true },
+        ratingList: [{type: Number}]
     }],
     tasks: 
     [
