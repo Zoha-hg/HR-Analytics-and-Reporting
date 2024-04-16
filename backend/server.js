@@ -1253,3 +1253,55 @@ app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/employee-skill-averages', authenticateToken, async (req, res) => {
+	try {
+	  // Get the username from the authenticated user
+	  const username = req.user.username;
+	  console.log('Authenticated user:', username);
+  
+	  // Find the employee by their username (which is acting as the user ID here)
+	  const employee = await Employee.findOne({ employee_id: username }).populate('tasks');
+    
+	//   console.log('Employee:', employee);
+	  if (!employee) {
+		console.log('Employee not found for username:', username);
+		return res.status(404).json({ message: 'Employee not found.' });
+	  }
+	
+	  // Proceed only with completed tasks
+	  const completedTasks = employee.tasks.filter(task => task.completion_status === 'completed');
+	
+	  // Initialize an object to keep track of skill averages
+	  let skillAverages = {};
+	  completedTasks.forEach(task => {
+		task.skills.forEach(skill => {
+		  if (skill.rating !== undefined) { // Ensure that a rating exists
+			if (!skillAverages[skill.skill]) {
+			  skillAverages[skill.skill] = {
+				totalRating: 0,
+				count: 0
+			  };
+			}
+			skillAverages[skill.skill].totalRating += skill.rating;
+			skillAverages[skill.skill].count += 1;
+		  }
+		});
+	  });
+	
+	  // Calculate the average for each skill
+	  for (let skill in skillAverages) {
+		skillAverages[skill].average = skillAverages[skill].totalRating / skillAverages[skill].count;
+	  }
+	
+	  // Return the skill averages
+	  res.json(skillAverages);
+	} catch (error) {
+	  console.error('Error fetching employee skill averages:', error);
+	  res.status(500).json({ message: 'Failed to fetch employee skill averages. Please try again.' });
+	}
+  });
+  
+
+
+
+

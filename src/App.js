@@ -22,6 +22,8 @@ import GmailIntegrate from './components/GmailIntegrate';
 import GmailDashboard from './components/GmailDashboard';
 import TimeTracker from './components/TimeTracker';
 import Unread from './components/unreadGmail';
+import EmployeeAnalysis from './components/Analysis/EmployeeAnalysis';
+// import SkillRatingsChartsContainer from './components/Analysis/employeePlots';
 
 
 function App() {
@@ -53,6 +55,7 @@ function App() {
                 {/* calendar ka naam change kar lena. */}
                 <Route path= "/calendar" element={<TimeTracker/>} /> 
                 <Route path="/unread" element={<Unread/>}/>
+                <Route path="/analysis" element={<EmployeeAnalysis />} />
               </Routes>
             </div>
             </Router>
