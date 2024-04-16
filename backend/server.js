@@ -102,6 +102,18 @@ app.post("/signup", async (req, res) => {
 	const validEmail = await verifyEmail(email);
 	if (validEmail){
 		const hashedPassword = await bcrypt.hash(password, 10);
+		if (role == "Employee"){
+			// Checking if the user already exists in the employee database:
+			const existingEmployee = await Employee.findOne({ employee_id: username });
+			if (!existingEmployee) {
+				return res.status(401).json({ message: 'Employee does not exist' });
+		}}
+		if (role == "Manager"){
+			// Checking if the user already exists in the manager database:
+			const existingManager = await Manager.findOne({ employee_id: username });
+			if (!existingManager) {
+				return res.status(401).json({ message: 'Manager does not exist' });
+		}}
 		// Checking if the email or username already exist in the database.
 		const existing = await User.findOne({ $or: [{ username }, { email }] });
 		if (existing) {
