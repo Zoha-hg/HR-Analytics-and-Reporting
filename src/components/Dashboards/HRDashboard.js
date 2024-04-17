@@ -150,16 +150,7 @@ const HRProfessionalDashboard = ({ role }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
                     </Typography>
-                    <LineChart
-                        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-                        series={[
-                        {
-                            data: [2, 5.5, 2, 8.5, 1.5, 5],
-                        },
-                        ]}
-                        width={850}
-                        height={220}
-                    />
+                    
                     </CardContent>
                 </Card>
                 </Link>
