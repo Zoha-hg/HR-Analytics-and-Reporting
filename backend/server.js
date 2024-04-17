@@ -1368,26 +1368,45 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             };
         });
 
-        const formattedData = performanceReports.map(report => ({
-            "Performance Rating": report.averageSkills,
-            "Number of Projects": report.totalCompletedTasks,
-            "Average Monthly Hours": report.totalHoursWorked, 
-            "Salary": report.salary
-        }));
+        const formattedData = performanceReports.map(report => {
+            let salaryCategory;
+            if (report.salary < 50000) {
+                salaryCategory = 'low';
+            } else if (report.salary > 70000) {
+                salaryCategory = 'high';
+            } else {
+                salaryCategory = 'medium';
+            }
 
-		const AI_URI = process.env.AI_URI;
+            return {
+                "Performance Rating": report.averageSkills,
+                "Number of Projects": report.totalCompletedTasks,
+                "Average Monthly Hours": report.totalHoursWorked,
+                "Salary": salaryCategory
+            };
+        });
+
+        console.log("formattedData", formattedData);
+
+        const AI_URI = process.env.AI_URI;
         const apiResponse = await axios.post(AI_URI, formattedData);
-        const probabilities = apiResponse.data; 
+        const probabilities = apiResponse.data.prediction;
+		// console.log('jeee',probabilities);
+		// convert probabilities to array
+		// const probabilities = Object.values(probabilitiesResponse);
+		// console.log('jeee',probabilities[0]);
+		// console.log('jeee',performanceReports.length);
 
         const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
             ...report,
             probability: probabilities[index]
         }));
 
-		console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
+        console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
         res.json({ employees: performanceReportsWithProbabilities });
     } catch (error) {
         console.error('Error fetching performance reports:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
