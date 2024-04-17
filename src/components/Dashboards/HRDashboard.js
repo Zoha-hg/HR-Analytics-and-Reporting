@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { Typography, Grid, Toolbar, Divider, Box, Avatar, Paper,} from '@mui/material';
+import { Typography, Grid, Toolbar, Divider, Box, Paper} from '@mui/material';
 import { Card, CardContent, CardActions, Button } from '@mui/material/';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Company from '../assets/logo.png';
 import profile from '../assets/profile.png';
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail';
+import TimeTracker from '../TimeTrackingCard';
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -83,8 +84,8 @@ const HRProfessionalDashboard = ({ role }) => {
         setNumUnreadEmails(count);
     }
 
-    const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
-    const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
+    const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date())
+    const finishedForms = forms.filter(form => new Date(form.end_time) < new Date())
 
   return (
     <Grid container>
@@ -109,7 +110,7 @@ const HRProfessionalDashboard = ({ role }) => {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                             You have {numUnreadEmails} unread messages.
                         </Typography>
-                        <div style={{ maxHeight: 305, overflowY: 'auto', paddingRight: '1px', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
+                        <div style={{ maxHeight: 305, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
                             <Grid container>
                                 <UnreadEmail handleUnreadEmailCount={handleUnreadEmailCount}/>
                             </Grid>
@@ -132,18 +133,10 @@ const HRProfessionalDashboard = ({ role }) => {
                 </Card>
                 </Link>
             </Grid>
-            <Box className={classes.stack} sx={{ flexGrow: 1 }}>
+            <Box className={classes.stack} sx={{ flexGrow: 0 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
-                        <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                            Time tracking.
-                        </Typography>
-                        </CardContent>
-                    </Card>
-                    </Link>
+                    <TimeTracker/>
                 </Grid>
               </Grid>
             </Box>
@@ -173,28 +166,28 @@ const HRProfessionalDashboard = ({ role }) => {
             </Grid>
             <Box flexGrow={1}>
               <Grid item className={classes.cardItem}>
-                <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
-                        <CardContent>
-                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
+                        <CardContent> {/* Ensure no padding at the bottom */}
+                            <Typography variant="h6" component="div" sx={{ textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
                                 Ongoing Feedback Forms
                             </Typography>
                             {ongoingForms.length === 0 ? (
-                                <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                <Typography variant="body1" component="div" sx={{ textAlign: 'center' }}>
                                     No Pending Forms
                                 </Typography>
                             ) : (
-                                <div style={{ maxHeight: 200, overflowY: 'auto', paddingRight: '1px', scrollbarWidth: 'none', WebkitScrollbar: 'none' }}>
+                                <div style={{ maxHeight: 230, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none' }}>
                                     {ongoingForms.map(form => (
                                         <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
-                                            <div key={form.form_id}>
-                                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>
+                                            <div>
+                                                <Typography variant="body1" component="div" sx={{ textAlign: 'center' }}>
                                                     {form.title}
                                                 </Typography>
-                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>
                                                     Due: {formatDate(form.end_time)}
                                                 </Typography>
-                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>
                                                     Description: {form.description}
                                                 </Typography>
                                             </div>

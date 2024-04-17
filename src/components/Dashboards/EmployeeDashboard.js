@@ -8,6 +8,7 @@ import Company from '../assets/logo.png'
 import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail'; 
+import TimeTracker from '../TimeTrackingCard';
 
 const EmployeeDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -177,23 +178,11 @@ const EmployeeDashboard = ({ role }) => {
                 </Link>
             </Grid>
             <Grid item className={classes.cardItem}>
-                <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Time Tracking.
-                    </Typography>
-                    </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
-                </Card>
-                </Link>
+                <TimeTracker/>
             </Grid>
             <Box className={classes.stack} sx={{ flexGrow: 1 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
-                    {/* <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}> */}
                     <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
                         <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
@@ -202,7 +191,6 @@ const EmployeeDashboard = ({ role }) => {
                         <UnreadEmail />
                         </CardContent>
                     </Card>
-                    {/* </Link> */}
                 </Grid>
               </Grid>
             </Box>
