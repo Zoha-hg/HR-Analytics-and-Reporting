@@ -1317,7 +1317,6 @@ app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
 
 app.get('/api/performancereports', authenticateToken, async (req, res) => {
     try {
-        // Fetch all employees
         const employees = await Employee.find({});
 
         const aggregatedTimelogs = await TimeLog.aggregate([
@@ -1347,7 +1346,7 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             }
         ]);
 
-        console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+        // console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
 
         const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
             item._id.toString(), 
@@ -1386,16 +1385,12 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             };
         });
 
-        console.log("formattedData", formattedData);
+        // console.log("formattedData", formattedData);
 
         const AI_URI = process.env.AI_URI;
         const apiResponse = await axios.post(AI_URI, formattedData);
         const probabilities = apiResponse.data.prediction;
-		// console.log('jeee',probabilities);
-		// convert probabilities to array
-		// const probabilities = Object.values(probabilitiesResponse);
-		// console.log('jeee',probabilities[0]);
-		// console.log('jeee',performanceReports.length);
+		console.log(apiResponse)
 
         const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
             ...report,
@@ -1448,7 +1443,7 @@ app.get('/api/teamperformancereports/managers', authenticateToken, async (req, r
             }
         ]);
 
-        console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+        // console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
 
         const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
             item._id.toString(), 
@@ -1487,16 +1482,11 @@ app.get('/api/teamperformancereports/managers', authenticateToken, async (req, r
             };
         });
 
-        console.log("formattedData", formattedData);
+        // console.log("formattedData", formattedData);
 
         const AI_URI = process.env.AI_URI;
         const apiResponse = await axios.post(AI_URI, formattedData);
         const probabilities = apiResponse.data.prediction;
-		// console.log('jeee',probabilities);
-		// convert probabilities to array
-		// const probabilities = Object.values(probabilitiesResponse);
-		// console.log('jeee',probabilities[0]);
-		// console.log('jeee',performanceReports.length);
 
         const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
             ...report,
@@ -1507,6 +1497,79 @@ app.get('/api/teamperformancereports/managers', authenticateToken, async (req, r
         res.json({ team: performanceReportsWithProbabilities });
     } catch (error) {
         console.error('Error fetching team performance reports:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+app.get('/api/turnover', authenticateToken, async (req, res) => {
+    try {
+        const employees = await Employee.find({}).populate('feedback_forms.form');
+        const departments = await Department.find({});
+		
+        const departmentMap = departments.reduce((map, dept) => {
+            map[dept._id.toString()] = dept.department_name.trim(); 
+            return map;
+        }, {});
+
+        const employeesWithAdditionalInfo = employees.map(employee => {
+            const filledForms = employee.feedback_forms.filter(feedback => feedback.filled);
+
+            const averageSatisfaction = filledForms.reduce((acc, feedback) => {
+                const ratingsSum = feedback.ratingList.reduce((sum, rating) => sum + rating, 0);
+                return acc + (ratingsSum / (feedback.ratingList.length || 1));
+            }, 0) / (filledForms.length || 1);
+
+            // Attempt to convert date_started to a Date object
+			console.log(employee.date_started)
+            const startDate = employee.date_started ? new Date(employee.date_started) : null;
+    		// console.log(`Date started for ${employee.employee_name}:`, startDate);
+
+            const currentDate = new Date();
+            const tenure = startDate ? Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24 * 365)) : 'Start date not available';
+            // console.log(`Tenure for ${employee.employee_name}:`, tenure);
+
+            return {
+				...employee._doc, // use the raw document directly
+				department_name: departmentMap[employee.department.toString()] || 'No Department Found',
+				satisfaction_level: filledForms.length ? averageSatisfaction : 0,
+				tenure_years: tenure // Should now be a whole number or the error message
+			};
+        });
+
+		const formattedData = employeesWithAdditionalInfo.map(employee => {
+			return {
+				"Satisfaction Level": employee.satisfaction_level,
+				"Age": employee.age,
+				"Years of Experience": employee.years_of_experience,
+				"Salary": employee.salary,
+				"Promotions": employee.number_of_promotions,
+				"Tenure": employee.tenure_years, 
+				"Department_HR": employee.department_name === "HR",
+				"Department_Marketing": employee.department_name === "Marketing",
+				"Department_Operations": employee.department_name === "Operations",
+				"Department_Sales": employee.department_name === "Sales",
+				"Department_Tech": employee.department_name === "Tech"
+		};});
+
+        // console.log("employeesWithAdditionalInfo", employeesWithAdditionalInfo);
+		// console.log("formattedData", formattedData);
+
+		const AI_URI = process.env.AI_URI_TO;
+		const apiResponse = await axios.post(AI_URI, formattedData);
+		const probabilities = apiResponse.data.prediction;
+		// console.log(apiResponse.data)
+        // Send the modified employee data
+        // res.json(employeesWithAdditionalInfo);
+		const finalData = employeesWithAdditionalInfo.map((employee, index) => ({
+			...employee,
+			probability: probabilities[index]
+		}));
+		console.log("finalData", finalData);
+
+		res.json({ turnover: finalData });
+    } catch (error) {
+        console.error('Error fetching turnover data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

@@ -17,6 +17,16 @@ const HRPerformanceReports = () => {
             },
         ],
     });
+    const [turnoverData, setTurnoverData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Turnover Probability',
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+        ],
+    });
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -44,8 +54,33 @@ const HRPerformanceReports = () => {
                 }
             }
         };
+        const fetchTurnoverData = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/turnover', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedTurnoverData = response.data.employees;
+                setTurnoverData({
+                    labels: fetchedTurnoverData.map(report => report.employee_name),
+                    datasets: [
+                        {
+                            label: 'Turnover Probability',
+                            data: fetchedTurnoverData.map(report => report.probability),
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.error('Error fetching turnover data:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
+            }
+        };
 
         fetchReports();
+        fetchTurnoverData();
     }, [navigate]);
 
     return (
