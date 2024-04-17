@@ -264,7 +264,7 @@ const TimeTrackerCard = () => {
     };
 
 
-    const size = 300;
+    const size = 120;
     const strokeWidth = 6;
     const center = size / 2;
     const radius = size / 2 - strokeWidth / 2;
@@ -297,17 +297,40 @@ const TimeTrackerCard = () => {
             </Typography>
             </Link>
             <Box style={{ textAlign: 'center' }}>
-                <Typography variant="h6" style={{ color: '#333', marginBottom: 2 }}>
+                <Typography variant="h6" style={{ color: '#333', marginBottom: 3 }}>
                 Time Elapsed: {formatElapsedTime(elapsedTime)}
                 </Typography>
                 <Box style={{ position: 'relative' }}>
-                <CircularProgress variant="determinate" value={progress} size={100} sx={{ marginTop: 2 }} />
+                {/* <CircularProgress variant="determinate" value={progress} size={100} sx={{ marginTop: 2 }} /> */}
+                <svg width={size} height={size} >
+                        {/* Background circle */}
+                        <circle
+                            cx={center}
+                            cy={center}
+                            r={radius}
+                            strokeWidth={strokeWidth}
+                            fill="none"
+                            stroke="#E6E6E6" // Color of the background circle
+                        />
+                        {/* Foreground circle */}
+                        <circle
+                            cx={center}
+                            cy={center}
+                            r={radius}
+                            strokeWidth={strokeWidth}
+                            fill="none"
+                            stroke='#39d6d3' // Color of the progress circle
+                            strokeDasharray={circumference}
+                            strokeDashoffset={strokeDashoffset}
+                            transform={`rotate(-90 ${center} ${center})`} // Start the progress from the top
+                        />
+                    </svg>
                 <Box style={{}}>
                     <Button
                     onClick={isTracking ? handleStop : handleStart}
                     variant="contained"
                     color={isTracking ? 'primary' : 'primary'}
-                    sx={{ marginTop: 2 }}
+                    sx={{ marginTop: 1 }}
                     >
                     {isTracking ? 'Stop Tracking' : 'Start Tracking'}
                     </Button>
