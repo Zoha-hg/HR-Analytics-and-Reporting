@@ -61,17 +61,17 @@ const LoginPage = () => {
                 value={password}
                 onChange={event => setPassword(event.target.value)}/>
             </div>
-            <div className="form-options">
-            <div className="remember-me">
+              <button type="submit" className="sign-in-button">Sign In</button>
+            {/* <div className="form-options"> */}
+            {/* <div className="remember-me">
                 <input type="checkbox" id="rememberMe" hidden />
                 <label htmlFor="rememberMe" className="custom-checkbox-label">
                   <span className="custom-checkbox"></span>
                   Remember me
                 </label>
-              </div>
-              <a href="#" className="forgot-password">Forgot password?</a>
-            </div>
-            <button type="submit" className="sign-in-button">Sign In</button>
+              </div> */}
+              {/* <a href="#" className="forgot-password">Forgot password?</a> */}
+            {/* </div> */}
           </form>
         </section>
       </div>

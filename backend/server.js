@@ -11,6 +11,10 @@ const employeeModel = require("./models/employee_model");
 const managerModel = require("./models/manager_model");
 const taskModel = require("./models/tasks_model");
 const dailyTrackingModel = require("./models/daily_tracking_model");
+const authorize = require("./email-api/services/googleApiAuthService");
+const TimeLog = require("./models/timeLog_model");
+const {authorize2,loadSavedCredentialsIfExists} = require("./email-api/services/googleApiAuthService2");
+const { listSentMessages, listMessages, sendEmail, listJunkMessages, listTrashMessages, listUnreadMessages, countUnreadMessages } = require("./email-api/services/gmailApiServices");
 
 
 
@@ -610,7 +614,7 @@ app.post("/updateStatus", async (req, res) =>
 		else
 		{
 			await Task.updateOne({ task_id: task_id }, { completion_status: status });
-			if(status =="completed")
+			if(status ==="completed")
 			{
 
 				await Task.updateOne({ task_id: task_id }, { evaluation_status: "evaluate" });
@@ -772,79 +776,482 @@ app.post("/createmanager", async (req, res) => {
 
 });
 
-app.get("/updateemployees", async (req, res) => {
-	let ids = [1, 10000,10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
-	for(let i = 0; i < ids.length; i++)
-	{
-		try{
-			const employee = await Employee.findOne({employee_id: ids[i]});
-			employee.number_of_promotions = Math.floor(Math.random() * 8);
-			console.log("employee ", employee);
-			await employee.save();
-		} catch (error) {
-			console.log("error", error);
-			res.send(error);
-		}
-	}
-	// let dobs = []
-	// let yoe = [];
-	// let startYear =1960;
-	// let endYear = 2005;
-	// for(let i = 0; i < ids.length; i++) {
-    //     let year = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
-    //     let month = Math.floor(Math.random() * 12);
-    //     let day = Math.floor(Math.random() * 28) + 1; // Keeping it at 28 to handle February
-    //     let date = new Date(year, month, day);
-    //     dobs.push(date);
 
-	// 	yoe.push(Math.floor(Math.random() * 20));
-    // }
+app.get('/start-gmail-authorization', authenticateToken ,async (req, res) => {
+  console.log("here")
+  try {
+    // Using the username from the authenticated user's details
+    console.log('User:', req.user);
+    const username = req.user.username;
 
-	// for(let i = 0; i < ids.length; i++)
-	// {
-	// 	try{
-	// 		const employee = await Employee.findOne({employee_id: ids[i]});
-	// 		employee.date_of_birth = dobs[i];
-	// 		employee.years_of_experience = yoe[i];
-	// 		await employee.save();
-	
-	// 	} catch (error) {
-	// 		res.send(error);
-	// 	}
+    if (!username) {
+      return res.status(400).send('User identifier is missing');
+    }
 
-	// }
-	res.send("done");
+    // Call your authorization logic here with the username
+    await authorize2(username);
+    res.status(200).send('Authorization initiated');
+  } catch (error) {
+    console.error('Authorization error:', error);
+    res.status(500).send('Internal server error');
+  }
+
 });
 
 
-app.get("/startjob", async (req, res) => {
-	let ids = [1, 10000,10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
-	for(let i = 0; i < ids.length; i++)
-	{
-		try{
-			const employee = await Employee.findOne({employee_id: ids[i]});
-			let current = new Date();
-			// let year = current.getFullYear() - employee.date_of_birth.getFullYear();
-			// let datejoined = new Date(employee.years_of_experience);
-			// await employee.save();
-			// if(!employee)
-			// {
-			// 	console.log("yo");
-			// 	res.send("um");
-			// }
-			// console.log("yoe", employee.years_of_experience);
-			// console.log(current.getFullYear()- employee.years_of_experience);
-			let year = current.getFullYear()- employee.years_of_experience;
-			let month = Math.floor(Math.random() * 12);
-			let day = Math.floor(Math.random() * 28) + 1; // Keeping it at 28 to handle February
-			let date = new Date(year, month, day);
 
-			employee.date_started = date;
-			await employee.save();
-				
-		} catch (error) {
-			res.send(error);
-		}
-	}
-	res.send("done");
-})
+
+
+// const getClient = async (req, res, next) => {
+  
+//   const username = req.user.username;
+//   console.log("heyy", username)
+
+//   if (!username) {
+//       return res.status(401).send('Username is missing from the request');
+//   }
+
+//   try {
+//       // Load the saved credentials (e.g., refresh token) for the user
+//       const authClient = await loadSavedCredentialsIfExists(username);
+
+//       if (!authClient) {
+   
+//           return res.status(401).send('Failed to load authentication credentials for the user');
+//       }
+
+//       // Attach the authenticated Google client to the request object so it can be used in subsequent route handlers
+//       req.authClient = authClient;
+
+//       next(); // Proceed to the next middleware/route handler
+//   } catch (error) {
+//       console.error('Error in getClient middleware:', error);
+//       res.status(500).send('Internal server error while loading Google client');
+//   }
+// };
+
+// Gmail routes
+
+
+app.get('/api/gmail/inbox', authenticateToken, async (req, res) => {
+    const username = req.user.username;  // Assuming this is set by authenticateToken
+  
+    const authClient = await authorize2(username);
+  
+    const messages = await listMessages(authClient);
+    res.json(messages);
+});
+app.get('/api/gmail/unread', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listUnreadMessages(authClient);
+  res.json(messages);
+});
+
+app.get('/api/gmail/sent', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listSentMessages(authClient);
+  res.json(messages);
+});
+
+
+
+app.get('/api/gmail/junk', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listJunkMessages(authClient);
+  res.json(messages);
+});
+
+app.get('/api/gmail/deleted', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  const messages = await listTrashMessages(authClient);
+  res.json(messages);
+});
+
+app.post('/api/gmail/send', authenticateToken, async (req, res) => {
+  const { message } = req.body;
+  const username = req.user.username;
+
+  try {
+      const authClient = await authorize2(username);
+      const result = await sendEmail(authClient, message); // Assuming sendEmail expects a single message string
+      res.json(result);
+  } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ message: 'Failed to send email' });
+  }
+});
+
+const authenticateToken1 = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+    if (err) return res.sendStatus(403);
+
+    try {
+      // Assuming the JWT token was created with the username
+      const user = await User.findOne({ username: decoded.username });
+      if (!user) {
+        return res.sendStatus(404); // User not found
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      console.error('Error fetching user from token:', error);
+      res.status(500).json({ message: 'Failed to authenticate token.' });
+    }
+  });
+};
+
+
+app.post('/start-time-log', authenticateToken1, async (req, res) => {
+  try {
+    const newTimeLog = new TimeLog({
+      user: req.user._id,  // Use the full user object's _id
+      startTime: new Date(),
+    });
+
+    await newTimeLog.save();
+    res.status(201).json(newTimeLog);
+  } catch (error) {
+    console.error('Error starting time log:', error);
+    res.status(500).json({ message: 'Failed to start time log. Please try again.' });
+  }
+});
+
+
+app.post('/stop-time-log', authenticateToken1, async (req, res) => {
+  try {
+    const { timeLogId } = req.body;
+    const timeLog = await TimeLog.findById(timeLogId);
+
+    if (!timeLog) {
+      return res.status(404).send('Time log not found');
+    }
+
+    if (timeLog.user.toString() !== req.user._id.toString()) {
+      return res.status(403).send('Unauthorized to modify this time log');
+    }
+
+    timeLog.endTime = new Date();
+    timeLog.duration = (timeLog.endTime - timeLog.startTime) / 1000; // Duration in seconds
+    console.log("timeLog", timeLog)
+    await timeLog.save();
+
+    res.status(200).json(timeLog);
+  } catch (error) {
+    console.error('Error stopping time log:', error);
+    res.status(500).json({ message: 'Failed to stop time log. Please try again.' });
+  }
+});
+app.get('/total-time/:date', authenticateToken1, async (req, res) => {
+  try {
+    const dateString = req.params.date; // 'YYYY-MM-DD' format assumed
+    const userTimezoneOffset = req.user.timezoneOffset || 0; // Assuming timezone offset in minutes might be stored in user profile
+
+    const date = new Date(dateString);
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    startOfDay.setMinutes(startOfDay.getMinutes() + userTimezoneOffset);
+
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    const timeLogs = await TimeLog.find({
+      user: req.user,
+      startTime: { $gte: startOfDay },
+      endTime: { $lte: endOfDay }
+    });
+    
+    const totalDuration = timeLogs.reduce((total, log) => {
+      return total + (log.duration || 0);
+    }, 0);
+
+    res.json({
+      date: dateString,
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
+app.get('/total-time-graph', authenticateToken1, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of today
+
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: today },
+      endTime: { $lte: endOfDay }
+    }).sort({ startTime: 1 }); // Make sure to sort by startTime
+
+    // Assuming you want to group durations by hour, you may need a more complex aggregation.
+    // Below is a simple map for demonstration.
+    const hourlyDurations = new Array(24).fill(0); // Array to hold sums of durations for each hour
+    timeLogs.forEach(log => {
+      const hour = log.startTime.getHours();
+      hourlyDurations[hour] += log.duration; // Add duration to the corresponding hour
+    });
+
+    // Map hourly durations to the response
+    const timeEntries = hourlyDurations.map((duration, hour) => ({
+      label: hour, // Hour labels from 1 to 24
+      duration: duration,
+    }));
+
+    const totalDuration = hourlyDurations.reduce((total, duration) => total + duration, 0);
+
+    res.json({
+      labels: timeEntries.map(entry => entry.label),
+      durations: timeEntries.map(entry => entry.duration),
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
+
+app.get('/total-time-graph', authenticateToken1, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of today
+
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: today },
+      endTime: { $lte: endOfDay }
+    });
+
+    // Here, you map timeLogs to create an array of time entries with hourly labels.
+    const timeEntries = timeLogs.map(log => ({
+      // Assuming startTime is stored as a Date object in your database.
+      // Extract the hours and minutes as labels.
+      label: `${log.startTime.getHours().toString().padStart(2, '0')}:${log.startTime.getMinutes().toString().padStart(2, '0')}`,
+      duration: log.duration,
+    }));
+
+    const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+    // Now, instead of sending back the date, you send back an array of the generated labels and durations.
+    res.json({
+      labels: timeEntries.map(entry => entry.label), // This will be the x-axis labels (hours)
+      durations: timeEntries.map(entry => entry.duration), // This will be the y-axis data (durations)
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+  } catch (error) {
+    console.error('Error calculating total time:', error);
+    res.status(500).json({ message: 'Failed to calculate total time. Please try again.' });
+  }
+});
+
+app.get('/total-time-weekly/:date', authenticateToken1, async (req, res) => {
+  try {
+      const inputDate = new Date(req.params.date);  // Assumes 'YYYY-MM-DD' format
+      const weekStart = new Date(inputDate);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Set to Sunday (start of week)
+      weekStart.setUTCHours(0, 0, 0, 0);  // Start of the day in UTC
+
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);  // Move to Saturday (end of week)
+      weekEnd.setUTCHours(23, 59, 59, 999);  // End of the day in UTC
+
+      const timeLogs = await TimeLog.find({
+          user: req.user,
+          startTime: { $gte: weekStart },
+          endTime: { $lte: weekEnd }
+      });
+      
+      const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+      res.json({
+        weekStarting: weekStart.toISOString().split('T')[0],
+        weekEnding: weekEnd.toISOString().split('T')[0],
+        totalDurationInSeconds: totalDuration,
+        totalDurationFormatted: formatDuration(totalDuration),
+      });
+  } catch (error) {
+      console.error('Error calculating weekly total time:', error);
+      res.status(500).json({ message: 'Failed to calculate weekly total time. Please try again.' });
+  }
+});
+
+app.get('/total-time-monthly/:date', authenticateToken1, async (req, res) => {
+  try {
+    const inputDate = new Date(req.params.date); // Assumes 'YYYY-MM-DD' format
+    const monthStart = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1)); // Set to the first day of the month
+    const monthEnd = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0, 23, 59, 59, 999)); // Set to the last day of the month
+
+    // Query to find time logs within the start and end of the month
+    const timeLogs = await TimeLog.find({
+      user: req.user._id, // Assuming req.user._id contains the ID of the authenticated user
+      startTime: { $gte: monthStart },
+      endTime: { $lte: monthEnd }
+    });
+
+    
+
+    // Reducing timeLogs to calculate totalDuration
+    const totalDuration = timeLogs.reduce((total, log) => total + (log.duration || 0), 0);
+
+    // Sending the response
+    res.json({
+      monthStarting: monthStart.toISOString().split('T')[0],
+      monthEnding: monthEnd.toISOString().split('T')[0],
+      totalDurationInSeconds: totalDuration,
+      totalDurationFormatted: formatDuration(totalDuration),
+    });
+
+  } catch (error) {
+    console.error('Error calculating monthly total time:', error);
+    res.status(500).json({ message: 'Failed to calculate monthly total time. Please try again.' });
+  }
+});
+
+
+app.get('/total-time-graph/:date', authenticateToken1, async (req, res) => {
+  try {
+    const dateString = req.params.date; // 'YYYY-MM-DD' format assumed
+    const date = new Date(dateString);
+    date.setHours(0, 0, 0, 0); // Set to start of given date
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999); // Set to end of given date
+
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: date },
+      endTime: { $lte: endOfDay }
+    }).sort({ startTime: 1 }); // Sort by startTime
+
+    const hourlyDurations = new Array(24).fill(0); // Initialize array for hourly durations
+    timeLogs.forEach(log => {
+      const hour = log.startTime.getHours();
+      hourlyDurations[hour] += log.duration / 60; // Convert to minutes and add to the correct hour
+    });
+
+    res.json({
+      date: dateString,
+      hourlyDurations: hourlyDurations, // Send the hourly durations
+    });
+  } catch (error) {
+    console.error('Error calculating total time for the date:', error);
+    res.status(500).json({ message: 'Failed to calculate total time for the date. Please try again.' });
+  }
+});
+app.get('/total-time-graph-weekly/:date', authenticateToken1, async (req, res) => {
+  try {
+    const inputDate = new Date(req.params.date);
+    // Get the first day of the week (Sunday) based on inputDate
+    const startOfWeek = new Date(inputDate.setDate(inputDate.getDate() - inputDate.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    // Fetch logs within the week and map data to days of the week
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: startOfWeek },
+      endTime: { $lte: endOfWeek }
+    });
+
+    // Initialize array for daily durations
+    const dailyDurations = Array.from({ length: 7 }, () => 0);
+    timeLogs.forEach(log => {
+      const dayOfWeek = log.startTime.getDay(); // Get the day of the week, 0 (Sunday) - 6 (Saturday)
+      dailyDurations[dayOfWeek] += log.duration / 60; // Convert to minutes
+    });
+
+    res.json({
+      weekStarting: startOfWeek.toISOString().split('T')[0],
+      dailyDurations: dailyDurations,
+    });
+  } catch (error) {
+    console.error('Error calculating weekly graph data:', error);
+    res.status(500).json({ message: 'Failed to calculate weekly graph data. Please try again.' });
+  }
+});
+app.get('/total-time-graph-monthly/:date', authenticateToken1, async (req, res) => {
+  try {
+    const inputDate = new Date(req.params.date);
+    // Get the first and last day of the month
+    const startOfMonth = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), 1));
+    const endOfMonth = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth() + 1, 0));
+    endOfMonth.setHours(23, 59, 59, 999);
+
+    // Fetch logs within the month and map data to each day of the month
+    const timeLogs = await TimeLog.find({
+      user: req.user._id,
+      startTime: { $gte: startOfMonth },
+      endTime: { $lte: endOfMonth }
+    });
+
+    // Initialize array for daily durations
+    const daysInMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 1, 0).getDate();
+    const dailyDurations = Array.from({ length: daysInMonth }, () => 0);
+    timeLogs.forEach(log => {
+      const dayOfMonth = log.startTime.getDate() - 1; // Get day of month (0 index)
+      dailyDurations[dayOfMonth] += log.duration / 60; // Convert to minutes
+    });
+
+    res.json({
+      monthStarting: startOfMonth.toISOString().split('T')[0],
+      dailyDurations: dailyDurations,
+    });
+  } catch (error) {
+    console.error('Error calculating monthly graph data:', error);
+    res.status(500).json({ message: 'Failed to calculate monthly graph data. Please try again.' });
+  }
+});
+
+function formatDuration(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+// Example endpoint to check Gmail authorization status
+app.get('/api/gmail/check-authorization', authenticateToken, async (req, res) => {
+  const username = req.user.username;
+  const client = await loadSavedCredentialsIfExists(username);
+  res.status(200).json({ isAuthorized: !!client });
+});
+
+app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
+  const username = req.user.username;  // Assuming this is set by authenticateToken
+
+  const authClient = await authorize2(username);
+
+  try {
+      const unreadCount = await countUnreadMessages(authClient);
+      res.json({ unreadCount: unreadCount });
+  } catch (error) {
+      console.error('Failed to count unread messages:', error);
+      res.status(500).json({ message: 'Failed to count unread messages.' });
+  }
+});
+

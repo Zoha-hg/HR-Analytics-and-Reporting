@@ -7,6 +7,8 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Company from '../assets/logo.png'
 import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
+import UnreadEmail from '../unreadGmail'; 
+import TimeTracker from '../TimeTrackingCard';
 
 const EmployeeDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -119,6 +121,8 @@ const EmployeeDashboard = ({ role }) => {
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
     const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
 
+    const unfilledForms = forms.filter(form => !form.filled && (new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()));
+
   return (
     <Grid container>
       <Box className={classes.mainContent}>
@@ -129,9 +133,6 @@ const EmployeeDashboard = ({ role }) => {
               {role} Dashboard
             </Typography>
           </Box>
-          {/* Avatar */}
-          <Divider orientation="vertical" flexItem />
-          <Avatar alt="Avatar" src={profile} sx={{ marginLeft: 2 }} />
         </Toolbar>
         <Divider />
         {/* specific dashboard content. */}
@@ -139,54 +140,57 @@ const EmployeeDashboard = ({ role }) => {
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/employee" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                <Link to="/employees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305, maxHeight: 305 }}>
                     <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        {tasks.length != 0 && (
-                            tasks.map(task => {
-                                return (
-                                    <div>
-                                        <Typography>{task.title}</Typography>
-                                        <Typography>{task.completion_status}</Typography>
-                                    </div>
-                                )
-                            })
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
+                            My Tasks
+                        </Typography>
+                        {tasks.length !== 0 && (
+                        tasks.map(task => {
+                            let backgroundColor;
+                            switch (task.completion_status) {
+                            case 'completed':
+                                backgroundColor = '#c3eded'; // green
+                                break;
+                            case 'in progress':
+                                backgroundColor = '#e8eff9'; // blue
+                                break;
+                            case 'not started':
+                                backgroundColor = '#fde7e7'; // red
+                                break;
+                            default:
+                                backgroundColor = '#FFFFFF'; // default white
+                            }
+
+                            return (
+                            <Paper key={task.id} variant='outlined' elevation={8} sx={{ marginBottom: 2, backgroundColor }}>
+                                <div>
+                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>{task.title}</Typography>
+                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>{task.completion_status}</Typography>
+                                </div>
+                            </Paper>
+                            )
+                        })
                         )}
-                    </Typography>
                     </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
                 </Card>
                 </Link>
             </Grid>
             <Grid item className={classes.cardItem}>
-                <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Time Tracking.
-                    </Typography>
-                    </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
-                </Card>
-                </Link>
+                <TimeTracker/>
             </Grid>
             <Box className={classes.stack} sx={{ flexGrow: 1 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
                         <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                             unread emails.
                         </Typography>
+                        <UnreadEmail />
                         </CardContent>
                     </Card>
-                    </Link>
                 </Grid>
               </Grid>
             </Box>
@@ -217,33 +221,17 @@ const EmployeeDashboard = ({ role }) => {
             <Box flexGrow={0}>
               <Grid item className={classes.cardItem}>
                 <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, maxHeight: 295, minHeight: 295 }}>
+                <Card variant="outlined" sx={{ minWidth: 453, maxWidth: 453, maxHeight: 295, minHeight: 295 }}>
                     <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Ongoing Feedback Forms
+                        Incomplete Feedback Forms
                         </Typography>
-                        {ongoingForms.length === 0 ? ( // Check if there are no ongoing forms
+                        {unfilledForms.length === 0 ? ( // Check if there are no ongoing forms
                         <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
                             No Pending Forms!
-                            {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
-                                Finished Feedback Forms
-                            </Typography>
-                            {finishedForms.map(form => (
-                                <div key={form.form_id}>
-                                    <Typography variant="h6" component="div" sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                        {form.title}
-                                    </Typography>
-                                    <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                        Due: {formatDate(form.end_time)}
-                                    </Typography>
-                                    <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 8 }}>
-                                        Description: {form.description}
-                                    </Typography>
-                                </div>
-                            ))} */}
                         </Typography>
                         ) : (
-                        ongoingForms.map(form => (
+                        unfilledForms.map(form => (
                             <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
                             <div key={form.form_id}>
                                 <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>

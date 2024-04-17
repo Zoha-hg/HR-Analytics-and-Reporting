@@ -10,6 +10,9 @@ const theme = createTheme({
     secondary: {
       main: '#042434', // secondary colour.
     },
+    error: {
+      main: '#FF7F7F', // error colour.
+    },
   },
   typography: {
     fontFamily: 'Nunito, Manrope, sans-serif', // font family. 

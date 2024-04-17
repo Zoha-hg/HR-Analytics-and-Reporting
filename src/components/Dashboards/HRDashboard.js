@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { Typography, Grid, Toolbar, Divider, Box, Avatar, Paper,} from '@mui/material';
+import { Typography, Grid, Toolbar, Divider, Box, Paper} from '@mui/material';
 import { Card, CardContent, CardActions, Button } from '@mui/material/';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Company from '../assets/logo.png'
-import profile from '../assets/profile.png'
+import Company from '../assets/logo.png';
+import profile from '../assets/profile.png';
 import DashboardStyles from '../DashboardStyles';
-import DisplayForms from '../FeedbackForms/DisplayForm';
+import UnreadEmail from '../unreadGmail';
+import TimeTracker from '../TimeTrackingCard';
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -78,8 +80,12 @@ const HRProfessionalDashboard = ({ role }) => {
         return day + "/" + month + "/" + year;
     }
 
-    const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
-    const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
+    const handleUnreadEmailCount = (count) => {
+        setNumUnreadEmails(count);
+    }
+
+    const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date())
+    const finishedForms = forms.filter(form => new Date(form.end_time) < new Date())
 
   return (
     <Grid container>
@@ -91,28 +97,27 @@ const HRProfessionalDashboard = ({ role }) => {
               {role} Dashboard
             </Typography>
           </Box>
-          {/* Avatar */}
-          <Divider orientation="vertical" flexItem />
-          <Avatar alt="Avatar" src={profile} sx={{ marginLeft: 2 }} />
         </Toolbar>
-        <Divider />
+        <Divider/>
         {/* specific dashboard content. */}
         {/* first row and its grids. */}
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
             <Grid item className={classes.cardItem}>
-                <Link to="/employeeperformance" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+            <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305, overflow: 'hidden', paddingBottom:2 }}>
                     <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        date, upcoming schedule, etc.
-                    </Typography>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
+                            You have {numUnreadEmails} unread messages.
+                        </Typography>
+                        <div style={{ maxHeight: 305, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
+                            <Grid container>
+                                <UnreadEmail handleUnreadEmailCount={handleUnreadEmailCount}/>
+                            </Grid>
+                        </div>
                     </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
                 </Card>
-                </Link>
+            </Link>
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -128,29 +133,10 @@ const HRProfessionalDashboard = ({ role }) => {
                 </Card>
                 </Link>
             </Grid>
-            <Box className={classes.stack} sx={{ flexGrow: 1 }}>
+            <Box className={classes.stack} sx={{ flexGrow: 0 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 40 }}>
-                        <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                            unread emails.
-                        </Typography>
-                        </CardContent>
-                    </Card>
-                    </Link>
-                </Grid>
-                <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 200 }}>
-                        <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                            Time tracking.
-                        </Typography>
-                        </CardContent>
-                    </Card>
-                    </Link>
+                    <TimeTracker/>
                 </Grid>
               </Grid>
             </Box>
@@ -180,35 +166,37 @@ const HRProfessionalDashboard = ({ role }) => {
             </Grid>
             <Box flexGrow={1}>
               <Grid item className={classes.cardItem}>
-                <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 400, maxHeight: 295 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Ongoing Feedback Forms
-                        </Typography>
-                        {ongoingForms.length === 0 ? ( // Check if there are no ongoing forms
-                        <Typography variant="h7" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                            No Pending Forms
-                        </Typography>
-                        ) : (
-                        ongoingForms.map(form => (
-                            <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
-                            <div key={form.form_id}>
-                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>
-                                {form.title}
+              <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
+                        <CardContent> {/* Ensure no padding at the bottom */}
+                            <Typography variant="h6" component="div" sx={{ textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
+                                Ongoing Feedback Forms
+                            </Typography>
+                            {ongoingForms.length === 0 ? (
+                                <Typography variant="body1" component="div" sx={{ textAlign: 'center' }}>
+                                    No Pending Forms
                                 </Typography>
-                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                                Due: {formatDate(form.end_time)}
-                                </Typography>
-                                <Typography variant="body2" component="div" sx={{ textAlign: 'center', marginBottom: 0 }}>
-                                Description: {form.description}
-                                </Typography>
-                            </div>
-                            </Paper>
-                        ))
-                        )}
-                    </CardContent>
-                </Card>
+                            ) : (
+                                <div style={{ maxHeight: 230, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none' }}>
+                                    {ongoingForms.map(form => (
+                                        <Paper key={form.form_id} className="form-card" onClick={() => handleGoToForm(form.form_id)}>
+                                            <div>
+                                                <Typography variant="body1" component="div" sx={{ textAlign: 'center' }}>
+                                                    {form.title}
+                                                </Typography>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>
+                                                    Due: {formatDate(form.end_time)}
+                                                </Typography>
+                                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>
+                                                    Description: {form.description}
+                                                </Typography>
+                                            </div>
+                                        </Paper>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
                 </Link>
               </Grid>
             </Box>
