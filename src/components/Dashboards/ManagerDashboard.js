@@ -6,12 +6,15 @@ import { Card, CardContent, CardActions, Button } from '@mui/material/';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Company from '../assets/logo.png'
 import profile from '../assets/profile.png'
+import UnreadEmail from '../unreadGmail2'; 
 import DashboardStyles from '../DashboardStyles';
+import TimeTracker from '../TimeTrackingCard2';
 
 const ManagerDashboard = ({ role }) => {
   const classes = DashboardStyles();
   const [forms, setForms] = useState([]);
   const [username, setUsername] = useState('');
+  const [numUnreadEmails, setNumUnreadEmails] = useState(0);
   const [userRole, setUserRole] = useState('');
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
@@ -116,6 +119,10 @@ const ManagerDashboard = ({ role }) => {
       return day + "/" + month + "/" + year;
   }
 
+  const handleUnreadEmailCount = (count) => {
+    setNumUnreadEmails(count);
+    }
+
   const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
   const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
 
@@ -175,7 +182,7 @@ const ManagerDashboard = ({ role }) => {
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 310 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2 }}>
                         Turnover Reports
@@ -187,29 +194,26 @@ const ManagerDashboard = ({ role }) => {
                 </Card>
                 </Link>
             </Grid>
-            <Box className={classes.stack} sx={{ flexGrow: 1 }}>
+            <Box className={classes.stack} sx={{ flexGrow: 0 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
                     <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 40 }}>
+                    <Card variant="outlined" sx={{ minWidth: 450, maxHeight:450, minHeight: 85, maxHeight: 85 }}>
                         <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0 }}>
-                            unread emails.
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
+                            You have {numUnreadEmails} unread messages.
                         </Typography>
+                        <div style={{ maxHeight: 305, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
+                            <Grid container>
+                                <UnreadEmail handleUnreadEmailCount={handleUnreadEmailCount}/>
+                            </Grid>
+                        </div>
                         </CardContent>
                     </Card>
                     </Link>
                 </Grid>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 100, minHeight: 200 }}>
-                        <CardContent>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2 }}>
-                            Time tracking.
-                        </Typography>
-                        </CardContent>
-                    </Card>
-                    </Link>
+                    <TimeTracker/>
                 </Grid>
               </Grid>
             </Box>

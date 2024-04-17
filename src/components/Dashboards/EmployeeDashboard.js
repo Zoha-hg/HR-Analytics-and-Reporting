@@ -15,6 +15,7 @@ const EmployeeDashboard = ({ role }) => {
     const [forms, setForms] = useState([]);
     const [username, setUsername] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
 
@@ -118,6 +119,10 @@ const EmployeeDashboard = ({ role }) => {
         return day + "/" + month + "/" + year;
     }
 
+    const handleUnreadEmailCount = (count) => {
+        setNumUnreadEmails(count);
+    }
+
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date() && new Date(form.end_time) >= new Date()).slice(0, 2);
     const finishedForms = forms.filter(form => new Date(form.end_time) < new Date()).slice(0, 2);
 
@@ -183,14 +188,20 @@ const EmployeeDashboard = ({ role }) => {
             <Box className={classes.stack} sx={{ flexGrow: 1 }}>
               <Grid container direction={'column'}>
                 <Grid item className={classes.cardItem}>
+                <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ minWidth: 100, minHeight: 305 }}>
-                        <CardContent>
+                    <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                            unread emails.
+                            You have {numUnreadEmails} unread messages.
                         </Typography>
-                        <UnreadEmail />
-                        </CardContent>
+                        <div style={{ maxHeight: 305, overflowY: 'auto', scrollbarWidth: 'none', WebkitScrollbar: 'none', paddingBottom:100 }}>
+                            <Grid container>
+                                <UnreadEmail handleUnreadEmailCount={handleUnreadEmailCount}/>
+                            </Grid>
+                        </div>
+                    </CardContent>
                     </Card>
+                </Link>
                 </Grid>
               </Grid>
             </Box>

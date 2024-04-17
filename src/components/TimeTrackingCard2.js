@@ -274,7 +274,7 @@ const TimeTrackerCard = () => {
     return (
         <Card
             variant="outlined"
-            sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305 }}
+            sx={{ minWidth: 450, maxWidth: 450, minHeight: 210, maxHeight: 210 }}
             onClick={(e) => {
             // Prevent card click event from propagating when the button is clicked
             e.stopPropagation();
@@ -288,7 +288,7 @@ const TimeTrackerCard = () => {
                 sx={{
                 flexGrow: 1,
                 textAlign: 'center',
-                marginBottom: 1,
+                marginBottom: 0,
                 color: '#03716C',
                 fontFamily: 'Lexend',
                 }}
@@ -297,11 +297,11 @@ const TimeTrackerCard = () => {
             </Typography>
             </Link>
             <Box style={{ textAlign: 'center' }}>
-                <Typography variant="h6" style={{ color: '#333', marginBottom: 2 }}>
+                <Typography variant="h7" style={{ color: '#333', marginBottom: 2, marginTop:0 }}>
                 Time Elapsed: {formatElapsedTime(elapsedTime)}
                 </Typography>
                 <Box style={{ position: 'relative' }}>
-                <CircularProgress variant="determinate" value={progress} size={100} sx={{ marginTop: 2 }} />
+                <CircularProgress variant="determinate" value={progress} size={50} sx={{marginTop: 2, ...(progress === 0 && { color: 'error' }),}} />
                 <Box style={{}}>
                     <Button
                     onClick={isTracking ? handleStop : handleStart}
