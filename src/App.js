@@ -22,6 +22,8 @@ import GmailIntegrate from './components/GmailIntegrate';
 import GmailDashboard from './components/GmailDashboard';
 import TimeTracker from './components/TimeTracker';
 import Unread from './components/unreadGmail';
+import PerformanceReports from './components/PerformanceReports';
+import PerformanceReportsAndTurnover from './components/PerformanceReports';
 
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
                 {/* calendar ka naam change kar lena. */}
                 <Route path= "/calendar" element={<TimeTracker/>} /> 
                 <Route path="/unread" element={<Unread/>}/>
+                {/* make sure to change turnover and performance respectively*/}
+                <Route path="/turnover" element={<PerformanceReportsAndTurnover/>}/>
               </Routes>
             </div>
             </Router>
