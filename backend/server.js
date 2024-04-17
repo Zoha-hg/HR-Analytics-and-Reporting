@@ -667,6 +667,8 @@ app.post("/getowntasks", async (req, res) => {
 	}
 
 })
+
+
 // just so i can make employees pls ignore
 
 const getDepartment = async (ddepartment_id) => {
@@ -770,3 +772,79 @@ app.post("/createmanager", async (req, res) => {
 
 });
 
+app.get("/updateemployees", async (req, res) => {
+	let ids = [1, 10000,10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
+	for(let i = 0; i < ids.length; i++)
+	{
+		try{
+			const employee = await Employee.findOne({employee_id: ids[i]});
+			employee.number_of_promotions = Math.floor(Math.random() * 8);
+			console.log("employee ", employee);
+			await employee.save();
+		} catch (error) {
+			console.log("error", error);
+			res.send(error);
+		}
+	}
+	// let dobs = []
+	// let yoe = [];
+	// let startYear =1960;
+	// let endYear = 2005;
+	// for(let i = 0; i < ids.length; i++) {
+    //     let year = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+    //     let month = Math.floor(Math.random() * 12);
+    //     let day = Math.floor(Math.random() * 28) + 1; // Keeping it at 28 to handle February
+    //     let date = new Date(year, month, day);
+    //     dobs.push(date);
+
+	// 	yoe.push(Math.floor(Math.random() * 20));
+    // }
+
+	// for(let i = 0; i < ids.length; i++)
+	// {
+	// 	try{
+	// 		const employee = await Employee.findOne({employee_id: ids[i]});
+	// 		employee.date_of_birth = dobs[i];
+	// 		employee.years_of_experience = yoe[i];
+	// 		await employee.save();
+	
+	// 	} catch (error) {
+	// 		res.send(error);
+	// 	}
+
+	// }
+	res.send("done");
+});
+
+
+app.get("/startjob", async (req, res) => {
+	let ids = [1, 10000,10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009];
+	for(let i = 0; i < ids.length; i++)
+	{
+		try{
+			const employee = await Employee.findOne({employee_id: ids[i]});
+			let current = new Date();
+			// let year = current.getFullYear() - employee.date_of_birth.getFullYear();
+			// let datejoined = new Date(employee.years_of_experience);
+			// await employee.save();
+			// if(!employee)
+			// {
+			// 	console.log("yo");
+			// 	res.send("um");
+			// }
+			// console.log("yoe", employee.years_of_experience);
+			// console.log(current.getFullYear()- employee.years_of_experience);
+			let year = current.getFullYear()- employee.years_of_experience;
+			let month = Math.floor(Math.random() * 12);
+			let day = Math.floor(Math.random() * 28) + 1; // Keeping it at 28 to handle February
+			let date = new Date(year, month, day);
+
+			employee.date_started = date;
+			await employee.save();
+				
+		} catch (error) {
+			res.send(error);
+		}
+	}
+	res.send("done");
+})
