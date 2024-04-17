@@ -1385,19 +1385,19 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             };
         });
 
-        // console.log("formattedData", formattedData);
+        console.log("formattedData", formattedData);
 
         const AI_URI = process.env.AI_URI;
         const apiResponse = await axios.post(AI_URI, formattedData);
         const probabilities = apiResponse.data.prediction;
-		console.log(apiResponse)
+		console.log(apiResponse.data)
 
         const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
             ...report,
             probability: probabilities[index]
         }));
 
-        console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
+        // console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
         res.json({ employees: performanceReportsWithProbabilities });
     } catch (error) {
         console.error('Error fetching performance reports:', error);
@@ -1521,7 +1521,7 @@ app.get('/api/turnover', authenticateToken, async (req, res) => {
             }, 0) / (filledForms.length || 1);
 
             // Attempt to convert date_started to a Date object
-			console.log(employee.date_started)
+			// console.log(employee.date_started)
             const startDate = employee.date_started ? new Date(employee.date_started) : null;
     		// console.log(`Date started for ${employee.employee_name}:`, startDate);
 
@@ -1565,7 +1565,7 @@ app.get('/api/turnover', authenticateToken, async (req, res) => {
 			...employee,
 			probability: probabilities[index]
 		}));
-		console.log("finalData", finalData);
+		// console.log("finalData", finalData);
 
 		res.json({ turnover: finalData });
     } catch (error) {
