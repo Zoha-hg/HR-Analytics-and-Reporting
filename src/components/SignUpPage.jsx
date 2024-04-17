@@ -16,23 +16,57 @@ const SignUpPage = () => {
         console.log('SignUp attempt with', username, email, password, role);
         try {
             const response = await axios.post('http://localhost:8000/signup', { username, email, password, role });
-            // console.log('SignUp successful:', response.data);
             // Handle success, redirect or set user state
             if (response.status === 201) {
                 navigate('/login');
             }
         } catch (error) {
-            // console.error('SignUp error:', error.response ? error.response.data : error.message);
             // Handle error, display error message to the user
-            alert('SignUp failed. Please try again.');
+            alert(`SignUp failed: ${error.response.data.message}`);
         }
     };
+    // // Checking password strength
+    // const calculateStrength = ({password}) => {
+    //     let strength = 0;
+    //     if(password.length > 8) strength += 1;
+    //     if(password.match(/[a-z]/)) strength += 1;
+    //     if(password.match(/[A-Z]/)) strength += 1;
+    //     if(password.match(/[0-9]/)) strength += 1;
+    //     if(password.match(/[^a-zA-Z0-9]/)) strength += 1;
+    //     return strength;
+    // }
+    // function getStrengthLevel(strength){
+    //     switch(strength){
+    //         case 0:
+    //             return 'red';
+    //         case 1:
+    //             return 'orange';
+    //         case 2:
+    //             return 'yellow';
+    //         case 3:
+    //             return 'lightblue';
+    //         case 4:
+    //             return 'lightgreen';
+    //         default:
+    //             return 'grey';
+    //     }
+    // }
+    // const strength = calculateStrength({password});
+    // const strengthLevel = getStrengthLevel(strength);
+    // const stregnthbarStyle = {
+    //     width : `${(strength / 5) * 100}%`,
+    //     backgroundColor: strengthLevel,
+    //     filter: strength > 0 ? `drop-shadow(0 0 5px ${strengthLevel})` : `none`
+    // }
+          
 
     return (
         <div className="signup-container">
             <div className="signup-card">
                 <header className="signup-header">
-                    <img src={companylogo} alt="DevSinc logo" className="company-logo" />
+                    <a href="/">
+                        <img src={companylogo} alt="DevSinc logo" className="company-logo"/>
+                    </a>
                     <p>HR DATA DRIVE</p>
                 </header>
                 <section className="signup-form">
@@ -71,6 +105,12 @@ const SignUpPage = () => {
                                 onChange={(event) => setPassword(event.target.value)}
                                 placeholder="Enter your password"
                             />
+                            {/* <div className='strength-meter'>
+                                <div className='strength-bar' style={stregnthbarStyle}></div>
+                            </div>
+                            <script>
+                                
+                            </script> */}
                         </div>
                         <div className="form-group">
                             <label htmlFor="role">Role</label>
@@ -82,6 +122,7 @@ const SignUpPage = () => {
                                 <option value="">Select Role</option>
                                 <option value="HR professional">HR professional</option>
                                 <option value="Employee">Employee</option>
+                                <option value="Manager">Manager</option>
                                 <option value="Admin">Admin</option>
                             </select>
                         </div>
