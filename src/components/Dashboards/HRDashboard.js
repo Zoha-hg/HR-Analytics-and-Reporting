@@ -9,6 +9,8 @@ import profile from '../assets/profile.png';
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail';
 import TimeTracker from '../TimeTrackingCard';
+import { Bar } from 'react-chartjs-2';
+
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -17,6 +19,17 @@ const HRProfessionalDashboard = ({ role }) => {
     const [userRole, setUserRole] = useState('');
     const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const navigate = useNavigate();
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Probability of Promotion',
+                data: [],
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    });
+    const [topThreeEmployees, setTopThreeEmployees] = useState([]);
 
     useEffect(() => {
         const fetchUserRole = async () => {
@@ -33,7 +46,94 @@ const HRProfessionalDashboard = ({ role }) => {
                 navigate('/login');
             }
         };
+        const fetchReports = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/performancereports', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedReports = response.data.employees;
+                // console.log(fetchedReports);
+                setChartData({
+                    labels: fetchedReports.map(report => report.employee_name),
+                    datasets: [
+                        {
+                            label: 'Probability of Promotion',
+                            data: fetchedReports.map(report => report.probability),
+                            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        },
+                    ],
+                });
 
+                const response2 = await axios.get('http://localhost:8000/api/turnover', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedTurnoverData = response2.data.turnover;
+                // console.log(fetchedTurnoverData);
+                const sortedReports = [...fetchedTurnoverData].sort((a, b) => b.probability - a.probability);
+    
+
+                const topThreeReports = sortedReports.slice(0, 3);
+                setTopThreeEmployees(topThreeReports.map(report => ({
+                    name: report.employee_name,
+                    // Convert to number if it's a string and then use toFixed
+                    probability: typeof report.probability === 'number' 
+                        ? report.probability.toFixed(2) 
+                        : parseFloat((report.probability)*100).toFixed(2)
+                })));
+
+
+
+                console.log(topThreeEmployees);
+    
+            } catch (error) {
+                console.error('Error fetching performance reports:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
+            }
+        };
+        // const fetchReports = async () => {
+        //     const token = localStorage.getItem('token');
+        //     try {
+        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //             headers: { Authorization: `Bearer ${token}` },
+        //         });
+        //         const fetchedReports = response.data.employees;
+        //         setChartData({
+        //             labels: fetchedReports.map(report => report.employee_name),
+        //             datasets: [
+        //                 {
+        //                     label: 'Probability of Promotion',
+        //                     data: fetchedReports.map(report => report.probability),
+        //                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        //                 },
+        //             ],
+        //         });
+        //     } catch (error) {
+        //         console.error('Error fetching performance reports:', error);
+        //         if (error.response && error.response.status === 401) {
+        //             navigate('/login');
+        //         }
+        //     }
+        // };
+        fetchReports();
+        // const findHighestTurnoverProbabilties = async () => {
+        //     // Creating a list of the 3 most likely to turnover employees based on probabilities
+        //     const token = localStorage.getItem('token');
+        //     try {
+        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //             headers: { Authorization: `Bearer ${token}` },
+        //         });
+        //         const fetchedReports = response.data.employees;
+                
+        //     } catch (error) {
+        //         console.error('Error fetching performance reports:', error);
+        //         if (error.response && error.response.status === 401) {
+        //             navigate('/login');
+        //         }
+        //     }
+        // };
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
@@ -121,16 +221,22 @@ const HRProfessionalDashboard = ({ role }) => {
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Turnover Reports
-                    </Typography>
-                    </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
-                </Card>
+                    <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                        <CardContent>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
+                                Turnover Reports
+                            </Typography>
+                            {/* Here we map over the topThreeEmployees state to display the data */}
+                            {topThreeEmployees.map((employee, index) => (
+                                <Typography key={index}>
+                                    {index + 1}. {employee.name} - {employee.probability}%
+                                </Typography>
+                            ))}
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small">Learn More</Button>
+                        </CardActions>
+                    </Card>
                 </Link>
             </Grid>
             <Box className={classes.stack} sx={{ flexGrow: 0 }}>
@@ -150,7 +256,7 @@ const HRProfessionalDashboard = ({ role }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
                     </Typography>
-                    <LineChart
+                    {/* <LineChart
                         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
                         series={[
                         {
@@ -159,12 +265,19 @@ const HRProfessionalDashboard = ({ role }) => {
                         ]}
                         width={850}
                         height={220}
-                    />
+                    /> */}
+                    {/* <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+                        <Paper elevation={3} sx={{ mb: 2, p: 2, width: '100%', maxWidth: '800px' }}>
+                            <Typography variant="h6" align="center">Performance Chart</Typography>
+                            <Bar data={chartData} />
+                        </Paper>
+                    </Box> */}
+                    <Bar data={chartData} width={850} height={220}/>
                     </CardContent>
                 </Card>
                 </Link>
             </Grid>
-            <Box flexGrow={1}>
+            <Box flexGrow={0}>
               <Grid item className={classes.cardItem}>
               <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
