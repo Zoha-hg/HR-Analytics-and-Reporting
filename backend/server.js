@@ -1410,3 +1410,112 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
     }
 });
 
+app.get('/api/teamperformancereports/managers', authenticateToken, async (req, res) => {
+    try {
+        // Assuming you have the manager's ID stored in req.user after authentication
+        const managerId = req.user.username; // or however you get the manager's ID from the request
+
+        // Find the manager's department
+        const manager = await Manager.findById(managerId).populate('department');
+        const departmentId = manager.department._id;
+
+        // Fetch only employees who belong to the manager's department
+        const employees = await Employee.find({ department: departmentId });
+
+		
+
+        // ... rest of your existing logic for aggregating reports ...
+
+        // Now, 'performanceReports' will only contain reports for the manager's team
+        // The rest of the code remains the same
+        // Remember to adjust the axios.post and the map according to your actual data structure
+		const aggregatedTimelogs = await TimeLog.aggregate([
+            {
+                $group: {
+                    _id: '$user',
+                    totalDuration: { $sum: '$duration' } 
+                }
+            }
+        ]);
+
+        const tasksWithSkillsAndCount = await Task.aggregate([
+            {
+                $match: {
+                    evaluation_status: "completed" 
+                }
+            },
+            {
+                $unwind: '$skills' 
+            },
+            {
+                $group: {
+                    _id: '$assigned_to', 
+                    averageSkills: { $avg: '$skills.rating' }, 
+                    completedTasksCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+
+        const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
+            item._id.toString(), 
+            { averageSkills: item.averageSkills, completedTasksCount: item.completedTasksCount }
+        ]));
+        const durationMap = new Map(aggregatedTimelogs.map(item => [item._id.toString(), item.totalDuration]));
+
+        const performanceReports = employees.map(employee => {
+            const employeeIdString = employee._id.toString();
+            const totalDuration = durationMap.get(employeeIdString) || 0;
+            const employeeSkillsAndCount = skillsAndCountMap.get(employeeIdString) || { averageSkills: 0, completedTasksCount: 0 };
+            
+            return {
+                ...employee._doc,
+                totalHoursWorked: totalDuration / 3600,
+                averageSkills: employeeSkillsAndCount.averageSkills,
+                totalCompletedTasks: employeeSkillsAndCount.completedTasksCount
+            };
+        });
+
+        const formattedData = performanceReports.map(report => {
+            let salaryCategory;
+            if (report.salary < 50000) {
+                salaryCategory = 'low';
+            } else if (report.salary > 70000) {
+                salaryCategory = 'high';
+            } else {
+                salaryCategory = 'medium';
+            }
+
+            return {
+                "Performance Rating": report.averageSkills,
+                "Number of Projects": report.totalCompletedTasks,
+                "Average Monthly Hours": report.totalHoursWorked,
+                "Salary": salaryCategory
+            };
+        });
+
+        console.log("formattedData", formattedData);
+
+        const AI_URI = process.env.AI_URI;
+        const apiResponse = await axios.post(AI_URI, formattedData);
+        const probabilities = apiResponse.data.prediction;
+		// console.log('jeee',probabilities);
+		// convert probabilities to array
+		// const probabilities = Object.values(probabilitiesResponse);
+		// console.log('jeee',probabilities[0]);
+		// console.log('jeee',performanceReports.length);
+
+        const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
+            ...report,
+            probability: probabilities[index]
+        }));
+		
+
+        res.json({ team: performanceReportsWithProbabilities });
+    } catch (error) {
+        console.error('Error fetching team performance reports:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+

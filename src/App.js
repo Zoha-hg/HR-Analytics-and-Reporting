@@ -23,6 +23,7 @@ import GmailDashboard from './components/GmailDashboard';
 import TimeTracker from './components/TimeTracker';
 import Unread from './components/unreadGmail';
 import PerformanceReports from './components/PerformanceReports';
+import TeamPerformanceReports from './components/TeamPerformanceRreport';
 
 function App() {
   // const classes = useStyles();
@@ -55,6 +56,7 @@ function App() {
                 <Route path="/unread" element={<Unread/>}/>
                 {/* make sure to change turnover and performance respectively*/}
                 <Route path="/turnover" element={<PerformanceReports/>}/>
+                <Route path="/performance" element={<TeamPerformanceReports/>}/>
               </Routes>
             </div>
             </Router>
