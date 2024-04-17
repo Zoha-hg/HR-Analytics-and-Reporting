@@ -207,7 +207,7 @@ const HRProfessionalDashboard = ({ role }) => {
                 </Card>
                 </Link>
             </Grid>
-            <Box flexGrow={1}>
+            <Box flexGrow={0}>
               <Grid item className={classes.cardItem}>
               <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>

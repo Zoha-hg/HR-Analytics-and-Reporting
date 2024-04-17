@@ -244,7 +244,7 @@ const Dashboard = () => {
     <Grid container className={classes.container}>
       {/* Drawer */}
       {/* can also try left side margin/padding padding better. */}
-      <Grid item xs={2.75} md={2} lg={1.5}> 
+      <Grid item xs={2.75} md={2} lg={1.5} xl={1.5}> 
         <Drawer
             variant="permanent"
             anchor="left"
