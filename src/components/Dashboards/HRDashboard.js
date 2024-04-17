@@ -29,6 +29,7 @@ const HRProfessionalDashboard = ({ role }) => {
             },
         ],
     });
+    const [topThreeEmployees, setTopThreeEmployees] = useState([]);
 
     useEffect(() => {
         const fetchUserRole = async () => {
@@ -52,6 +53,7 @@ const HRProfessionalDashboard = ({ role }) => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const fetchedReports = response.data.employees;
+                // console.log(fetchedReports);
                 setChartData({
                     labels: fetchedReports.map(report => report.employee_name),
                     datasets: [
@@ -62,6 +64,28 @@ const HRProfessionalDashboard = ({ role }) => {
                         },
                     ],
                 });
+
+                const response2 = await axios.get('http://localhost:8000/api/turnover', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedTurnoverData = response2.data.turnover;
+                // console.log(fetchedTurnoverData);
+                const sortedReports = [...fetchedTurnoverData].sort((a, b) => b.probability - a.probability);
+    
+
+                const topThreeReports = sortedReports.slice(0, 3);
+                setTopThreeEmployees(topThreeReports.map(report => ({
+                    name: report.employee_name,
+                    // Convert to number if it's a string and then use toFixed
+                    probability: typeof report.probability === 'number' 
+                        ? report.probability.toFixed(2) 
+                        : parseFloat((report.probability)*100).toFixed(2)
+                })));
+
+
+
+                console.log(topThreeEmployees);
+    
             } catch (error) {
                 console.error('Error fetching performance reports:', error);
                 if (error.response && error.response.status === 401) {
@@ -69,7 +93,47 @@ const HRProfessionalDashboard = ({ role }) => {
                 }
             }
         };
+        // const fetchReports = async () => {
+        //     const token = localStorage.getItem('token');
+        //     try {
+        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //             headers: { Authorization: `Bearer ${token}` },
+        //         });
+        //         const fetchedReports = response.data.employees;
+        //         setChartData({
+        //             labels: fetchedReports.map(report => report.employee_name),
+        //             datasets: [
+        //                 {
+        //                     label: 'Probability of Promotion',
+        //                     data: fetchedReports.map(report => report.probability),
+        //                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        //                 },
+        //             ],
+        //         });
+        //     } catch (error) {
+        //         console.error('Error fetching performance reports:', error);
+        //         if (error.response && error.response.status === 401) {
+        //             navigate('/login');
+        //         }
+        //     }
+        // };
         fetchReports();
+        // const findHighestTurnoverProbabilties = async () => {
+        //     // Creating a list of the 3 most likely to turnover employees based on probabilities
+        //     const token = localStorage.getItem('token');
+        //     try {
+        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //             headers: { Authorization: `Bearer ${token}` },
+        //         });
+        //         const fetchedReports = response.data.employees;
+                
+        //     } catch (error) {
+        //         console.error('Error fetching performance reports:', error);
+        //         if (error.response && error.response.status === 401) {
+        //             navigate('/login');
+        //         }
+        //     }
+        // };
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
@@ -157,16 +221,22 @@ const HRProfessionalDashboard = ({ role }) => {
             </Grid>
             <Grid item className={classes.cardItem}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
-                    <CardContent>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
-                        Turnover Reports
-                    </Typography>
-                    </CardContent>
-                    <CardActions>
-                    <Button size="small">Learn More</Button>
-                    </CardActions>
-                </Card>
+                    <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                        <CardContent>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
+                                Turnover Reports
+                            </Typography>
+                            {/* Here we map over the topThreeEmployees state to display the data */}
+                            {topThreeEmployees.map((employee, index) => (
+                                <Typography key={index}>
+                                    {index + 1}. {employee.name} - {employee.probability}%
+                                </Typography>
+                            ))}
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small">Learn More</Button>
+                        </CardActions>
+                    </Card>
                 </Link>
             </Grid>
             <Box className={classes.stack} sx={{ flexGrow: 0 }}>
