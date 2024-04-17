@@ -25,9 +25,13 @@ const employeeSchema = new Schema({
     gender: { type: String, required: true, trim: true},
     position: { type: String, required: true, trim: true},
     salary: { type: Number, required: true, trim: true},
-    age: { type: Number, required: true, trim: true},
+    date_of_birth: { type: Date, required: true, trim: true},
     address: { type: String, required: true, trim: true},
     phone_number: { type: String, required: true, trim: true},
+    years_of_experience: { type: Number, required: true, trim: true},
+    date_started: { type: Date, required: true, trim: true},
+    number_of_promotions: { type: Number},
+    age: {type: Number},
     daily_performance: 
     [
         {
@@ -40,7 +44,8 @@ const employeeSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Feedback',
         },
-        filled: { type: Boolean, required: true }
+        filled: { type: Boolean, required: true },
+        ratingList: [{type: Number}]
     }],
     tasks: 
     [

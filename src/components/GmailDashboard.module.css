@@ -1,0 +1,333 @@
+.emailContent {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 4px;
+  margin: 20px;
+  padding: 20px;
+}
+
+.emailHeader {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.emailSubject {
+  font-size: 24px;
+  margin: 0;
+}
+
+.emailSenderInfo {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+
+.senderDetails {
+  flex-grow: 1;
+}
+
+.senderName {
+  font-weight: bold;
+}
+
+.senderEmail {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.emailActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px; 
+}
+
+.actionButton {
+  background-color: #f3f9f9;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; 
+  font-size: 0.9em;
+}
+.actionButton:hover {
+  background-color: #eaf3f3;
+}
+.actionIcon {
+  height: 20px; 
+  width: 20px; 
+}
+.emailBody {
+  white-space: pre-wrap; 
+}
+
+.emailContent time {
+  font-size: 0.8em;
+  color: #888;
+  float: right;
+}
+
+.dashboard {
+  padding-left: 70px;
+  display: flex;
+  height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.sidebar {
+  padding-left: 60px;
+  width: 240px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.emailListSection {
+  flex: 1;
+  overflow-y: auto;
+  border-right: 1px solid #e0e0e0;
+  background-color: #f3f9f9;
+}
+
+.emailContentSection {
+  flex: 2;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.sidebarSection {
+  margin-bottom: 15px;
+}
+
+.sidebarTitle {
+  font-weight: bold;
+  padding: 10px;
+  color: #555;
+}
+
+
+.sidebar button {
+  justify-content: left;
+  width: 100%;
+  padding: 10px 20px;
+  text-align: left;
+  border: none;
+  
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebarSection button:hover {
+  background-color: #eaf3f3;
+}
+
+.sidebarSection   button.active {
+  background-color: #deedee;
+}
+
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.messagePreview, .messageSelected {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+  background-color: #FFFFFF; 
+}
+.messagePreview:hover, .messageSelected:hover {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.messageSelected {
+  background-color: #deedee;
+}
+.splitView {
+  display: flex;
+  width: 100%;
+}
+
+.messageList {
+  padding-left: 100px;
+  width: 35%;
+  padding-right: 20px;
+}
+
+.sidebarSection button {
+  background-color: #f3f9f9;
+}
+
+.messageTime {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.messageSnippet {
+  color: #666;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.messageDetails {
+  width: 65%;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  min-height: 200px; 
+  font-family: 'Nunito', sans-serif;
+}
+.messageInfo {
+  flex-grow: 1;
+}
+
+.messageSubject {
+  color: #666;
+  text-align: left;
+  font-size: 1em;
+  margin-bottom: 4px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.messageFrom {
+  font-size: 5em;
+  color: #999;
+  margin-bottom: 4px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.messageDate {
+  text-align: right;
+  color: #ccc;
+  margin-bottom: 10px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.messageBody {
+  color: #333;
+}
+
+.filterOptions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filterOptions button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  background-color: #f1f3f4;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filterOptions button:hover, .filterOptions button.active {
+  background-color: #e8eaed;
+}
+
+.newMailButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: #39d6d3;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  font-size: 1em;
+  outline: none;
+  transition: box-shadow 0.2s, background-color 0.2s;
+}
+
+.newMailButton:hover {
+  background-color: #0ed9d9; /* Slightly darker background on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow on hover */
+}
+
+.newMailIcon {
+  
+  margin-right: 8px; /* Space between icon and text */
+  width: 20px; /* Adjust width as necessary */
+  fill: currentColor; /* This ensures the SVG icon uses the current text color */
+}
+.newMailButton > span {
+  line-height: 1; /* Adjust line height to align text vertically */
+}
+
+.buttonWithIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the content horizontally */
+}
+
+/* Assuming your icon has a class named `icon` */
+.buttonWithIcon .icon {
+  margin-right: 2%; /* Adjust the value as needed */
+}
+.newEmailForm {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.newEmailForm input,
+.newEmailForm textarea {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.newEmailForm button {
+  padding: 10px 20px;
+  background-color: #39d6d3;
+  font-weight: bold;
+  font-size: 1em;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.newEmailForm button:hover {
+  background-color: #0ed9d9;
+}
+.newEmailForm textarea {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  min-height: 150px; /* Or whatever minimum height you prefer */
+  resize: vertical; /* This allows users to resize the textarea vertically */
+}
+
+.total-time-display {
+  font-family: 'Segment7', monospace; /* Example font */
+  display: flex;
+  align-items: baseline;
+}
+
+.time-unit {
+  font-size: 2em; /* Big size for the digits */
+  padding: 0 0.2em;
+}
+
+.time-label {
+  font-size: 0.5em; /* Smaller size for the labels */
+  padding-left: 0.1em;
+}

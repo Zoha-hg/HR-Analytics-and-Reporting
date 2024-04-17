@@ -11,8 +11,9 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
     task_id: { type: Number, required: true, trim: true, unique: true},
-    start_time: { type: Date, required: true, trim: true, minlength: 3 },
-    end_time: { type: Date, trim: true, minlength: 3 },
+    title: { type: String, required: true, trim: true},
+    start_time: { type: Date, required: true, trim: true},
+    end_time: { type: Date, trim: true},
     assigned_to: 
     {
         type: Schema.Types.ObjectId,
@@ -25,7 +26,26 @@ const taskSchema = new Schema({
         ref: 'Manager',
         required: true
     },
-    completed: { type: Boolean, required: true, trim: true, minlength: 3 },
+    skills:
+    [{
+        skill: { type: String, required: true, trim: true },
+        rating: { type: Number, min: 1, max: 5 }    
+    }],
+    completion_status: {
+        type: String,
+        required: true,
+        trim: true,
+        enum: ['not started', 'in progress', 'completed'],
+        default: 'not started'
+    },
+    evaluation_status: {
+        type: String,
+        required: true,
+        trim: true,
+        enum: ['pending', 'completed', 'evaluate'],
+        default: 'pending'
+    },
+
 });
 
 module.exports = taskSchema;

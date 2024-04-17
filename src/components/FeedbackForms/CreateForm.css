@@ -1,0 +1,255 @@
+/* Import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+.container{
+	margin-left: 117px;
+	margin-right: 5px;
+}
+.container h1{
+	color: #0D3951;
+	font-family: Rubik;
+	font-size: 32px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	letter-spacing: 3.2px;
+}
+
+.container h2{
+    color: #03716C;
+    font-family: Lexend;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 2.4px;
+}
+.container h3{
+    color: #555;
+	font-family: Lexend;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: normal;
+	letter-spacing: 1.6px;
+}
+.container h4{
+	color: #000;
+	font-family: Nunito;
+	font-size: 13px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: normal;
+	letter-spacing: 1.2px;
+}
+.container p{
+	color: #2E2A2A;
+	font-family: Nunito;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 1.2px;
+}
+.forms ul{
+	padding: 0px;
+}
+.form-cards {
+	list-style: none;
+
+}
+.form-cards li {
+	margin-bottom: 10px;
+	list-style: none;
+	padding: 0px;
+}
+li h3{
+	margin-bottom: 8px;
+	margin-top: 0px;
+}
+li h4{
+	margin: 0px;
+}
+li p{
+	margin: 10px 0px 0px 0px;
+}
+.form-button{
+	border-radius: 9px;
+	border: 1px solid #B8BFC3;
+	background: #FFF;
+	padding-top: 20px; /* Add padding inside the card */
+	padding-bottom: 20px; /* Add padding inside the card */
+	padding-left: 23px; /* Add padding inside the card */
+	padding-right: 23px;
+    margin-bottom: 13px;
+	text-align: left;
+	width: 90%;
+}
+.forms-create
+{
+	margin-right: 10%;
+}
+.createform{
+	/* display: inline-block; */
+	width: auto;
+    height: auto;
+	padding: 5px 10px;
+    font-family: Nunito;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    border-radius: 26px;
+    background: #3686F7;
+    text-align: center;
+    color: white;
+    border: none;
+    margin-bottom: 8px;
+}
+.form-card{
+	display: block;
+	border-radius: 9px;
+    border: 1px solid #B8BFC3; 
+    background-color: #FFF;
+    /* width: 90%; */
+   
+    padding-top: 20px;
+	padding-bottom: 20px; 
+	padding-left: 23px;
+    padding-right: 23px;
+	margin-bottom: 13px;
+}
+.incomplete-forms, .complete-forms {
+    width: 48%; /* Each column will take up 48% of the width, leaving a small gap between them */
+    float: left; /* Align the columns next to each other */
+    padding: 0; /* Add some padding to separate the columns */
+}
+.graphs{
+	display: grid; /* Use CSS grid for layout */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Define columns that fit the container */
+    gap: 16px; /* Add spacing between the graphs */
+    padding-right: 16px; /* Add padding around the graphs */
+    margin: 0 auto; /* Center the container */
+}
+
+.addqs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.addqs label{
+	margin-right: 5px;
+}
+.addqs input {
+    flex-grow: 1; /* Allow the input to take up available space */
+    margin-right: 10px; /* Add a gap of 10px between the input and button */
+}
+.add-question{
+	width: auto;
+    height: auto;
+	padding: 3px 10px;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    border-radius: 26px;
+    background: #3686F7;
+    text-align: left;
+    color: white;
+    border: none;
+    margin-bottom: 15px;
+}
+.remove-question{
+	border: none;
+    background-color: #FF8675;
+    color: white;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    text-align: center;
+    border-radius: 26px;
+    width: 90px;
+    height: 25px;
+}
+.fixed-size-textarea {
+    width: 100%; /* Set the width to 100% of the parent container or a specific fixed value */
+    height: 200px; /* Set a fixed height */
+    border-radius: 9px;
+    border: 1px solid #B8BFC3;
+    margin-bottom: 8px;
+    color: #555;
+    font-family: Nunito;
+    font-size: 16px;
+    padding: 8px;
+
+}
+.formfill {
+    display: flex; /* Enable flexbox layout */
+    justify-content: space-between; /* Add space between items */
+    align-items: center; /* Center items vertically */
+    padding: 10px 0; /* Add padding for spacing */
+    border-bottom: 1px solid #ccc; /* Add a border to separate items */
+}
+
+.formfill label {
+    flex: 1; /* Allow the label to take up available space */
+    font-weight: bold; /* Make the label text bold (optional) */
+    margin-right: 10px; /* Add space between label and rating */
+}
+
+.formfill .MuiRating-root {
+    flex: none; /* Prevent the rating from growing */
+}
+
+.submit{
+	padding-bottom: 30px;
+}
+@media screen and (max-width: 1000px) and (min-width: 800px)
+{
+	.container{
+		margin-left: 70px;
+	}
+	.container h1{
+		font-size: 24px;
+	}
+	.container h2{
+		font-size: 20px;
+	}
+	.fixed-size-textarea{
+		font-size: 14px;
+	}
+
+}
+
+@media screen and (max-width: 799px)
+{
+	.container{
+		margin-left: 25px;
+	}
+	.container h1{
+		font-size: 21px;
+	}
+	.container h2{
+		font-size: 18px;
+	}
+	.incomplete-forms, .complete-forms
+	{
+		width: 70%; /* Each column will take up 48% of the width, leaving a small gap between them */
+	}
+	.form-button{
+		width: 100%;
+	}
+	.form-card{
+		width: 100%;
+	}
+}

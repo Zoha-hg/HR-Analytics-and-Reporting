@@ -21,10 +21,11 @@ const managerSchema = new Schema({
         ref: 'Department',
         required: true
     },
-    age: { type: Number, required: true, trim: true},
+    date_of_birth: { type: Date, required: true, trim: true},
     gender: { type: String, required: true, trim: true},
     address: { type: String, required: true, trim: true},
     phone_number: { type: String, required: true, trim: true},
+    age: {type: Number},
     team_performance: 
     [
         {
@@ -37,8 +38,16 @@ const managerSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Feedback',
         },
-        filled: { type: Boolean, required: true }
+        filled: { type: Boolean, required: true },
+        ratingList: [{type: Number}]
     }],
+    tasks: 
+    [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Task',
+        }
+    ]
 });
 
 module.exports = managerSchema;

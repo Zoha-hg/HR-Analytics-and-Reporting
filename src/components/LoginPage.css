@@ -37,7 +37,8 @@
 .login-header p {
     color: #1b1919;
     font-size: 1.1em;
-    font-family: 'Inknut Antiqua', serif;
+    font-family: 'Manrope', serif;
+    margin-left: 2%;
     height: 35em;
     margin-top: 0;
     margin-bottom: 0;
@@ -145,8 +146,8 @@
 
 .sign-in-button {
     align-items: right;
-    width: 107%;
-    padding: 0.75em;
+    width: 100%;
+    padding: 1.1em;
     
     border-radius: 100px;
     background-color: #39d6d3;

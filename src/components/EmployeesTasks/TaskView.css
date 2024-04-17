@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+.Tasks{
+    margin-left: 117px;
+}
+.Tasks h1{
+    color: #0D3951;
+    font-family: Rubik;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 3.2px;
+}
+.Tasks h2{
+    color: #03716C;
+    font-family: Lexend;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 2.4px;
+}
+.task_view{
+    border-collapse: collapse;
+    width: 97%;
+}
+.skill-eval{
+    margin-right: 5%;
+}
+.task_view thead
+{
+    color: #555;
+    font-family: Lexend;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    text-align: left;
+}
+th {
+    height: 33px;
+}
+.task_view tbody
+{
+    color: #555;
+    font-family: Nunito;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    text-align: left;
+    
+}
+.task_view tbody tr
+{
+    border-top: 1px solid #B8BFC3;
+    border-bottom: 1px solid #B8BFC3;
+    margin-top: 20px 
+}
+td {
+    padding: 10px 0px;
+}
+.task_view select{
+    width: 161px;
+    height: 27px;
+    border-radius: 26px;
+    border: none;
+    outline:0px;
+    color: #FFF;
+
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    padding: 0px 10px;
+}
+select option {
+    background-color: white;
+    border-radius: 26px;
+    color: #0D3951;
+}
+.completed{
+    background: #48C6BF;
+    width: 161px;
+    height: 27px;
+    border-radius: 26px;
+    outline:0px;
+    color: #FFF;
+    padding: 5px;
+    padding-right: 60px;
+    padding-left: 15px;
+    
+}
+.status_eval span{
+    padding-right: 10px;
+    border-radius: 26px;
+}
+.completed{
+    background: #48C6BF;
+    font-size: 14px;
+    font-weight: 600;
+    
+}
+.notstarted{
+    background: #D8D8D8;
+}
+.inprogress{
+    background: #FFE050;
+}
+
+.Completed{
+    color:#48C6BF;   
+}
+
+.Pending{
+    color:#7f86e7;
+}
+.evaluate{
+    background: #FF6565;
+    border-radius: 26px;
+    color: #FFF;
+    border: none;
+    padding: 5px;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    padding-right: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.addnew{
+    width: 110px;
+    height: 25px;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 1.6px;
+    border-radius: 26px;
+    background: #3686F7;
+    text-align: left;
+    color: white;
+    border: none;
+    margin-bottom: 15px;
+}
+
+.line{
+    background: #E2E1E1;
+    box-shadow: 0px 1px 5.4px 0px rgba(120, 116, 116, 0.08);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 1px;
+
+}
+@media screen and (max-width: 1000px) and (min-width: 800px)
+{
+    .Tasks{
+        margin-left: 70px;
+    }
+    .Tasks h1{
+        font-size: 24px;
+        letter-spacing: 2.4px;
+    }
+    .Tasks h2{
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 799px) {
+    .Tasks{
+        margin-left: 25px;
+    }
+    .Tasks h1{
+        color: #0D3951;
+        font-family: Rubik;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 3.2px;
+    }
+    .Tasks h2{
+        font-size: 15px;
+    }
+    .line{
+        margin-top: 10px;
+        margin-bottom: 15px;
+    
+    }
+    .task_view thead
+    {
+        color: #555;
+        font-family: Lexend;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: 1.6px;
+        text-align: left;
+    }
+
+    .task_view tbody
+    {
+        color: #555;
+        font-family: Nunito;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: 1.6px;
+        text-align: left;
+        
+    }
+    .task_view tbody tr
+    {
+        border-top: 1px solid #B8BFC3;
+        border-bottom: 1px solid #B8BFC3;
+        margin-top: 20px 
+    }
+    td {
+        padding: 10px 0px;
+    }
+    .task_view select{
+        width: 80%;
+
+        height: 27px;
+        border-radius: 26px;
+        border: none;
+        outline:0px;
+        color: #FFF;
+    
+        font-family: Nunito;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 1.6px;
+        padding: 0px 10px;
+    }
+    select option {
+        background-color: white;
+        border-radius: 26px;
+        color: #0D3951;
+    }
+    .completed{
+        padding: 6px;
+        padding-right: 35%;
+        padding-left: 12px;
+        
+    }
+    .evaluate{
+        background: #FF6565;
+        border-radius: 26px;
+        color: #FFF;
+        border: none;
+        padding: 5px;
+        font-family: Nunito;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 1.6px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .addnew{
+        font-size: 12px;
+        font-weight: 500px;
+        width: 100px;
+        height: 20px;
+        padding-left: 8px;
+        margin-bottom: 10px;
+    }
+}

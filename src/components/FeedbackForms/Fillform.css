@@ -1,0 +1,16 @@
+.circle-container {
+    display: flex;
+  }
+  
+  .circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .circle.selected {
+    background-color: blue; /* Change to the selected color */
+  }
