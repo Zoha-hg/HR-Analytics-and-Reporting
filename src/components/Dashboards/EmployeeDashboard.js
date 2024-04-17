@@ -9,6 +9,7 @@ import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail'; 
 import TimeTracker from '../TimeTrackingCard';
+import { AlignHorizontalLeft } from '@mui/icons-material';
 
 const EmployeeDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -52,6 +53,7 @@ const EmployeeDashboard = ({ role }) => {
             let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
 
             setTasks(tasks_data.data);
+            
             console.log(tasks_data.data);
             console.log("TASKS ", tasks);
         }
@@ -60,6 +62,10 @@ const EmployeeDashboard = ({ role }) => {
             let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
             console.log("employees", tasks_data.data);
             if(tasks_data.error === undefined) {
+                if(tasks_data.data.length > 3)
+                {
+                    tasks_data.data = tasks_data.data.slice(0, 3);
+                }
                 setTasks(tasks_data.data);
                 console.log("TASKS ", tasks_data.data);
             }
@@ -169,10 +175,10 @@ const EmployeeDashboard = ({ role }) => {
                             }
 
                             return (
-                            <Paper key={task.id} variant='outlined' elevation={8} sx={{ marginBottom: 2, backgroundColor }}>
+                            <Paper key={task.id} variant='outlined' elevation={8} sx={{ marginBottom: 2, backgroundColor , padding: 1, fontFamily: 'Lexend'}}>
                                 <div>
-                                <Typography variant="h7" component="div" sx={{ textAlign: 'center' }}>{task.title}</Typography>
-                                <Typography variant="body2" component="div" sx={{ textAlign: 'center' }}>{task.completion_status}</Typography>
+                                <Typography variant="h7" component="div" sx={{ textAlign: 'left' }}>{task.title}</Typography>
+                                <Typography variant="body2" component="div" sx={{ textAlign: 'left' }}>{task.completion_status}</Typography>
                                 </div>
                             </Paper>
                             )
