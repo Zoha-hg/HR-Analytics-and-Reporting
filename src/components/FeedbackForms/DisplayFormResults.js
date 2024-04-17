@@ -72,8 +72,16 @@ function DisplayResults()
                 console.log("res",res);
                 if(setRes(res))
                 {
-                    setGotData(true);
-                    console.log("has_data", has_data, res);
+                    // console.log("statement", (res[0].rating1 === 1));
+                    // if(res.lenth > 0)
+                    // {
+                        if((res[0].rating1 === 1) || (res[0].rating2 == 1) || (res[0].rating3 == 1) || (res[0].rating4 == 1) || (res[0].rating5 == 1))
+                        {
+
+                            setGotData(true);
+                            // console.log("WHaaat", has_data, res);
+                        }
+                    // }
                 }
             }
         }
@@ -112,12 +120,12 @@ function DisplayResults()
                 <h1 >Results for form {form.title}</h1>
                 <h3 style={{ marginBottom: '0px'}}>{form.description}</h3>
 
-                {!has_data && (
+                {!gotData && (
                     <div>
                         <h2>No responses</h2>
                     </div>
                 )}
-                {has_data && (
+                {gotData && (
                     <div>
                         <h2>{results.total_rating} Responses</h2>
                         <div className="chart-options">

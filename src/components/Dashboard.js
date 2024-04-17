@@ -80,10 +80,10 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/calendar">
+                <ListItemButton component={Link} to="/timetrack">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
-                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                        <ListItemText style={{ color: '#ffff', }} primary="Time Track"/>
                     </Box>
                 </ListItemButton>
                 <ListItemButton component={Link} to="/gmail">
@@ -124,10 +124,10 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/calendar">
+                <ListItem component={Link} to="/timetrack">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
-                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                        <ListItemText style={{ color: '#ffff', }} primary="Time Track"/>
                     </Box>
                 </ListItem>
                 <ListItem component={Link} to="/gmail">
@@ -162,10 +162,10 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Feedback Forms"/>
                     </Box>
                 </ListItemButton>
-                <ListItemButton component={Link} to="/calendar">
+                <ListItemButton component={Link} to="/timetrack">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
-                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                        <ListItemText style={{ color: '#ffff', }} primary="Time Track"/>
                     </Box>
                 </ListItemButton>
                 <ListItemButton component={Link} to="/gmail">
@@ -206,10 +206,10 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Turnover Reports"/>
                     </Box>
                 </ListItem>
-                <ListItem component={Link} to="/calendar">
+                <ListItem component={Link} to="/timetrack">
                     <Box display="flex" alignItems="center">
                         <img src={calendar} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
-                        <ListItemText style={{ color: '#ffff', }} primary="Calendar"/>
+                        <ListItemText style={{ color: '#ffff', }} primary="Time Track"/>
                     </Box>
                 </ListItem>
                 <ListItem component={Link} to="/gmail">
