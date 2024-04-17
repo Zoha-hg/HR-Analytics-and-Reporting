@@ -60,14 +60,14 @@ const HRPerformanceReports = () => {
                 const response = await axios.get('http://localhost:8000/api/turnover', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                const fetchedTurnoverData = response.data.employees;
+                const fetchedTurnoverData = response.data.turnover;
                 setTurnoverData({
                     labels: fetchedTurnoverData.map(report => report.employee_name),
                     datasets: [
                         {
                             label: 'Turnover Probability',
                             data: fetchedTurnoverData.map(report => report.probability),
-                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            backgroundColor: 'rgba(0, 113, 127, 0.5)',
                         },
                     ],
                 });
@@ -90,8 +90,8 @@ const HRPerformanceReports = () => {
                 <Bar data={chartData} />
             </Paper>
             <Paper elevation={3} sx={{ p: 2, width: '100%', maxWidth: '800px' }}>
-                <Typography variant="h6" align="center">Second Chart Placeholder</Typography>
-                <Bar data={chartData} />
+                <Typography variant="h6" align="center">Turnover Chart</Typography>
+                <Bar data={turnoverData} />
             </Paper>
         </Box>
     );

@@ -1385,12 +1385,12 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             };
         });
 
-        console.log("formattedData", formattedData);
+        // console.log("formattedData", formattedData);
 
         const AI_URI = process.env.AI_URI;
         const apiResponse = await axios.post(AI_URI, formattedData);
         const probabilities = apiResponse.data.prediction;
-		console.log(apiResponse.data)
+		// console.log(apiResponse.data)
 
         const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
             ...report,
