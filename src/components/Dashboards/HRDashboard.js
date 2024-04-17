@@ -203,9 +203,9 @@ const HRProfessionalDashboard = ({ role }) => {
         {/* first row and its grids. */}
         <Grid container className={classes.cards} rowSpacing={1} columnSpacing={1}>
           <Grid container className={classes.firstRow}>
-            <Grid item className={classes.cardItem}>
+            <Grid item className={classes.cardItem} lg={4}>
             <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305, overflow: 'hidden', paddingBottom:2 }}>
+                <Card variant="outlined" sx={{ minWidth: 400, maxWidth: 400, minHeight: 305, maxHeight: 305, overflow: 'hidden', paddingBottom:2 }}>
                     <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                             You have {numUnreadEmails} unread messages.
@@ -219,9 +219,9 @@ const HRProfessionalDashboard = ({ role }) => {
                 </Card>
             </Link>
             </Grid>
-            <Grid item className={classes.cardItem}>
+            <Grid item className={classes.cardItem} lg={4}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ minWidth: 450, minHeight: 305 }}>
+                    <Card variant="outlined" sx={{ minWidth: 400, maxWidth: 400, minHeight: 305, maxHeight: 305 }}>
                         <CardContent>
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2, color: '#03716C', fontFamily: 'Lexend' }}>
                                 Turnover Reports
@@ -249,9 +249,9 @@ const HRProfessionalDashboard = ({ role }) => {
           </Grid>
           {/* second row and its grids. */}
           <Grid container className={classes.secondRow}>
-            <Grid item className={classes.cardItem}>
+            <Grid item className={classes.cardItem} lg={8}>
                 <Link to="/turnover" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Card variant="outlined" sx={{ minWidth: 916, minHeight: 250 }}>
+                <Card variant="outlined" sx={{ minWidth: 816, minHeight: 250 }}>
                     <CardContent>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
@@ -272,15 +272,15 @@ const HRProfessionalDashboard = ({ role }) => {
                             <Bar data={chartData} />
                         </Paper>
                     </Box> */}
-                    <Bar data={chartData} width={850} height={220}/>
+                    <Bar data={chartData} width={750} height={220}/>
                     </CardContent>
                 </Card>
                 </Link>
             </Grid>
             <Box flexGrow={0}>
-              <Grid item className={classes.cardItem}>
+              <Grid item className={classes.cardItem} lg={4}>
               <Link to="/feedbackform" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card variant="outlined" sx={{ maxWidth: 453, minHeight: 295, maxHeight: 295 }}>
+                    <Card variant="outlined" sx={{ minWidth: 400, maxWidth: 400, minHeight: 300, maxHeight: 300, }}>
                         <CardContent> {/* Ensure no padding at the bottom */}
                             <Typography variant="h6" component="div" sx={{ textAlign: 'center', marginBottom: 1, color: '#03716C', fontFamily: 'Lexend' }}>
                                 Ongoing Feedback Forms

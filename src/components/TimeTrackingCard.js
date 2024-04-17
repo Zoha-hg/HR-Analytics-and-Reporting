@@ -274,7 +274,7 @@ const TimeTrackerCard = () => {
     return (
         <Card
             variant="outlined"
-            sx={{ minWidth: 450, maxWidth: 450, minHeight: 305, maxHeight: 305 }}
+            sx={{ minWidth: 400, maxWidth: 400, minHeight: 305, maxHeight: 305 }}
             onClick={(e) => {
             // Prevent card click event from propagating when the button is clicked
             e.stopPropagation();
