@@ -46,6 +46,7 @@ connection.once("open", () =>
 });
 
 const usersRouter = require("./routes/users");
+const { default: axios } = require("axios");
 const { all } = require("axios");
 const e = require("express");
 app.use("/users", usersRouter);
@@ -99,22 +100,83 @@ app.get('/user-name', authenticateToken, async (req, res) => {
 
 
 app.post("/signup", async (req, res) => {
-	try
-	{
-		const { username, email, password, role } = req.body;
+  try {
+    const { username, email, password, role } = req.body;
+	// Ensuring that all of the fields are filled
+	if (!username || !email || !password || !role) {
+	  return res.status(400).json({ message: 'All fields are required' });
+	}
+	// Checking if the email is valid
+	const validEmail = await verifyEmail(email);
+	if (validEmail){
 		const hashedPassword = await bcrypt.hash(password, 10);
-		const newUser = new User({ username, email, password: hashedPassword, role });
-		await newUser.save();
-		res.status(201).json({ message: "Signup successful" });
-
+		if (role == "Employee"){
+			// Checking if the user already exists in the employee database:
+			const existingEmployee = await Employee.findOne({ employee_id: username });
+			if (!existingEmployee) {
+				return res.status(401).json({ message: 'Employee does not exist' });
+		}}
+		if (role == "Manager"){
+			// Checking if the user already exists in the manager database:
+			const existingManager = await Manager.findOne({ employee_id: username });
+			if (!existingManager) {
+				return res.status(401).json({ message: 'Manager does not exist' });
+		}}
+		// Checking if the email or username already exist in the database.
+		const existing = await User.findOne({ $or: [{ username }, { email }] });
+		if (existing) {
+		return res.status(401).json({ message: 'User already exists' });
+		}
+		else{
+		// Checking if the password is valid and contains at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.
+		const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+		if (!password.match(passwordRegex)) {
+			// console.log('Password invalid:', password)
+			return res.status(400).json({ message: 'Password must contain at least 8 characters with 1 digit, 1 uppercase letter, 1 lowercase letter, and 1 special character.' });
+		}
+		else {
+			const newUser = new User({ username, email, password: hashedPassword, role });
+			await newUser.save();
+			// Adding the user's credentials to the relevant database
+			await addUser(username, email, role);
+			res.status(201).json({ message: "Signup successful" });
+		}
+		}
 	}
-	catch (error)
-	{
-		console.error('SignUp error:', error);
-		res.status(500).json({ message: 'Failed to sign up. Please try again.' });
+	else{
+		return res.status(400).json({ message: 'Could not verify Email. Please try with a different Email.' });
 	}
+  } catch (error) {
+    console.error('SignUp error:', error);
+    res.status(500).json({ message: 'Failed to sign up. Please try again.' });
+  }
 });
 
+const verifyEmail = async (email) => {
+	// Checking if the email is valid by using the hunter API
+
+	const url = `https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${process.env.HUNTER_API_KEY}`;
+
+	try{
+		const response = await axios.get(url);
+		if (response.data.data.status === 'valid'){
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	} catch(error){
+		console.log("Error message:", error.message);
+		console.log("Error details:", error.response ? error.response.data : "No response data");
+
+		return false;
+	};
+}
+
+const addUser = async (username, email, role) => {
+	//Adding the details of the user to the rest of the database
+}
 
 app.post("/login", async (req, res) => 
 {
@@ -1253,5 +1315,264 @@ app.get('/api/gmail/unread-count', authenticateToken, async (req, res) => {
       console.error('Failed to count unread messages:', error);
       res.status(500).json({ message: 'Failed to count unread messages.' });
   }
+});
+
+app.get('/api/performancereports', authenticateToken, async (req, res) => {
+    try {
+        const employees = await Employee.find({});
+
+        const aggregatedTimelogs = await TimeLog.aggregate([
+            {
+                $group: {
+                    _id: '$user',
+                    totalDuration: { $sum: '$duration' } 
+                }
+            }
+        ]);
+
+        const tasksWithSkillsAndCount = await Task.aggregate([
+            {
+                $match: {
+                    evaluation_status: "completed" 
+                }
+            },
+            {
+                $unwind: '$skills' 
+            },
+            {
+                $group: {
+                    _id: '$assigned_to', 
+                    averageSkills: { $avg: '$skills.rating' }, 
+                    completedTasksCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+
+        const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
+            item._id.toString(), 
+            { averageSkills: item.averageSkills, completedTasksCount: item.completedTasksCount }
+        ]));
+        const durationMap = new Map(aggregatedTimelogs.map(item => [item._id.toString(), item.totalDuration]));
+
+        const performanceReports = employees.map(employee => {
+            const employeeIdString = employee._id.toString();
+            const totalDuration = durationMap.get(employeeIdString) || 0;
+            const employeeSkillsAndCount = skillsAndCountMap.get(employeeIdString) || { averageSkills: 0, completedTasksCount: 0 };
+            
+            return {
+                ...employee._doc,
+                totalHoursWorked: totalDuration / 3600,
+                averageSkills: employeeSkillsAndCount.averageSkills,
+                totalCompletedTasks: employeeSkillsAndCount.completedTasksCount
+            };
+        });
+
+        const formattedData = performanceReports.map(report => {
+            let salaryCategory;
+            if (report.salary < 50000) {
+                salaryCategory = 'low';
+            } else if (report.salary > 70000) {
+                salaryCategory = 'high';
+            } else {
+                salaryCategory = 'medium';
+            }
+
+            return {
+                "Performance Rating": report.averageSkills,
+                "Number of Projects": report.totalCompletedTasks,
+                "Average Monthly Hours": report.totalHoursWorked,
+                "Salary": salaryCategory
+            };
+        });
+
+        // console.log("formattedData", formattedData);
+
+        const AI_URI = process.env.AI_URI;
+        const apiResponse = await axios.post(AI_URI, formattedData);
+        const probabilities = apiResponse.data.prediction;
+		// console.log(apiResponse.data)
+
+        const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
+            ...report,
+            probability: probabilities[index]
+        }));
+
+        // console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
+        res.json({ employees: performanceReportsWithProbabilities });
+    } catch (error) {
+        console.error('Error fetching performance reports:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/teamperformancereports/managers', authenticateToken, async (req, res) => {
+    try {
+        const managerId = req.user.username; 
+
+        const manager = await Manager.findById(managerId).populate('department');
+        const departmentId = manager.department._id;
+
+
+        const employees = await Employee.find({ department: departmentId });
+
+
+		const aggregatedTimelogs = await TimeLog.aggregate([
+            {
+                $group: {
+                    _id: '$user',
+                    totalDuration: { $sum: '$duration' } 
+                }
+            }
+        ]);
+
+        const tasksWithSkillsAndCount = await Task.aggregate([
+            {
+                $match: {
+                    evaluation_status: "completed" 
+                }
+            },
+            {
+                $unwind: '$skills' 
+            },
+            {
+                $group: {
+                    _id: '$assigned_to', 
+                    averageSkills: { $avg: '$skills.rating' }, 
+                    completedTasksCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // console.log("tasksWithSkillsAndCount", tasksWithSkillsAndCount);
+
+        const skillsAndCountMap = new Map(tasksWithSkillsAndCount.map(item => [
+            item._id.toString(), 
+            { averageSkills: item.averageSkills, completedTasksCount: item.completedTasksCount }
+        ]));
+        const durationMap = new Map(aggregatedTimelogs.map(item => [item._id.toString(), item.totalDuration]));
+
+        const performanceReports = employees.map(employee => {
+            const employeeIdString = employee._id.toString();
+            const totalDuration = durationMap.get(employeeIdString) || 0;
+            const employeeSkillsAndCount = skillsAndCountMap.get(employeeIdString) || { averageSkills: 0, completedTasksCount: 0 };
+            
+            return {
+                ...employee._doc,
+                totalHoursWorked: totalDuration / 3600,
+                averageSkills: employeeSkillsAndCount.averageSkills,
+                totalCompletedTasks: employeeSkillsAndCount.completedTasksCount
+            };
+        });
+
+        const formattedData = performanceReports.map(report => {
+            let salaryCategory;
+            if (report.salary < 50000) {
+                salaryCategory = 'low';
+            } else if (report.salary > 70000) {
+                salaryCategory = 'high';
+            } else {
+                salaryCategory = 'medium';
+            }
+
+            return {
+                "Performance Rating": report.averageSkills,
+                "Number of Projects": report.totalCompletedTasks,
+                "Average Monthly Hours": report.totalHoursWorked,
+                "Salary": salaryCategory
+            };
+        });
+
+        // console.log("formattedData", formattedData);
+
+        const AI_URI = process.env.AI_URI;
+        const apiResponse = await axios.post(AI_URI, formattedData);
+        const probabilities = apiResponse.data.prediction;
+
+        const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
+            ...report,
+            probability: probabilities[index]
+        }));
+		
+
+        res.json({ team: performanceReportsWithProbabilities });
+    } catch (error) {
+        console.error('Error fetching team performance reports:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+app.get('/api/turnover', authenticateToken, async (req, res) => {
+    try {
+        const employees = await Employee.find({}).populate('feedback_forms.form');
+        const departments = await Department.find({});
+		
+        const departmentMap = departments.reduce((map, dept) => {
+            map[dept._id.toString()] = dept.department_name.trim(); 
+            return map;
+        }, {});
+
+        const employeesWithAdditionalInfo = employees.map(employee => {
+            const filledForms = employee.feedback_forms.filter(feedback => feedback.filled);
+
+            const averageSatisfaction = filledForms.reduce((acc, feedback) => {
+                const ratingsSum = feedback.ratingList.reduce((sum, rating) => sum + rating, 0);
+                return acc + (ratingsSum / (feedback.ratingList.length || 1));
+            }, 0) / (filledForms.length || 1);
+
+            // Attempt to convert date_started to a Date object
+			// console.log(employee.date_started)
+            const startDate = employee.date_started ? new Date(employee.date_started) : null;
+    		// console.log(`Date started for ${employee.employee_name}:`, startDate);
+
+            const currentDate = new Date();
+            const tenure = startDate ? Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24 * 365)) : 'Start date not available';
+            // console.log(`Tenure for ${employee.employee_name}:`, tenure);
+
+            return {
+				...employee._doc, // use the raw document directly
+				department_name: departmentMap[employee.department.toString()] || 'No Department Found',
+				satisfaction_level: filledForms.length ? averageSatisfaction : 0,
+				tenure_years: tenure // Should now be a whole number or the error message
+			};
+        });
+
+		const formattedData = employeesWithAdditionalInfo.map(employee => {
+			return {
+				"Satisfaction Level": employee.satisfaction_level,
+				"Age": employee.age,
+				"Years of Experience": employee.years_of_experience,
+				"Salary": employee.salary,
+				"Promotions": employee.number_of_promotions,
+				"Tenure": employee.tenure_years, 
+				"Department_HR": employee.department_name === "HR",
+				"Department_Marketing": employee.department_name === "Marketing",
+				"Department_Operations": employee.department_name === "Operations",
+				"Department_Sales": employee.department_name === "Sales",
+				"Department_Tech": employee.department_name === "Tech"
+		};});
+
+        // console.log("employeesWithAdditionalInfo", employeesWithAdditionalInfo);
+		// console.log("formattedData", formattedData);
+
+		const AI_URI = process.env.AI_URI_TO;
+		const apiResponse = await axios.post(AI_URI, formattedData);
+		const probabilities = apiResponse.data.prediction;
+		// console.log(apiResponse.data)
+        // Send the modified employee data
+        // res.json(employeesWithAdditionalInfo);
+		const finalData = employeesWithAdditionalInfo.map((employee, index) => ({
+			...employee,
+			probability: probabilities[index]
+		}));
+		// console.log("finalData", finalData);
+
+		res.json({ turnover: finalData });
+    } catch (error) {
+        console.error('Error fetching turnover data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
