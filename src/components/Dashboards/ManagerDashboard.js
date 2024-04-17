@@ -9,6 +9,8 @@ import profile from '../assets/profile.png'
 import UnreadEmail from '../unreadGmail2'; 
 import DashboardStyles from '../DashboardStyles';
 import TimeTracker from '../TimeTrackingCard2';
+import { Bar } from 'react-chartjs-2';
+
 
 const ManagerDashboard = ({ role }) => {
   const classes = DashboardStyles();
@@ -18,6 +20,18 @@ const ManagerDashboard = ({ role }) => {
   const [userRole, setUserRole] = useState('');
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+        {
+            label: 'Probability of Promotion',
+            data: [],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+        },
+    ],
+});
 
   useEffect(() => {
       const fetchUserRole = async () => { // gets user role
@@ -34,74 +48,100 @@ const ManagerDashboard = ({ role }) => {
               navigate('/login');
           }
       };
+        const fetchReports = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/teamperformancereports/managers', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setChartData({
+                    labels: response.data.team.map(report => report.employee_name),
+                    datasets: [
+                        {
+                            label: 'Probability of Promotion',
+                            data: response.data.team.map(report => report.probability),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.error('Error fetching team performance reports:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
+            }};
+        fetchReports();
+
       
-      const fetchUserName = async () => { // gets username aka employee id
-          const token = localStorage.getItem('token');
-          try {
-              const response = await axios.get('http://localhost:8000/user-name', {
-                  headers: { Authorization: `Bearer ${token}` }
-              });
-              setUsername(response.data.username);
-              return response.data.username;
-          } catch (error) {
-              console.error('Error fetching user name:', error);
-          }
-      };
+        const fetchUserName = async () => { // gets username aka employee id
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/user-name', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUsername(response.data.username);
+                return response.data.username;
+            } catch (error) {
+                console.error('Error fetching user name:', error);
+            }
+        };
 
-      const fetchTasks = async (manager_id) => { // gets department tasks for the manager
-          let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
+        const fetchTasks = async (manager_id) => { // gets department tasks for the manager
+            let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
 
-          setTasks(tasks_data.data);
-          console.log(tasks_data.data);
-          console.log("TASKS ", tasks);
-      }
+            setTasks(tasks_data.data);
+            console.log(tasks_data.data);
+            console.log("TASKS ", tasks);
+        }
 
-      const getEmployeeTasks = async (employee_id) => { // gets employees own tasks
-          let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
-          console.log("employees", tasks_data.data);
-          if(tasks_data.error === undefined) {
-              setTasks(tasks_data.data);
-              console.log("TASKS ", tasks_data.data);
-          }
-          console.log("yoooo");
-      }
-      
-      const getData2 = async () => { // gets the tasks according to user role
-          let user = await fetchUserName();
-          console.log("user", user);
-          let userrole = await fetchUserRole();
-          setUserRole(userrole);
-          console.log("role ", userRole);
-          if(userrole == "Manager")
-          {
-              fetchTasks(user);
-          }
-          else if(userrole == "Employee")
-          {
-              console.log("woah");
-              getEmployeeTasks(user);
-          }
-      }
+        const getEmployeeTasks = async (employee_id) => { // gets employees own tasks
+            let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
+            console.log("employees", tasks_data.data);
+            if(tasks_data.error === undefined) {
+                setTasks(tasks_data.data);
+                console.log("TASKS ", tasks_data.data);
+            }
+            console.log("yoooo");
+        }
+        
+        const getData2 = async () => { // gets the tasks according to user role
+            let user = await fetchUserName();
+            console.log("user", user);
+            let userrole = await fetchUserRole();
+            setUserRole(userrole);
+            console.log("role ", userRole);
+            if(userrole == "Manager")
+            {
+                fetchTasks(user);
+            }
+            else if(userrole == "Employee")
+            {
+                console.log("woah");
+                getEmployeeTasks(user);
+            }
+        }
 
-      getData2();
+        getData2();
 
 
-      const fetchData = async (username, role) => {
-          try {
-              const response = await axios.post('http://localhost:8000/displayforms', { user: username, user_role: role });
-              setForms(response.data);
-          } catch (error) {
-              console.error('Error fetching forms:', error);
-          }
-      };
+        const fetchData = async (username, role) => {
+            try {
+                const response = await axios.post('http://localhost:8000/displayforms', { user: username, user_role: role });
+                setForms(response.data);
+            } catch (error) {
+                console.error('Error fetching forms:', error);
+            }
+        };
 
-      const getData = async () => {
-          let role = await fetchUserRole();
-          let username = await fetchUserName();
-          fetchData(username, role);
-      }
+        const getData = async () => {
+            let role = await fetchUserRole();
+            let username = await fetchUserName();
+            fetchData(username, role);
+        }
 
-      getData();
+        getData();
   }, []);
 
   const handleGoToForm = async (form_id) => {
@@ -227,7 +267,7 @@ const ManagerDashboard = ({ role }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
                     </Typography>
-                    <LineChart
+                    {/* <LineChart
                         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
                         series={[
                         {
@@ -236,7 +276,13 @@ const ManagerDashboard = ({ role }) => {
                         ]}
                         width={850}
                         height={220}
-                    />
+                    /> */}
+                    <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+                        <Paper elevation={3} sx={{ mb: 2, p: 2, width: '100%', maxWidth: '800px' }}>
+                            <Typography variant="h6" align="center">Performance Chart</Typography>
+                            <Bar data={chartData} />
+                        </Paper>
+                    </Box>
                     </CardContent>
                 </Card>
                 </Link>
