@@ -9,6 +9,7 @@ import profile from '../assets/profile.png'
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail'; 
 import TimeTracker from '../TimeTrackingCard';
+import { Bar } from 'react-chartjs-2';
 
 const EmployeeDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -18,6 +19,16 @@ const EmployeeDashboard = ({ role }) => {
     const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Probability of Promotion',
+                data: [],
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    });
 
     useEffect(() => {
         const fetchUserRole = async () => { // gets user role
@@ -52,39 +63,64 @@ const EmployeeDashboard = ({ role }) => {
             let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
 
             setTasks(tasks_data.data);
-            console.log(tasks_data.data);
-            console.log("TASKS ", tasks);
+            // console.log(tasks_data.data);
+            // console.log("TASKS ", tasks);
         }
 
         const getEmployeeTasks = async (employee_id) => { // gets employees own tasks
             let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
-            console.log("employees", tasks_data.data);
+            // console.log("employees", tasks_data.data);
             if(tasks_data.error === undefined) {
                 setTasks(tasks_data.data);
-                console.log("TASKS ", tasks_data.data);
+                // console.log("TASKS ", tasks_data.data);
             }
             console.log("yoooo");
         }
         
         const getData2 = async () => { // gets the tasks according to user role
             let user = await fetchUserName();
-            console.log("user", user);
+            // console.log("user", user);
             let userrole = await fetchUserRole();
             setUserRole(userrole);
-            console.log("role ", userRole);
+            // console.log("role ", userRole);
             if(userrole == "Manager")
             {
                 fetchTasks(user);
             }
             else if(userrole == "Employee")
             {
-                console.log("woah");
+                // console.log("woah");
                 getEmployeeTasks(user);
             }
         }
+        const fetchPerformanceData = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/performancereport/skills', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedReports = response.data.employeeSkills;
+                setChartData({
+                    labels: fetchedReports.map(report => report.skillName),
+                    datasets: [
+                        {
+                            label: 'Skill Level',
+                            data: fetchedReports.map(report => report.averageRating),
+                            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        },
+                    ],
+                });
+            }
+            catch (error) {
+                console.error('Error fetching performance reports:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
+            }
+        };
 
         getData2();
-
+        fetchPerformanceData();
 
         const fetchData = async (username, role) => {
             try {
@@ -215,7 +251,7 @@ const EmployeeDashboard = ({ role }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
                     </Typography>
-                    <LineChart
+                    {/* <LineChart
                         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
                         series={[
                         {
@@ -224,7 +260,13 @@ const EmployeeDashboard = ({ role }) => {
                         ]}
                         width={850}
                         height={220}
-                    />
+                    /> */}
+                    <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+                        <Paper elevation={3} sx={{ mb: 2, p: 2, width: '100%', maxWidth: '800px' }}>
+                            <Typography variant="h6" align="center">Performance Chart</Typography>
+                            <Bar data={chartData} />
+                        </Paper>
+                    </Box>
                     </CardContent>
                 </Card>
                 </Link>

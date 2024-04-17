@@ -1574,3 +1574,124 @@ app.get('/api/turnover', authenticateToken, async (req, res) => {
     }
 });
 
+app.get('/api/performancereport/individual', authenticateToken, async (req, res) => {
+    try {
+        const employeeId = req.user.username;
+
+        // Retrieve the employee's information directly
+        const employee = await Employee.findById(employeeId);
+
+        // Get time logs for the specific employee
+        const aggregatedTimelogs = await TimeLog.aggregate([
+            {
+                $match: {
+                    user: employee._id
+                }
+            },
+            {
+                $group: {
+                    _id: '$user',
+                    totalDuration: { $sum: '$duration' }
+                }
+            }
+        ]);
+
+        // Get tasks with skills and counts for the specific employee
+        const tasksWithSkillsAndCount = await Task.aggregate([
+            {
+                $match: {
+                    assigned_to: employee._id,
+                    evaluation_status: "completed"
+                }
+            },
+            {
+                $unwind: '$skills'
+            },
+            {
+                $group: {
+                    _id: '$assigned_to',
+                    averageSkills: { $avg: '$skills.rating' },
+                    completedTasksCount: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Processing the retrieved data
+        const totalDuration = aggregatedTimelogs.length > 0 ? aggregatedTimelogs[0].totalDuration : 0;
+        const { averageSkills, completedTasksCount } = tasksWithSkillsAndCount.length > 0 ? tasksWithSkillsAndCount[0] : { averageSkills: 0, completedTasksCount: 0 };
+
+        // Compute hours and categorize salary
+        const totalHoursWorked = totalDuration / 3600;
+        let salaryCategory;
+        if (employee.salary < 50000) {
+            salaryCategory = 'low';
+        } else if (employee.salary > 70000) {
+            salaryCategory = 'high';
+        } else {
+            salaryCategory = 'medium';
+        }
+
+        // Preparing report for the calling employee
+        const report = {
+            "Performance Rating": averageSkills,
+            "Number of Projects": completedTasksCount,
+            "Average Monthly Hours": totalHoursWorked,
+            "Salary": salaryCategory
+        };
+
+        // Optionally send to AI API for further processing or prediction
+        const AI_URI = process.env.AI_URI;
+        const apiResponse = await axios.post(AI_URI, [report]); // Ensure it's an array if API expects that
+        const probability = apiResponse.data.prediction;
+
+        // Return the formatted report with any additional data like probability
+        res.json({ report: {...report, probability: probability[0]} });
+    } catch (error) {
+        console.error('Error fetching individual performance report:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+app.get('/api/performancereport/skills', authenticateToken, async (req, res) => {
+    try {
+        const employeeId = req.user.username;
+
+        // Retrieve the employee's information directly
+		const employee = await Employee.findOne({ employee_id: employeeId });
+
+        // Aggregate tasks to calculate average skill ratings for the specific employee
+        const skillsWithAverageRatings = await Task.aggregate([
+            {
+                $match: {
+                    assigned_to: employee._id, // Make sure this is indeed an ObjectId
+                    evaluation_status: "completed"
+                }
+            },
+            {
+                $unwind: '$skills'
+            },
+            {
+                $group: {
+                    _id: '$skills.skill', // Group by the skill name
+                    averageRating: { $avg: '$skills.rating' } // Use $avg accumulator to calculate average rating
+                }
+            },
+            {
+                $sort: { _id: 1 } // Sort by skill name alphabetically
+            }
+        ]);
+
+        // Prepare the skills report for the calling employee
+        const skillsReport = skillsWithAverageRatings.map(skill => ({
+            skillName: skill._id,
+            averageRating: skill.averageRating
+        }));
+		console.log('skillsReport', skillsReport);
+
+        // Return the skills report
+        res.json({ employeeSkills: skillsReport });
+    } catch (error) {
+        console.error('Error fetching skills report for employee:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
