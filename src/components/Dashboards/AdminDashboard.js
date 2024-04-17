@@ -90,7 +90,7 @@ const AdminDashboard = ({ role }) => {
                     </Link>
                 </Grid>
                 <Grid item className={classes.cardItem}>
-                    <Link to="/gmail" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Link to="/timetrack" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Card variant="outlined" sx={{ minWidth: 100, minHeight: 200 }}>
                         <CardContent>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 2 }}>

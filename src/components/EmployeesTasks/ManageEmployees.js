@@ -212,7 +212,7 @@ const ManageEmployees = () => {
                                                                 data-index={index}
                                                                 onChange={handleStatusChange} className={selectClass(taskObj.completion_status)}
                                                             >
-                                                                    <option className={taskObj.completion_status} value={taskObj.completion_status}>{taskObj.completion_status}</option>
+                                                                    {/* <option className={taskObj.completion_status} value={taskObj.completion_status}>{taskObj.completion_status}</option> */}
                                                                     <option className='notstarted' value="not started">Not started</option>
                                                                     <option className='1' value="in progress">In progress</option>
                                                                     <option id="completed" value="completed">Completed</option>

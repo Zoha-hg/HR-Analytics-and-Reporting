@@ -53,7 +53,7 @@ function App() {
                 <Route path= "/gmail" element={<GmailIntegrate/>} />
                 <Route path= "/gmail-authorized" element={<GmailDashboard/>} />
                 {/* calendar ka naam change kar lena. */}
-                <Route path= "/calendar" element={<TimeTracker/>} /> 
+                <Route path= "/timetrack" element={<TimeTracker/>} /> 
                 <Route path="/unread" element={<Unread/>}/>
                 {/* make sure to change turnover and performance respectively*/}
                 <Route path="/turnover" element={<PerformanceReportsAndTurnover/>}/>

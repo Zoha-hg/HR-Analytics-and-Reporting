@@ -210,6 +210,10 @@ li p{
 .formfill .MuiRating-root {
     flex: none; /* Prevent the rating from growing */
 }
+
+.submit{
+	padding-bottom: 30px;
+}
 @media screen and (max-width: 1000px) and (min-width: 800px)
 {
 	.container{
