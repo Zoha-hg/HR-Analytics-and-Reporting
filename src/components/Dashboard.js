@@ -106,12 +106,12 @@ const Dashboard = () => {
                         <ListItemText style={{ color: '#ffff', }} primary="Dashboard"/>
                     </Box>
                 </ListItemButton>
-                <ListItem component={Link} to="/employeeperformance">
+                {/* <ListItem component={Link} to="/employeeperformance">
                     <Box display="flex" alignItems="center">
                         <img src={employee} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
                         <ListItemText style={{ color: '#ffff', }} primary="Employee"/>
                     </Box>
-                </ListItem>
+                </ListItem> */}
                 <ListItem component={Link} to="/feedbackform">
                     <Box display="flex" alignItems="center">
                         <img src={feedback} alt="Logo" style={{ width: 20, marginRight: 25, marginLeft:15}} />
