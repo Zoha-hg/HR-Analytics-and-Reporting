@@ -4,7 +4,7 @@ import axios from 'axios';
 import HRPerformanceReports from './PerformanceReports/HRPerformanceReports';
 import ManagerPerformanceReports from './PerformanceReports/ManagerPerformanceReports';
 
-const PerformanceReports = () => {
+const PerformanceReportsAndTurnover = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState('');
 
@@ -44,4 +44,4 @@ const PerformanceReports = () => {
   );
 };
 
-export default PerformanceReports;
+export default PerformanceReportsAndTurnover;

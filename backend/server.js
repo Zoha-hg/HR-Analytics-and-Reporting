@@ -1412,23 +1412,15 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
 
 app.get('/api/teamperformancereports/managers', authenticateToken, async (req, res) => {
     try {
-        // Assuming you have the manager's ID stored in req.user after authentication
-        const managerId = req.user.username; // or however you get the manager's ID from the request
+        const managerId = req.user.username; 
 
-        // Find the manager's department
         const manager = await Manager.findById(managerId).populate('department');
         const departmentId = manager.department._id;
 
-        // Fetch only employees who belong to the manager's department
+
         const employees = await Employee.find({ department: departmentId });
 
-		
 
-        // ... rest of your existing logic for aggregating reports ...
-
-        // Now, 'performanceReports' will only contain reports for the manager's team
-        // The rest of the code remains the same
-        // Remember to adjust the axios.post and the map according to your actual data structure
 		const aggregatedTimelogs = await TimeLog.aggregate([
             {
                 $group: {
