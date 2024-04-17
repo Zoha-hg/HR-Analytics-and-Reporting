@@ -9,6 +9,8 @@ import profile from '../assets/profile.png';
 import DashboardStyles from '../DashboardStyles';
 import UnreadEmail from '../unreadGmail';
 import TimeTracker from '../TimeTrackingCard';
+import { Bar } from 'react-chartjs-2';
+
 
 const HRProfessionalDashboard = ({ role }) => {
     const classes = DashboardStyles();
@@ -17,6 +19,16 @@ const HRProfessionalDashboard = ({ role }) => {
     const [userRole, setUserRole] = useState('');
     const [numUnreadEmails, setNumUnreadEmails] = useState(0);
     const navigate = useNavigate();
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Probability of Promotion',
+                data: [],
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    });
 
     useEffect(() => {
         const fetchUserRole = async () => {
@@ -33,7 +45,31 @@ const HRProfessionalDashboard = ({ role }) => {
                 navigate('/login');
             }
         };
-
+        const fetchReports = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/performancereports', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const fetchedReports = response.data.employees;
+                setChartData({
+                    labels: fetchedReports.map(report => report.employee_name),
+                    datasets: [
+                        {
+                            label: 'Probability of Promotion',
+                            data: fetchedReports.map(report => report.probability),
+                            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.error('Error fetching performance reports:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
+            }
+        };
+        fetchReports();
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
@@ -150,7 +186,22 @@ const HRProfessionalDashboard = ({ role }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', marginBottom: 0, color: '#03716C', fontFamily: 'Lexend' }}>
                         Performance Chart
                     </Typography>
-                    
+                    {/* <LineChart
+                        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                        series={[
+                        {
+                            data: [2, 5.5, 2, 8.5, 1.5, 5],
+                        },
+                        ]}
+                        width={850}
+                        height={220}
+                    /> */}
+                    <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+                        <Paper elevation={3} sx={{ mb: 2, p: 2, width: '100%', maxWidth: '800px' }}>
+                            <Typography variant="h6" align="center">Performance Chart</Typography>
+                            <Bar data={chartData} />
+                        </Paper>
+                    </Box>
                     </CardContent>
                 </Card>
                 </Link>
