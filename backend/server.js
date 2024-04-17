@@ -1368,8 +1368,24 @@ app.get('/api/performancereports', authenticateToken, async (req, res) => {
             };
         });
 
-        console.log("performanceReports", performanceReports);
-        res.json({ employees: performanceReports });
+        const formattedData = performanceReports.map(report => ({
+            "Performance Rating": report.averageSkills,
+            "Number of Projects": report.totalCompletedTasks,
+            "Average Monthly Hours": report.totalHoursWorked, 
+            "Salary": report.salary
+        }));
+
+		const AI_URI = process.env.AI_URI;
+        const apiResponse = await axios.post(AI_URI, formattedData);
+        const probabilities = apiResponse.data; 
+
+        const performanceReportsWithProbabilities = performanceReports.map((report, index) => ({
+            ...report,
+            probability: probabilities[index]
+        }));
+
+		console.log("performanceReportsWithProbabilities", performanceReportsWithProbabilities);
+        res.json({ employees: performanceReportsWithProbabilities });
     } catch (error) {
         console.error('Error fetching performance reports:', error);
         res.status(500).json({ error: 'Internal Server Error' });
