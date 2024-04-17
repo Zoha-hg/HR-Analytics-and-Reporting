@@ -10,7 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import DashboardStyles from './DashboardStyles'; // Import the styles
 import Logo from './assets/HR logo.png'; // Import logo image
-import calendar from './assets/Calendar.svg'
+import calendar from './assets/Clock.png'
 import email from './assets/envelope.svg'
 import feedback from './assets/Feedback.svg'
 import employee from './assets/Employee.svg'

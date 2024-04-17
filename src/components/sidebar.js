@@ -5,13 +5,13 @@ import dashboard_icon from './assets/dashboard.png';
 import employee_icon from './assets/Employee.svg';
 import feedback_icon from './assets/Feedback.svg';
 import turnover_icon from './assets/Turnover.svg';
-import calendar_icon from './assets/Calendar.svg';
+import calendar_icon from './assets/Clock.png';
 import gmail_icon from './assets/email.svg';
 import bold_dashboard_icon from './assets/bold dashboard.svg';
 import bold_employee_icon from './assets/Bold employees.svg';
 import bold_feedback_icon from './assets/bold feedback.svg';
 import bold_turnover_icon from './assets/Bold Turnover.svg';
-import bold_calendar_icon from './assets/bold Calendar.svg';
+import bold_calendar_icon from './assets/bold Clock.png';
 import bold_gmail_icon from './assets/bold email.svg';
 import datalogo from './assets/datalogo.svg';
 import logo from './assets/logo.png';
@@ -26,7 +26,7 @@ const Sidebar = () => {
         { icon: employee_icon, name: 'Employees', path: '/employeeperformance', bold: bold_employee_icon},
         { icon: feedback_icon, name: 'Feedback Forms', path: '/feedbackform', bold: bold_feedback_icon},
         { icon: turnover_icon, name: 'Turnover', path: '/turnover', bold: bold_turnover_icon},
-        { icon: calendar_icon, name: 'Calendar', path: '/calendar', bold: bold_calendar_icon},
+        { icon: calendar_icon, name: 'Time Track', path: '/timetrack', bold: bold_calendar_icon},
         { icon: gmail_icon, name: 'Gmail', path: '/gmail', bold: bold_gmail_icon }
     ];
 
@@ -34,7 +34,7 @@ const Sidebar = () => {
         { icon: dashboard_icon, name: 'Dashboard', path: '/dashboard', bold: bold_dashboard_icon},
         { icon: employee_icon, name: 'Employees', path: '/employees', bold: bold_employee_icon},
         { icon: feedback_icon, name: 'Feedback Forms', path: '/feedbackform', bold: bold_feedback_icon},
-        { icon: calendar_icon, name: 'Calendar', path: '/calendar', bold: bold_calendar_icon },
+        { icon: calendar_icon, name: 'Time Track', path: '/timetrack', bold: bold_calendar_icon },
         { icon: gmail_icon, name: 'Gmail', path: '/gmail', bold: bold_gmail_icon}
     ];
 
@@ -43,7 +43,7 @@ const Sidebar = () => {
         { icon: employee_icon, name: 'Employees', path: '/employees', bold: bold_employee_icon},
         { icon: feedback_icon, name: 'Feedback Forms', path: '/feedbackform', bold: bold_feedback_icon},
         { icon: turnover_icon, name: 'Turnover', path: '/turnover', bold: bold_turnover_icon},
-        { icon: calendar_icon, name: 'Calendar', path: '/calendar', bold: bold_calendar_icon},
+        { icon: calendar_icon, name: 'Time Track', path: '/timetrack', bold: bold_calendar_icon},
         { icon: gmail_icon, name: 'Gmail', path: '/gmail', bold: bold_gmail_icon }
     ];
 
