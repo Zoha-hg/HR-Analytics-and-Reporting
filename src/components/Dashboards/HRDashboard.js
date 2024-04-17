@@ -196,12 +196,13 @@ const HRProfessionalDashboard = ({ role }) => {
                         width={850}
                         height={220}
                     /> */}
-                    <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+                    {/* <Box display="flex" flexDirection="column" alignItems="center" p={2}>
                         <Paper elevation={3} sx={{ mb: 2, p: 2, width: '100%', maxWidth: '800px' }}>
                             <Typography variant="h6" align="center">Performance Chart</Typography>
                             <Bar data={chartData} />
                         </Paper>
-                    </Box>
+                    </Box> */}
+                    <Bar data={chartData} width={850} height={220}/>
                     </CardContent>
                 </Card>
                 </Link>

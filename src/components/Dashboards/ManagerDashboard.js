@@ -283,6 +283,7 @@ const ManagerDashboard = ({ role }) => {
                             <Bar data={chartData} />
                         </Paper>
                     </Box>
+                    <Bar data={chartData} width={850} height={220}/>
                     </CardContent>
                 </Card>
                 </Link>

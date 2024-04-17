@@ -23,7 +23,7 @@ import options2 from './assets/options white.svg';
 const Sidebar = () => {
     const HRpages = [
         { icon: dashboard_icon, name: 'Dashboard', path: '/dashboard', bold: bold_dashboard_icon},
-        { icon: employee_icon, name: 'Employees', path: '/employeeperformance', bold: bold_employee_icon},
+        // { icon: employee_icon, name: 'Employees', path: '/employeeperformance', bold: bold_employee_icon},
         { icon: feedback_icon, name: 'Feedback Forms', path: '/feedbackform', bold: bold_feedback_icon},
         { icon: turnover_icon, name: 'Turnover', path: '/turnover', bold: bold_turnover_icon},
         { icon: calendar_icon, name: 'Calendar', path: '/calendar', bold: bold_calendar_icon},
