@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
-import dashboard_icon from './assets/dashboard.png';
+import dashboard_icon from './assets/Dashboard.png';
 import employee_icon from './assets/Employee.svg';
 import feedback_icon from './assets/Feedback.svg';
 import turnover_icon from './assets/Turnover.svg';
@@ -15,7 +15,6 @@ import bold_calendar_icon from './assets/bold Clock.png';
 import bold_gmail_icon from './assets/bold email.svg';
 import datalogo from './assets/datalogo.svg';
 import logo from './assets/logo.png';
-import search from './assets/search.svg';
 import styles from './Sidebar.module.css'
 import options from './assets/options.svg';
 import options2 from './assets/options white.svg';
