@@ -136,7 +136,7 @@ function FillForm() {
         getForms();
     }, [form_id]);
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         try
         {
             // setAnswers(ans);
@@ -146,7 +146,7 @@ function FillForm() {
                 alert("Please fill all the questions");
                 return;
             }
-            const response = axios.post('http://localhost:8000/fillform', {form_id: form_id, employee_id: user, user_role: user_role, answers: answers});
+            const response = await axios.post('http://localhost:8000/fillform', {form_id: form_id, employee_id: user, user_role: user_role, answers: answers});
             navigate('/feedbackform');
             if(response.data === "error")
             {

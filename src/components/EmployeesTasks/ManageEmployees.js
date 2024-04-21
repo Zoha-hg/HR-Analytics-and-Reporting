@@ -208,15 +208,17 @@ const ManageEmployees = () => {
                                                         taskObj.completion_status === 'completed' ? (
                                                             <span className="completed">Completed</span>
                                                         ) : (
-                                                            <select value={taskObj.completion_status}
+                                                            <select
+                                                                value={taskObj.completion_status}
                                                                 data-index={index}
-                                                                onChange={handleStatusChange} className={selectClass(taskObj.completion_status)}
+                                                                onChange={handleStatusChange}
+                                                                className={`${selectClass(taskObj.completion_status)} status`}
                                                             >
-                                                                    {/* <option className={taskObj.completion_status} value={taskObj.completion_status}>{taskObj.completion_status}</option> */}
-                                                                    <option className='notstarted' value="not started">Not started</option>
-                                                                    <option className='1' value="in progress">In progress</option>
-                                                                    <option id="completed" value="completed">Completed</option>
-                                                                </select>
+                                                                {/* <option className={taskObj.completion_status} value={taskObj.completion_status}>{taskObj.completion_status}</option> */}
+                                                                <option className='notstarted' value="not started">Not started</option>
+                                                                <option className='in progress' value="in progress">In progress</option>
+                                                                <option id="completed" value="completed">Completed</option>
+                                                            </select>
                                                         )
                                                     }
                                                 </td>

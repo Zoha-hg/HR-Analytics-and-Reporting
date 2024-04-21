@@ -21,7 +21,7 @@ const managerSchema = new Schema({
         ref: 'Department',
         required: true
     },
-    date_of_birth: { type: Date, required: true, trim: true},
+    date_of_birth: { type: Date, trim: true},
     gender: { type: String, required: true, trim: true},
     address: { type: String, required: true, trim: true},
     phone_number: { type: String, required: true, trim: true},
