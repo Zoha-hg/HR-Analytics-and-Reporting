@@ -18,7 +18,7 @@ function DisplayForms() {
             const token = localStorage.getItem('token');
             try {
                 // Make a GET request to the /user-role endpoint to extract the user's role based on the token
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
@@ -37,7 +37,7 @@ function DisplayForms() {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsername(response.data.username);
@@ -51,7 +51,7 @@ function DisplayForms() {
         const fetchData = async (username, role) => {
             try {
                 console.log("role ", role, "!", username);
-                const response = await axios.post('http://localhost:8000/displayforms', {user: username, user_role: role});
+                const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/displayforms', {user: username, user_role: role});
                 // console.log("response.data: ", response.data);
                 setForms(response.data);
                 if(user_role === "HR professional")

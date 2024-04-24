@@ -35,7 +35,7 @@ const EmployeeDashboard = ({ role }) => {
         const fetchUserRole = async () => { // gets user role
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
@@ -50,7 +50,7 @@ const EmployeeDashboard = ({ role }) => {
         const fetchUserName = async () => { // gets username aka employee id
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsername(response.data.username);
@@ -61,7 +61,7 @@ const EmployeeDashboard = ({ role }) => {
         };
 
         const fetchTasks = async (manager_id) => { // gets department tasks for the manager
-            let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
+            let tasks_data = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/getdepttasks", { manager_id });
 
             setTasks(tasks_data.data);
             
@@ -70,7 +70,7 @@ const EmployeeDashboard = ({ role }) => {
         }
 
         const getEmployeeTasks = async (employee_id) => { // gets employees own tasks
-            let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
+            let tasks_data = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/getowntasks", { employee_id });
             // console.log("employees", tasks_data.data);
             if(tasks_data.error === undefined) {
                 if(tasks_data.data.length > 3)
@@ -102,7 +102,7 @@ const EmployeeDashboard = ({ role }) => {
         const fetchPerformanceData = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/api/performancereport/skills', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/performancereport/skills', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const fetchedReports = response.data.employeeSkills;
@@ -130,7 +130,7 @@ const EmployeeDashboard = ({ role }) => {
 
         const fetchData = async (username, role) => {
             try {
-                const response = await axios.post('http://localhost:8000/displayforms', { user: username, user_role: role });
+                const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/displayforms', { user: username, user_role: role });
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);

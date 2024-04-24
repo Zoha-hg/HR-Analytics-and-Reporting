@@ -14,7 +14,7 @@ const ManageEmployees = () => {
 
     useEffect(() => {
         const fetchTasks = async (manager_id) => {
-            let tasks_data = await axios.post("http://localhost:8000/getdepttasks", { manager_id });
+            let tasks_data = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/getdepttasks", { manager_id });
             // console.log("employees", tasks_data.data);
             // if(tasks_data.error !== undefined) {
                 setTasks(tasks_data.data);
@@ -27,7 +27,7 @@ const ManageEmployees = () => {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setManagerId(response.data.username);
@@ -43,7 +43,7 @@ const ManageEmployees = () => {
             const token = localStorage.getItem('token');
             try {
                 // Make a GET request to the /user-role endpoint to extract the user's role based on the token
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
@@ -60,7 +60,7 @@ const ManageEmployees = () => {
         };
 
         const getEmployeeTasks = async (employee_id) => {
-            let tasks_data = await axios.post("http://localhost:8000/getowntasks", { employee_id });
+            let tasks_data = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/getowntasks", { employee_id });
             console.log("employees", tasks_data.data);
             if(tasks_data.error === undefined) {
                 setTasks(tasks_data.data);
@@ -95,7 +95,7 @@ const ManageEmployees = () => {
 
         try {
             const task_id = tasks[selectedIndex].task_id;
-            await axios.post("http://localhost:8000/updatestatus", { user_role: user_role, task_id: task_id, status: newCompletionStatus });
+            await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/updatestatus", { user_role: user_role, task_id: task_id, status: newCompletionStatus });
 
             // Update the tasks state with the new status
             setTasks(prevTasks => {

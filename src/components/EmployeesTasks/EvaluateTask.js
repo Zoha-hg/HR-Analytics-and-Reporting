@@ -63,7 +63,7 @@ const EvaluateTask = () => {
             const token = localStorage.getItem('token');
             try {
                 // Make a GET request to the /user-role endpoint to extract the user's role based on the token
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
@@ -82,7 +82,7 @@ const EvaluateTask = () => {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsername(response.data.username);
@@ -94,7 +94,7 @@ const EvaluateTask = () => {
         };
         
         const getTask = async () => {
-            const task_data = await axios.post("http://localhost:8000/gettask", {task_id: task_id});
+            const task_data = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/gettask", {task_id: task_id});
             return task_data.data;
         }
 
@@ -142,8 +142,8 @@ const EvaluateTask = () => {
         {
             try
             {
-                const evalu = await axios.post("http://localhost:8000/evaluate", {task_id: task_id, skills: task.skills});
-                const upd = await axios.post("http://localhost:8000/updateStatus", {task_id: task_id, user_role: user_role, status: 'completed'});
+                const evalu = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/evaluate", {task_id: task_id, skills: task.skills});
+                const upd = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/updateStatus", {task_id: task_id, user_role: user_role, status: 'completed'});
 
                 console.log(evalu.data);
                 alert("Evaluation completed!")

@@ -22,7 +22,7 @@ function DisplayResults()
     useEffect(() => {
         const getFormData = async () => {
             try{
-                const form_data = await axios.post('http://localhost:8000/getform', {form_id: form_id});
+                const form_data = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/getform', {form_id: form_id});
                 if(form_data.data !== "error")
                 {
                     setForm(form_data.data);
@@ -37,7 +37,7 @@ function DisplayResults()
         const fetchData = async () => {
             try
             {
-                const response = await axios.post('http://localhost:8000/displayresults', {form_id: form_id});
+                const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/displayresults', {form_id: form_id});
                 console.log("response.data: ", response.data);
                 // setResults(response.data);
 

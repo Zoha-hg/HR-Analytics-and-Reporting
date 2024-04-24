@@ -17,7 +17,7 @@ function GmailIntegrate({handleUnreadEmailCount}) {
     const fetchUnreadCount = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8000/api/gmail/unread-count', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/unread-count', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUnreadCount(response.data.unreadCount); // Set the unread count state with the fetched data
@@ -30,7 +30,7 @@ function GmailIntegrate({handleUnreadEmailCount}) {
     const fetchUnreadMessages = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8000/api/gmail/unread', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/unread', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessages(response.data); // Set the messages state with the fetched data
@@ -49,7 +49,7 @@ function GmailIntegrate({handleUnreadEmailCount}) {
         }
 
         try {
-            const response = await axios.get('http://localhost:8000/api/gmail/check-authorization', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/check-authorization', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setIsAuthorized(response.data.isAuthorized);
@@ -68,7 +68,7 @@ function GmailIntegrate({handleUnreadEmailCount}) {
     const initiateAuthorization = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8000/api/gmail/unread', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/unread', {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

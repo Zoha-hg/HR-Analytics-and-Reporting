@@ -110,7 +110,7 @@ const TimeTrackerCard = () => {
 
     const handleStart = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/start-time-log', {}, getAuthHeaders());
+            const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/start-time-log', {}, getAuthHeaders());
             setIsTracking(true);
             setTimeLogId(response.data._id);
             setStartTime(Date.now());
@@ -148,7 +148,7 @@ const TimeTrackerCard = () => {
             return;
         }
         try {
-            await axios.post('http://localhost:8000/stop-time-log', { timeLogId }, getAuthHeaders());
+            await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/stop-time-log', { timeLogId }, getAuthHeaders());
             setIsTracking(false);
             setTimeLogId(null);
             if (currentPeriod === 'daily') {
@@ -165,7 +165,7 @@ const TimeTrackerCard = () => {
 
     const fetchTotalTimeForDate
     = async (date) => {
-        const url = `http://localhost:8000/total-time-graph/${date}`;
+        const url = `https://hr-analytics-and-reporting-production.up.railway.app/total-time-graph/${date}`;
         try {
             const response = await axios.get(url, getAuthHeaders());
 
@@ -193,7 +193,7 @@ const TimeTrackerCard = () => {
     };
 
     const fetchTotalTimeGraphWeekly = async (date) => {
-        const url = `http://localhost:8000/total-time-graph-weekly/${date}`;
+        const url = `https://hr-analytics-and-reporting-production.up.railway.app/total-time-graph-weekly/${date}`;
         try {
             const response = await axios.get(url, getAuthHeaders());
             // Map durations to days of the week for the graph
@@ -224,7 +224,7 @@ const TimeTrackerCard = () => {
     };
 
     const fetchTotalTimeGraphMonthly = async (date) => {
-        const url = `http://localhost:8000/total-time-graph-monthly/${date}`;
+        const url = `https://hr-analytics-and-reporting-production.up.railway.app/total-time-graph-monthly/${date}`;
         try {
             const response = await axios.get(url, getAuthHeaders());
             // Map durations to days of the month for the graph

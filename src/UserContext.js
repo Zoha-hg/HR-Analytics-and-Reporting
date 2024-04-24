@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const { data } = await axios.get('http://localhost:8000/verify-token', {
+          const { data } = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/verify-token', {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (data?.username) {

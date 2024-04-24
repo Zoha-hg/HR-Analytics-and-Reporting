@@ -35,7 +35,7 @@ const HRProfessionalDashboard = ({ role }) => {
         const fetchUserRole = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserRole(response.data.role);
@@ -49,7 +49,7 @@ const HRProfessionalDashboard = ({ role }) => {
         const fetchReports = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/api/performancereports', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/performancereports', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const fetchedReports = response.data.employees;
@@ -65,7 +65,7 @@ const HRProfessionalDashboard = ({ role }) => {
                     ],
                 });
 
-                const response2 = await axios.get('http://localhost:8000/api/turnover', {
+                const response2 = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/turnover', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const fetchedTurnoverData = response2.data.turnover;
@@ -96,7 +96,7 @@ const HRProfessionalDashboard = ({ role }) => {
         // const fetchReports = async () => {
         //     const token = localStorage.getItem('token');
         //     try {
-        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //         const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/performancereports', {
         //             headers: { Authorization: `Bearer ${token}` },
         //         });
         //         const fetchedReports = response.data.employees;
@@ -122,7 +122,7 @@ const HRProfessionalDashboard = ({ role }) => {
         //     // Creating a list of the 3 most likely to turnover employees based on probabilities
         //     const token = localStorage.getItem('token');
         //     try {
-        //         const response = await axios.get('http://localhost:8000/api/performancereports', {
+        //         const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/performancereports', {
         //             headers: { Authorization: `Bearer ${token}` },
         //         });
         //         const fetchedReports = response.data.employees;
@@ -137,7 +137,7 @@ const HRProfessionalDashboard = ({ role }) => {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsername(response.data.username);
@@ -149,7 +149,7 @@ const HRProfessionalDashboard = ({ role }) => {
 
         const fetchData = async (username, role) => {
             try {
-                const response = await axios.post('http://localhost:8000/displayforms', { user: username, user_role: role });
+                const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/displayforms', { user: username, user_role: role });
                 setForms(response.data);
             } catch (error) {
                 console.error('Error fetching forms:', error);

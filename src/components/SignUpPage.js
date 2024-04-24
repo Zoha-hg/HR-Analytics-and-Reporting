@@ -15,7 +15,7 @@ const SignUpPage = () => {
         event.preventDefault();
         console.log('SignUp attempt with', username, email, password, role);
         try {
-            const response = await axios.post('http://localhost:8000/signup', { username, email, password, role });
+            const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/signup', { username, email, password, role });
             // Handle success, redirect or set user state
             if (response.status === 201) {
                 navigate('/login');

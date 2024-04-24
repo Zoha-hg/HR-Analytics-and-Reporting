@@ -60,7 +60,7 @@ const Sidebar = () => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (response.data.role === "HR professional" || response.data.role === "Admin") {

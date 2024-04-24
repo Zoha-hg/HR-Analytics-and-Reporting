@@ -73,7 +73,7 @@ function FillForm() {
             const token = localStorage.getItem('token');
             try {
                 // Make a GET request to the /user-role endpoint to extract the user's role based on the token
-                const response = await axios.get('http://localhost:8000/user-role', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 // setUserRole(response.data.role);
@@ -92,7 +92,7 @@ function FillForm() {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(response.data.username);
@@ -105,7 +105,7 @@ function FillForm() {
 
         const getFormData = async () => {
             try{
-                const form_data = await axios.post('http://localhost:8000/getform', {form_id: form_id});
+                const form_data = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/getform', {form_id: form_id});
                 if(form_data.data !== "error")
                 {
                     setForm(form_data.data);
@@ -146,7 +146,7 @@ function FillForm() {
                 alert("Please fill all the questions");
                 return;
             }
-            const response = await axios.post('http://localhost:8000/fillform', {form_id: form_id, employee_id: user, user_role: user_role, answers: answers});
+            const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/fillform', {form_id: form_id, employee_id: user, user_role: user_role, answers: answers});
             navigate('/feedbackform');
             if(response.data === "error")
             {

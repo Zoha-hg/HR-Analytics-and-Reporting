@@ -19,7 +19,7 @@ const CreateNewTask = () => {
         const fetchUserName = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/user-name', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-name', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setManagerId(response.data.username);
@@ -32,7 +32,7 @@ const CreateNewTask = () => {
         
         const getEmployees = async (employee_id) =>
         {
-            const employeess = await axios.post("http://localhost:8000/getdeptemplyees", {manager_id: employee_id});
+            const employeess = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/getdeptemplyees", {manager_id: employee_id});
 
             console.log("employees: ", employeess);
             setEmployees(employeess.data);
@@ -104,7 +104,7 @@ const CreateNewTask = () => {
             console.log("Task: ", task);
             try
             {
-                const response = await axios.post("http://localhost:8000/createtask", task);
+                const response = await axios.post("https://hr-analytics-and-reporting-production.up.railway.app/createtask", task);
                 console.log(response);
                 navigate("/employees")
             } catch (error)

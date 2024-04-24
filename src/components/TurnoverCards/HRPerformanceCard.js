@@ -21,7 +21,7 @@ const HRPerformanceCard = () => {
         const fetchReports = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/api/performancereports', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/performancereports', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const fetchedReports = response.data.employees;

@@ -20,7 +20,7 @@ function GmailIntegrate() {
                 return;
             }
     
-            const response = await axios.get('http://localhost:8000/start-gmail-authorization', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/start-gmail-authorization', {
                 headers: { Authorization: `Bearer ${token}` }
             });
     

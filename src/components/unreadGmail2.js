@@ -21,7 +21,7 @@ function GmailIntegrate({ handleUnreadEmailCount }) {
         }
 
         try {
-            const response = await axios.get('http://localhost:8000/api/gmail/check-authorization', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/check-authorization', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setIsAuthorized(response.data.isAuthorized);
@@ -35,7 +35,7 @@ function GmailIntegrate({ handleUnreadEmailCount }) {
     const initiateAuthorization = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8000/api/gmail/unread', {
+            const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/unread', {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

@@ -70,7 +70,7 @@ function GmailDashboard() {
                 Authorization: `Bearer ${token}`
             };
     
-            const response = await axios.post('http://localhost:8000/api/gmail/send', { message: emailContent }, { headers });
+            const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/send', { message: emailContent }, { headers });
     
             console.log('Email sent successfully:', response.data);
             setShowNewEmailForm(false); // Hide form after sending the email
@@ -89,7 +89,7 @@ function GmailDashboard() {
 
     const fetchMessages = async () => {
         // Construct the URL based on the current view
-        let url = `http://localhost:8000/api/gmail/${currentView}`;
+        let url = `https://hr-analytics-and-reporting-production.up.railway.app/api/gmail/${currentView}`;
 
         try {
             const response = await axios.get(url, getAuthHeaders());

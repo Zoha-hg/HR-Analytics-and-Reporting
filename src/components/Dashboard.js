@@ -32,7 +32,7 @@ const Dashboard = () => {
     const fetchUserRole = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:8000/user-role', {
+        const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRole(response.data.role);

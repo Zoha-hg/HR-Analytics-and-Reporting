@@ -25,7 +25,7 @@ const ManagerPerformanceReports = () => {
         const fetchReports = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8000/api/teamperformancereports/managers', {
+                const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/api/teamperformancereports/managers', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setChartData({

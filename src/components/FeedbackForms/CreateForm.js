@@ -49,7 +49,7 @@ function CreateForm() {
         try {
             const errors = validateForm(formData);
             if (Object.keys(errors).length === 0) {
-                await axios.post('http://localhost:8000/createform', formData);
+                await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/createform', formData);
                 alert('Form created successfully');
                 // should redirect back to displaying forms page
                 navigate('/feedbackform');
