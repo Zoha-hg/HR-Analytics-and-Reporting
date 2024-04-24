@@ -13,7 +13,7 @@ const LoginPage = () => {
   const handleUserLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/login', { username, password });
+      const response = await axios.post('https://hr-analytics-and-reporting-production.up.railway.app:8000/login', { username, password });
       console.log('Login response:', response);
       if (response.data.token) {
         // Store the JWT token in localStorage
