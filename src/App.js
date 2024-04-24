@@ -37,26 +37,25 @@ function App() {
           <div className="App">
             <Router>
             <div>
-              <Sidebar />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/feedbackform" element={<DisplayForm />} />
-                <Route path="/feedbackform/displayresults" element={<DisplayResults />} />
-                <Route path="/feedbackform/createform" element={<CreateForm />} />
-                <Route path="/feedbackform/fillform" element={<FillForm />} />
-                <Route path="/employees" element={<ManageEmployees />} />
-                <Route path="/employees/createtask" element={<CreateNewTask />} />
-                <Route path="/employees/evaluatetask" element={<EvaluateTask />} />
-                <Route path= "/gmail" element={<GmailIntegrate/>} />
-                <Route path= "/gmail-authorized" element={<GmailDashboard/>} />
+                <Route path="/dashboard" element={<><Sidebar/><Dashboard /></>} />
+                <Route path="/feedbackform" element={<><Sidebar/><DisplayForm /></>} />
+                <Route path="/feedbackform/displayresults" element={<><Sidebar/><DisplayResults /></>} />
+                <Route path="/feedbackform/createform" element={<><Sidebar/><CreateForm /></>} />
+                <Route path="/feedbackform/fillform" element={<><Sidebar/><FillForm /></>} />
+                <Route path="/employees" element={<><Sidebar/><ManageEmployees /></>} />
+                <Route path="/employees/createtask" element={<><Sidebar/><CreateNewTask /></>} />
+                <Route path="/employees/evaluatetask" element={<><Sidebar/><EvaluateTask /></>} />
+                <Route path= "/gmail" element={<><Sidebar/><GmailIntegrate/></>} />
+                <Route path= "/gmail-authorized" element={<><Sidebar/><GmailDashboard/></>} />
                 {/* calendar ka naam change kar lena. */}
-                <Route path= "/timetrack" element={<TimeTracker/>} /> 
-                <Route path="/unread" element={<Unread/>}/>
+                <Route path= "/timetrack" element={<><Sidebar/><TimeTracker/></>} /> 
+                <Route path="/unread" element={<><Sidebar/><Unread/></>}/>
                 {/* make sure to change turnover and performance respectively*/}
-                <Route path="/turnover" element={<PerformanceReportsAndTurnover/>}/>
+                <Route path="/turnover" element={<><Sidebar/><PerformanceReportsAndTurnover/></>}/>
               </Routes>
             </div>
             </Router>
