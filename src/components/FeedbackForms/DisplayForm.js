@@ -102,6 +102,10 @@ function DisplayForms() {
     const endedForms = forms.filter(form => new Date(form.end_time) < new Date().toISOString());
     const ongoingForms = forms.filter(form => new Date(form.start_time) <= new Date().toISOString() && new Date(form.end_time) >= new Date().toISOString());
 
+    // console.log("filledForms: ", filledForms);
+    // console.log("unfilledForms: ", unfilledForms);
+    console.log("endedForms: ", endedForms);
+    console.log("ongoingForms: ", ongoingForms);
     const formatDate = (date) => {
         const year = date.split('-')[0];
         const month = date.split('-')[1];
