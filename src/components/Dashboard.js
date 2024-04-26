@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Typography, Grid, Drawer, List, ListItem, ListItemText, Toolbar, Divider, Box, Avatar, ListItemButton} from '@mui/material';
 import { Card, CardContent, CardActions, Button } from '@mui/material/';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [role, setRole] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(true); // Drawer is initially open
   const location = useLocation(); // Get current location to highlight active link
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -47,6 +48,11 @@ const Dashboard = () => {
 
     fetchUserRole();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+    };
 
   // Define drawer content based on user role
   const drawerContent = () => {
@@ -265,7 +271,7 @@ const Dashboard = () => {
             </List>
             <List alignItems='flex-end'>
                 <Divider />
-                <ListItemButton component={Link} to="/">
+                <ListItemButton onClick={handleLogout}>
                     <Box display="flex" alignItems="center">
                     <LogoutIcon style={{ color: '#ffff', marginRight: 10, marginLeft: 5}} />
                     <ListItemText style={{ color: '#ffff', }} primary="Log Out" />
