@@ -49,7 +49,7 @@ const LoginPage = () => {
               <input 
                 type="text" 
                 id="username" 
-                placeholder="mustafa@gmail.com" 
+                placeholder="Enter your username"
                 value={username}
                 onChange={event => setUsername(event.target.value)}/>
             </div>
