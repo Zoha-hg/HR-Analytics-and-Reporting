@@ -146,6 +146,7 @@ const TimeTracker = () => {
             return;
         }
         try {
+            
             await axios.post('https://hr-analytics-and-reporting-production.up.railway.app/stop-time-log', { timeLogId }, getAuthHeaders());
             setIsTracking(false);
             setTimeLogId(null);
@@ -168,7 +169,11 @@ const TimeTracker = () => {
       
             if (response.data && response.data.hourlyDurations) {
                 const dataForGraph = {
-                    labels: Array.from({ length: 24 }, (_, i) => `${i}:00`), // Labels for each hour of the day
+                    // labels: Array.from({ length: 24 }, (_, i) => `${i}:00`), // Labels for each hour of the day
+                      labels : Array.from({ length: 24 }, (_, i) => {
+                      const adjustedHour = (i + 5) % 24; // Adds 5 hours and wraps around at 24
+                      return `${adjustedHour}:00`;
+                  }),
                     datasets: [{
                         label: 'Total Time',
                         data: response.data.hourlyDurations,
