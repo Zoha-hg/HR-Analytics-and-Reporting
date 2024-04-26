@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import dashboard_icon from './assets/Dashboard.svg';
 import employee_icon from './assets/Employee.svg';
 import feedback_icon from './assets/Feedback.svg';
@@ -54,6 +54,7 @@ const Sidebar = () => {
     const [isMediumScreen, setIsMediumScreen] = useState(false);
     const [openSideBar, setOpenSideBar] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     // for fetching user role
     useEffect(() => {
@@ -134,6 +135,10 @@ const Sidebar = () => {
     const toggleSideBar = () => {
         setOpenSideBar(!openSideBar);
     }
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/');
+    };
     return (
         <div>
             {((showSidebar && !showExpandedSidebar && !isSmallScreen) || (showSidebar && isMediumScreen)) && (
@@ -147,7 +152,7 @@ const Sidebar = () => {
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
                             </div> */}
-                            <p><Link to={"/"}>Log Out</Link></p>
+                            <p onClick={handleLogout}>Log Out</p>
 
                         </div>
                     </div>
@@ -192,7 +197,7 @@ const Sidebar = () => {
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
                             </div> */}
-                        <p><Link to={"/"}>Log Out</Link></p>
+                            <p onClick={handleLogout}>Log Out</p>
 
                         </div>
                     </div>
@@ -246,7 +251,7 @@ const Sidebar = () => {
                                 <input type="text" placeholder="Search..." />
                                 <img className={styles["search-icon"]} src={search} alt="Search" />
                             </div> */}
-                            <p><Link to={"/"}>Log Out</Link></p>
+                            <p onClick={handleLogout}>Log Out</p>
                         </div>
                     </div>
                     <div className={styles["expanded-line"]}></div>

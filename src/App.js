@@ -24,6 +24,7 @@ import TimeTracker from './components/TimeTracker';
 import Unread from './components/unreadGmail';
 import PerformanceReports from './components/PerformanceReports';
 import PerformanceReportsAndTurnover from './components/PerformanceReports';
+import PrivateRoutes from './components/util/PrivateRoutes';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route element={<PrivateRoutes/>}>
                 <Route path="/dashboard" element={<><Sidebar/><Dashboard /></>} />
                 <Route path="/feedbackform" element={<><Sidebar/><DisplayForm /></>} />
                 <Route path="/feedbackform/displayresults" element={<><Sidebar/><DisplayResults /></>} />
@@ -51,11 +53,12 @@ function App() {
                 <Route path="/employees/evaluatetask" element={<><Sidebar/><EvaluateTask /></>} />
                 <Route path= "/gmail" element={<><Sidebar/><GmailIntegrate/></>} />
                 <Route path= "/gmail-authorized" element={<><Sidebar/><GmailDashboard/></>} />
-                {/* calendar ka naam change kar lena. */}
                 <Route path= "/timetrack" element={<><Sidebar/><TimeTracker/></>} /> 
                 <Route path="/unread" element={<><Sidebar/><Unread/></>}/>
-                {/* make sure to change turnover and performance respectively*/}
                 <Route path="/turnover" element={<><Sidebar/><PerformanceReportsAndTurnover/></>}/>
+
+                </Route>
+                
               </Routes>
             </div>
             </Router>
