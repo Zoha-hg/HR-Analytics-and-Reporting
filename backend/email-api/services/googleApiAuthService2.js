@@ -21,7 +21,7 @@ async function loadSavedCredentialsIfExists(username) {
       const oauth2Client = new google.auth.OAuth2(
         "545520503111-8q2ile0qc90kuh3iretlormau3uikiqe.apps.googleusercontent.com",
         "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",
-        'https://hr-analytics-and-reportin.vercel.app/oauth2callback' // The redirect URI used in the initial OAuth flow, not used here but required for initialization
+        'https://datadarbaar.vercel.app/oauth2callback' // The redirect URI used in the initial OAuth flow, not used here but required for initialization
       );
 
       // Set the OAuth2 client's credentials with the user's refresh token
