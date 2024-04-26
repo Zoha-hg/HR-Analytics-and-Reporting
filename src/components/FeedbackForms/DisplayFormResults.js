@@ -127,7 +127,7 @@ function DisplayResults()
                 )}
                 {gotData && (
                     <div>
-                        <h2>{results.total_rating} Responses</h2>
+                        <h2>Responses</h2>
                         <div className="chart-options">
                         <label>
                             <input 

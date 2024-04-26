@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
-import dashboard_icon from './assets/dashboard.png';
+import dashboard_icon from './assets/Dashboard.svg';
 import employee_icon from './assets/Employee.svg';
 import feedback_icon from './assets/Feedback.svg';
 import turnover_icon from './assets/Turnover.svg';

@@ -35,6 +35,7 @@ const Dashboard = () => {
         const response = await axios.get('https://hr-analytics-and-reporting-production.up.railway.app/user-role', {
           headers: { Authorization: `Bearer ${token}` }
         });
+        console.log(response.data)
         setRole(response.data.role);
       } catch (error) {
         console.error('Error fetching user role:', error);

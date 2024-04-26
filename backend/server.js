@@ -247,6 +247,7 @@ app.post('/createform', async (req, res) => {
 app.post('/displayforms', async (req, res) => {
 	try {
 		const { user, user_role } = req.body;
+		console.log(req.body);
 		// const user_role = getUserRole(user);
 		console.log("user role", user_role, "hehehe", req.body)
 		if (user_role === "Employee") {
